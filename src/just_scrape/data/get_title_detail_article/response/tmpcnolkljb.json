@@ -1,0 +1,28 @@
+{
+  "data": {
+    "urlV2": {
+      "id": "dXJ8MTEzMzM4",
+      "node": {
+        "id": "ts21792",
+        "content": {
+          "articles": [
+            {
+              "id": "YXJ8MTQwNDI=",
+              "content": {
+                "__typename": "ArticleContent",
+                "synopsis": "\u003ch3\u003eThe antisocial antics of schoolboys Stan, Kyle, Eric, and Kenny\u003c/h3\u003e\n\u003cp\u003eIn South Park, Colorado, Stan, Kyle, Kenny, and Eric are four friends with mischievous adventures on the agenda. The boys face supernatural and uncanny events that bring out the gullible stupidity of the adults around them. Between terrorizing each other and shocking members of their town, the scandalous schoolboys are often the unlikeliest source of truth and reason.\u003c/p\u003e",
+                "whatToKnow": null,
+                "productionNews": null
+              },
+              "__typename": "Article"
+            }
+          ],
+          "__typename": "ShowContent"
+        },
+        "__typename": "Show",
+        "__typename": "Show"
+      },
+      "__typename": "Url"
+    }
+  }
+}

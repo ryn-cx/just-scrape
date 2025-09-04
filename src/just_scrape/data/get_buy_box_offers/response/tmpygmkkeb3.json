@@ -1,0 +1,368 @@
+{
+    "data": {
+        "node": {
+            "id": "ts4",
+            "__typename": "Show",
+            "offerCount": 13,
+            "maxOfferUpdatedAt": "2025-09-03T15:35:34.45003Z",
+            "offersHistory": [],
+            "flatrate": [
+                {
+                    "id": "b2Z8dHM0OlVTOjg6ZmxhdHJhdGU6NGs=",
+                    "presentationType": "_4K",
+                    "monetizationType": "FLATRATE",
+                    "newElementCount": 5,
+                    "retailPrice": null,
+                    "retailPriceValue": null,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": null,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8OA==",
+                        "packageId": 8,
+                        "clearName": "Netflix",
+                        "shortName": "nfx",
+                        "technicalName": "netflix",
+                        "icon": "/icon/207360008/s100/netflix.{format}",
+                        "iconWide": "/icon_wide/321739379/s160/netflix.{format}",
+                        "planOffers": [
+                            {
+                                "title": "Standard monthly",
+                                "retailPrice": "$17.99",
+                                "isTrial": false,
+                                "durationDays": 30,
+                                "retailPriceValue": 17.98,
+                                "children": [],
+                                "__typename": "PackagePlanOffer"
+                            },
+                            {
+                                "title": "Premium monthly",
+                                "retailPrice": "$24.99",
+                                "isTrial": false,
+                                "durationDays": 30,
+                                "retailPriceValue": 24.99,
+                                "children": [],
+                                "__typename": "PackagePlanOffer"
+                            }
+                        ],
+                        "__typename": "Package"
+                    },
+                    "plans": [
+                        {
+                            "title": "Standard monthly",
+                            "retailPrice": "$17.99",
+                            "isTrial": false,
+                            "durationDays": 30,
+                            "retailPriceValue": 17.98,
+                            "children": [],
+                            "__typename": "PackagePlanOffer"
+                        },
+                        {
+                            "title": "Premium monthly",
+                            "retailPrice": "$24.99",
+                            "isTrial": false,
+                            "durationDays": 30,
+                            "retailPriceValue": 24.99,
+                            "children": [],
+                            "__typename": "PackagePlanOffer"
+                        }
+                    ],
+                    "standardWebURL": "https://www.netflix.com/title/70143836",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 5,
+                    "availableTo": null,
+                    "subtitleLanguages": [
+                        "en",
+                        "es"
+                    ],
+                    "videoTechnology": [],
+                    "audioTechnology": [],
+                    "audioLanguages": [
+                        "en",
+                        "es"
+                    ],
+                    "__typename": "Offer"
+                },
+                {
+                    "id": "b2Z8dHM0OlVTOjE3OTY6ZmxhdHJhdGU6aGQ=",
+                    "presentationType": "HD",
+                    "monetizationType": "FLATRATE",
+                    "newElementCount": 5,
+                    "retailPrice": null,
+                    "retailPriceValue": null,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": null,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8MTc5Ng==",
+                        "packageId": 1796,
+                        "clearName": "Netflix Standard with Ads",
+                        "shortName": "nfa",
+                        "technicalName": "netflixbasicwithads",
+                        "icon": "/icon/330025803/s100/netflixbasicwithads.{format}",
+                        "iconWide": "/icon_wide/330025832/s160/netflixbasicwithads.{format}",
+                        "planOffers": [
+                            {
+                                "title": "Standard with ads monthly",
+                                "retailPrice": "$7.99",
+                                "isTrial": false,
+                                "durationDays": 30,
+                                "retailPriceValue": 7.99,
+                                "children": [],
+                                "__typename": "PackagePlanOffer"
+                            }
+                        ],
+                        "__typename": "Package"
+                    },
+                    "plans": [
+                        {
+                            "title": "Standard with ads monthly",
+                            "retailPrice": "$7.99",
+                            "isTrial": false,
+                            "durationDays": 30,
+                            "retailPriceValue": 7.99,
+                            "children": [],
+                            "__typename": "PackagePlanOffer"
+                        }
+                    ],
+                    "standardWebURL": "https://www.netflix.com/title/70143836",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 5,
+                    "availableTo": null,
+                    "subtitleLanguages": [
+                        "en",
+                        "es"
+                    ],
+                    "videoTechnology": [],
+                    "audioTechnology": [],
+                    "audioLanguages": [
+                        "en",
+                        "es"
+                    ],
+                    "__typename": "Offer"
+                }
+            ],
+            "buy": [
+                {
+                    "id": "b2Z8dHM0OlVTOjc6YnV5Omhk",
+                    "presentationType": "HD",
+                    "monetizationType": "BUY",
+                    "newElementCount": 5,
+                    "retailPrice": "$44.96",
+                    "retailPriceValue": 44.96,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": 109.95,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8Nw==",
+                        "packageId": 7,
+                        "clearName": "Fandango At Home",
+                        "shortName": "vdu",
+                        "technicalName": "vudu",
+                        "icon": "/icon/322380782/s100/vudu.{format}",
+                        "iconWide": "/icon_wide/322149958/s160/vudu.{format}",
+                        "planOffers": [],
+                        "__typename": "Package"
+                    },
+                    "plans": [],
+                    "standardWebURL": "https://athome.fandango.com/content/browse/details/Breaking-Bad-Season-1/207559",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 5,
+                    "availableTo": null,
+                    "subtitleLanguages": [],
+                    "videoTechnology": [],
+                    "audioTechnology": [],
+                    "audioLanguages": [
+                        "en"
+                    ],
+                    "__typename": "Offer",
+                    "offerSeasons": [
+                        "tss25",
+                        "tss27",
+                        "tss28",
+                        "tss29",
+                        "tss26"
+                    ],
+                    "minRetailPrice": "$2.99"
+                },
+                {
+                    "id": "b2Z8dHM0OlVTOjEwOmJ1eTo0aw==",
+                    "presentationType": "_4K",
+                    "monetizationType": "BUY",
+                    "newElementCount": 5,
+                    "retailPrice": "$104.95",
+                    "retailPriceValue": 104.95,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": 132.75,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8MTA=",
+                        "packageId": 10,
+                        "clearName": "Amazon Video",
+                        "shortName": "amz",
+                        "technicalName": "amazon",
+                        "icon": "/icon/430993/s100/amazon.{format}",
+                        "iconWide": "/icon_wide/322150880/s160/amazon.{format}",
+                        "planOffers": [],
+                        "__typename": "Package"
+                    },
+                    "plans": [],
+                    "standardWebURL": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.58a9f75a-c09b-f345-f535-6d38b35e9072",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 5,
+                    "availableTo": null,
+                    "subtitleLanguages": [],
+                    "videoTechnology": [
+                        ""
+                    ],
+                    "audioTechnology": [],
+                    "audioLanguages": [],
+                    "__typename": "Offer",
+                    "offerSeasons": [
+                        "tss25",
+                        "tss27",
+                        "tss28",
+                        "tss29",
+                        "tss26"
+                    ],
+                    "minRetailPrice": "$3.99"
+                },
+                {
+                    "id": "b2Z8dHM0OlVTOjI6YnV5Omhk",
+                    "presentationType": "HD",
+                    "monetizationType": "BUY",
+                    "newElementCount": 4,
+                    "retailPrice": "$89.96",
+                    "retailPriceValue": 89.96,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": 39.96,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8Mg==",
+                        "packageId": 2,
+                        "clearName": "Apple TV",
+                        "shortName": "itu",
+                        "technicalName": "itunes",
+                        "icon": "/icon/190848813/s100/itunes.{format}",
+                        "iconWide": "/icon_wide/322150876/s160/itunes.{format}",
+                        "planOffers": [],
+                        "__typename": "Package"
+                    },
+                    "plans": [],
+                    "standardWebURL": "https://tv.apple.com/us/show/breaking-bad/umc.cmc.1v90fu25sgywa1e14jwnrt9uc?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv_12",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 4,
+                    "availableTo": null,
+                    "subtitleLanguages": [],
+                    "videoTechnology": [],
+                    "audioTechnology": [],
+                    "audioLanguages": [],
+                    "__typename": "Offer",
+                    "offerSeasons": [
+                        "tss25",
+                        "tss27",
+                        "tss28",
+                        "tss29"
+                    ],
+                    "minRetailPrice": "$2.99"
+                }
+            ],
+            "rent": [],
+            "free": [],
+            "fast": [],
+            "bundles": [],
+            "promotedBundles": [],
+            "promotedOffers": [
+                {
+                    "id": "b2Z8dHM0OlVTOjEwOmJ1eTo0aw==",
+                    "presentationType": "_4K",
+                    "monetizationType": "BUY",
+                    "newElementCount": 5,
+                    "retailPrice": "$104.95",
+                    "retailPriceValue": 104.95,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": 132.75,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8MTA=",
+                        "packageId": 10,
+                        "clearName": "Amazon Video",
+                        "shortName": "amz",
+                        "technicalName": "amazon",
+                        "icon": "/icon/430993/s100/amazon.{format}",
+                        "iconWide": "/icon_wide/322150880/s160/amazon.{format}",
+                        "planOffers": [],
+                        "__typename": "Package"
+                    },
+                    "plans": [],
+                    "standardWebURL": "https://watch.amazon.com/detail?gti=amzn1.dv.gti.58a9f75a-c09b-f345-f535-6d38b35e9072",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 5,
+                    "availableTo": null,
+                    "subtitleLanguages": [],
+                    "videoTechnology": [
+                        ""
+                    ],
+                    "audioTechnology": [],
+                    "audioLanguages": [],
+                    "__typename": "Offer",
+                    "minRetailPrice": "$3.99"
+                },
+                {
+                    "id": "b2Z8dHM0OlVTOjI6YnV5Omhk",
+                    "presentationType": "HD",
+                    "monetizationType": "BUY",
+                    "newElementCount": 4,
+                    "retailPrice": "$89.96",
+                    "retailPriceValue": 89.96,
+                    "currency": "USD",
+                    "lastChangeRetailPriceValue": 39.96,
+                    "type": "AGGREGATED",
+                    "country": "US",
+                    "package": {
+                        "id": "cGF8Mg==",
+                        "packageId": 2,
+                        "clearName": "Apple TV",
+                        "shortName": "itu",
+                        "technicalName": "itunes",
+                        "icon": "/icon/190848813/s100/itunes.{format}",
+                        "iconWide": "/icon_wide/322150876/s160/itunes.{format}",
+                        "planOffers": [],
+                        "__typename": "Package"
+                    },
+                    "plans": [],
+                    "standardWebURL": "https://tv.apple.com/us/show/breaking-bad/umc.cmc.1v90fu25sgywa1e14jwnrt9uc?at=1000l3V2&ct=app_tv&itscg=30200&itsct=justwatch_tv_12",
+                    "preAffiliatedStandardWebURL": null,
+                    "streamUrl": null,
+                    "streamUrlExternalPlayer": null,
+                    "elementCount": 4,
+                    "availableTo": null,
+                    "subtitleLanguages": [],
+                    "videoTechnology": [],
+                    "audioTechnology": [],
+                    "audioLanguages": [],
+                    "__typename": "Offer",
+                    "minRetailPrice": "$2.99"
+                }
+            ]
+        }
+    }
+}
