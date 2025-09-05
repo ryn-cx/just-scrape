@@ -29,7 +29,7 @@ def download(variables: Variables) -> dict[str, Any]:
 
 
 def parse(data: dict[str, Any]) -> UrlV2:
-    return parse_response(ModelItem, data).data.url_v2
+    return parse_response(ModelItem, data, "get_title_detail_article").data.url_v2
 
 
 def get_title_detail_article(

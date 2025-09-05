@@ -37,7 +37,7 @@ def download(variables: Variables) -> dict[str, Any]:
 
 
 def parse(data: dict[str, Any]) -> Node:
-    return parse_response(ModelItem, data).data.node
+    return parse_response(ModelItem, data, "get_season_episodes").data.node
 
 
 def get_season_episodes(  # noqa: PLR0913

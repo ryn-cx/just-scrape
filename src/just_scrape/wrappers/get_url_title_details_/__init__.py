@@ -74,7 +74,7 @@ def download(variables: Variables) -> dict[str, Any]:
 
 
 def parse(data: dict[str, Any]) -> UrlV2:
-    return parse_response(ModelItem, data).data.url_v2
+    return parse_response(ModelItem, data, "get_url_title_details").data.url_v2
 
 
 def get_url_title_details(  # noqa: PLR0913

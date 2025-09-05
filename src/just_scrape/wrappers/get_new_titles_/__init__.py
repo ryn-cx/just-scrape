@@ -84,7 +84,7 @@ def download(variables: Variables) -> dict[str, Any]:
 
 
 def parse(data: dict[str, Any]) -> NewTitles:
-    return parse_response(ModelItem, data).data.new_titles
+    return parse_response(ModelItem, data, "get_new_titles").data.new_titles
 
 
 def get_new_titles(  # noqa: PLR0913

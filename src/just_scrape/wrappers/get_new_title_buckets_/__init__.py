@@ -74,7 +74,11 @@ def download(variables: Variables) -> dict[str, Any]:
 
 
 def parse(data: dict[str, Any]) -> NewTitleBuckets:
-    return parse_response(ModelItem, data).data.new_title_buckets
+    return parse_response(
+        ModelItem,
+        data,
+        "get_new_title_buckets",
+    ).data.new_title_buckets
 
 
 def get_new_title_buckets(  # noqa: PLR0913

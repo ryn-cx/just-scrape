@@ -5,7 +5,7 @@ from typing import Any
 
 JUST_SCRAPE_DIR = Path(__file__).parent.parent
 ROOT_DIR = JUST_SCRAPE_DIR.parent.parent
-DATA_DIR = JUST_SCRAPE_DIR / "data"
+SCHEMA_DIR = JUST_SCRAPE_DIR / "schema"
 
 
 def update_response(endpoint: Path) -> None:
@@ -19,7 +19,7 @@ def update_response(endpoint: Path) -> None:
         json.loads(file.read_text()) for file in response_folder.glob("*.json")
     ]
 
-    combined_schema_path = DATA_DIR / "temp.json"
+    combined_schema_path = SCHEMA_DIR / "temp.json"
     combined_schema_path.write_text(json.dumps(file_content))
 
     # Generate Python schema using datamodel-codegen
@@ -64,7 +64,7 @@ def update_request(endpoint: Path) -> None:
         json.loads(file.read_text()) for file in request_folder.glob("*.json")
     ]
 
-    combined_schema_path = DATA_DIR / "temp.json"
+    combined_schema_path = SCHEMA_DIR / "temp.json"
     combined_schema_path.write_text(json.dumps(file_content))
 
     # Generate Python schema using datamodel-codegen
@@ -115,7 +115,7 @@ def update_query(endpoint: Path) -> None:
 
 
 def update_all_schemas() -> None:
-    for endpoint in DATA_DIR.glob("*"):
+    for endpoint in SCHEMA_DIR.glob("*"):
         if endpoint.is_dir():
             update_response(endpoint)
             update_request(endpoint)
