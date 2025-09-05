@@ -24,7 +24,7 @@ def update_response(endpoint: Path) -> None:
     combined_schema_path.write_text(json.dumps(file_content))
 
     # Generate Python schema using datamodel-codegen
-    output_schema = JUST_SCRAPE_DIR / f"wrappers/_{name}/response.py"
+    output_schema = JUST_SCRAPE_DIR / f"wrappers/{name}_/response.py"
     output_schema.parent.mkdir(parents=True, exist_ok=True)
     command = [
         "uv",
@@ -69,7 +69,7 @@ def update_request(endpoint: Path) -> None:
     combined_schema_path.write_text(json.dumps(file_content))
 
     # Generate Python schema using datamodel-codegen
-    output_schema = JUST_SCRAPE_DIR / f"wrappers/_{name}/request.py"
+    output_schema = JUST_SCRAPE_DIR / f"wrappers/{name}_/request.py"
     output_schema.parent.mkdir(parents=True, exist_ok=True)
     command = [
         "uv",
@@ -110,7 +110,7 @@ def update_query(endpoint: Path) -> None:
         return
 
     file_content = json.loads(file.read_text())
-    output_file = JUST_SCRAPE_DIR / f"wrappers/_{name}/query.py"
+    output_file = JUST_SCRAPE_DIR / f"wrappers/{name}_/query.py"
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(f'# ruff: noqa: E501\nQUERY="""{file_content["query"]}"""')
 
