@@ -5,7 +5,7 @@ from just_scrape.lib import graphql_request, parse_response
 
 from .query import QUERY
 from .request import Filter, Variables
-from .response import ModelItem, NewTitles
+from .response import Edge, ModelItem, NewTitles
 
 
 def get_variables(  # noqa: PLR0913
@@ -138,3 +138,62 @@ def get_new_titles(  # noqa: PLR0913
     data = download(variables=variables)
 
     return parse(data)
+
+
+def get_all_new_titles(  # noqa: PLR0913
+    *,
+    available_to_packages: list[str] | None = None,
+    country: str = "US",
+    date: str | None = None,
+    filter_age_certifications: list[Any] | None = None,
+    filter_exclude_genres: list[Any] | None = None,
+    filter_exclude_irrelevant_titles: bool = False,
+    filter_exclude_production_countries: list[Any] | None = None,
+    filter_genres: list[Any] | None = None,
+    filter_monetization_types: list[Any] | None = None,
+    filter_object_types: list[Any] | None = None,
+    filter_packages: list[str] | None = None,
+    filter_presentation_types: list[Any] | None = None,
+    filter_production_countries: list[Any] | None = None,
+    filter_subgenres: list[Any] | None = None,
+    language: str = "en",
+    page_type: str = "NEW",
+    platform: str = "WEB",
+    price_drops: bool = False,
+    show_date_badge: bool = False,
+) -> list[Edge]:
+    all_edges: list[Edge] = []
+    after = None
+
+    while True:
+        response = get_new_titles(
+            after=after,
+            available_to_packages=available_to_packages,
+            country=country,
+            date=date,
+            filter_age_certifications=filter_age_certifications,
+            filter_exclude_genres=filter_exclude_genres,
+            filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+            filter_exclude_production_countries=filter_exclude_production_countries,
+            filter_genres=filter_genres,
+            filter_monetization_types=filter_monetization_types,
+            filter_object_types=filter_object_types,
+            filter_packages=filter_packages,
+            filter_presentation_types=filter_presentation_types,
+            filter_production_countries=filter_production_countries,
+            filter_subgenres=filter_subgenres,
+            language=language,
+            page_type=page_type,
+            platform=platform,
+            price_drops=price_drops,
+            show_date_badge=show_date_badge,
+        )
+
+        all_edges.extend(response.edges)
+
+        if not response.page_info.has_next_page:
+            break
+
+        after = response.page_info.end_cursor
+
+    return all_edges

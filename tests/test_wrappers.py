@@ -30,6 +30,15 @@ class TestGetNewTitles:
             file_content = json.loads(file.read_text())
             get_new_titles.parse(file_content)
 
+    def test_get_all_new_titles(self) -> None:
+        new_titles = get_new_titles.get_all_new_titles(
+            filter_packages=["amp"],
+            available_to_packages=["amp"],
+        )
+        # Amazon seems to always have at least 10 new episode every day so this will
+        # probably always be true without looking weird hitting JustWatch's backlog.
+        assert len(new_titles) > get_new_titles.get_variables().first
+
 
 class TestGetNewTitleBuckets:
     def test_parsing(self) -> None:
