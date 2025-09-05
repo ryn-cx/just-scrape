@@ -60,7 +60,7 @@ def parse_response[T: BaseModel](
             suffix=".json",
         ) as file:
             file.write(json.dumps(data).encode("utf-8"))
-        endpoint_folder = Path(__file__).parent / "data" / name
+        endpoint_folder = Path(__file__).parent / "schema" / name
         response_folder = endpoint_folder / "response"
         temp_file = Path(file.name)
         new_json_path = response_folder / temp_file.name
