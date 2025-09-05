@@ -30,8 +30,8 @@ class NewOffer(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     package: Package
-    retail_price: None = Field(..., alias="retailPrice")
-    retail_price_value: None = Field(..., alias="retailPriceValue")
+    retail_price: str | None = Field(..., alias="retailPrice")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     last_change_retail_price_value: None = Field(
         ...,
         alias="lastChangeRetailPriceValue",
@@ -52,7 +52,7 @@ class Scoring(BaseModel):
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
     tmdb_score: float | None = Field(..., alias="tmdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
-    certified_fresh: None = Field(..., alias="certifiedFresh")
+    certified_fresh: bool | None = Field(..., alias="certifiedFresh")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -69,14 +69,14 @@ class Content(BaseModel):
     poster_url: str = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
-    season_number: int | None = Field(None, alias="seasonNumber")
-    field__typename: str = Field(..., alias="__typename")
     is_released: bool = Field(..., alias="isReleased")
+    field__typename: str = Field(..., alias="__typename")
+    season_number: int | None = Field(None, alias="seasonNumber")
 
 
 class Scoring1(BaseModel):
-    imdb_votes: int = Field(..., alias="imdbVotes")
-    imdb_score: float = Field(..., alias="imdbScore")
+    imdb_votes: int | None = Field(..., alias="imdbVotes")
+    imdb_score: float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
     tmdb_score: float | None = Field(..., alias="tmdbScore")
     field__typename: str = Field(..., alias="__typename")
@@ -118,14 +118,14 @@ class Node(BaseModel):
     content: Content
     likelist_entry: None = Field(..., alias="likelistEntry")
     dislikelist_entry: None = Field(..., alias="dislikelistEntry")
-    show: Show | None = None
     seenlist_entry: None = Field(None, alias="seenlistEntry")
     watchlist_entry_v2: None = Field(None, alias="watchlistEntryV2")
+    show: Show | None = None
 
 
 class Edge(BaseModel):
     cursor: str
-    new_offer: NewOffer = Field(..., alias="newOffer")
+    new_offer: NewOffer | None = Field(..., alias="newOffer")
     node: Node
     field__typename: str = Field(..., alias="__typename")
 
