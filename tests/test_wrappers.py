@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 import just_scrape.wrappers._get_buy_box_offers as get_buy_box_offers
 import just_scrape.wrappers._get_content_providers as get_content_providers
 import just_scrape.wrappers._get_new_title_buckets as get_new_title_buckets
@@ -49,6 +51,11 @@ class TestGetUrlTitleDetails:
     def test_get_tv_show_details(self) -> None:
         path = "/us/tv-show/south-park"
         get_url_title_details.get_url_title_details(full_path=path)
+
+    def test_invalid_url(self) -> None:
+        path = "/us/tv-show/a"
+        with pytest.raises(ValueError, match="URL not found"):
+            get_url_title_details.get_url_title_details(full_path=path)
 
 
 class TestGetTitleDetailArticle:

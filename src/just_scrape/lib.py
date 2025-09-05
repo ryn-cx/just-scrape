@@ -6,8 +6,6 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
-from just_scrape.utils.update_files import update_response
-
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 11.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko)"
@@ -37,6 +35,12 @@ def graphql_request(
         msg = f"Unexpected response status code: {response.status_code}"
         raise ValueError(msg)
 
+    output = response.json()
+
+    if output.get("errors"):
+        msg = f"GraphQL errors occurred: {output['errors']}"
+        raise ValueError(msg)
+
     return response.json()
 
 
@@ -59,7 +63,6 @@ def parse_response[T: BaseModel](
         temp_file = Path(file.name)
         new_json_path = response_folder / temp_file.name
         temp_file.rename(new_json_path)
-        update_response(endpoint_folder)
 
-        msg = f"Code automatically updated, run again. Error parsing response: {e}.\n"
+        msg = "Parsing error, try updating the schemas."
         raise ValueError(msg) from e
