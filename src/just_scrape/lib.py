@@ -60,13 +60,13 @@ def parse_response[T: BaseModel](
             suffix=".json",
         ) as file:
             file.write(json.dumps(data).encode("utf-8"))
-        endpoint_schema_folder = Path(__file__).parent / "schema" / name
-        response_folder = endpoint_schema_folder / "response"
+        endpoint_folder = Path(__file__).parent / "data" / name
+        response_folder = endpoint_folder / "response"
         temp_file = Path(file.name)
         new_json_path = response_folder / temp_file.name
         new_json_path.parent.mkdir(parents=True, exist_ok=True)
         temp_file.rename(new_json_path)
-        update_response(endpoint_schema_folder)
+        update_response(endpoint_folder)
 
-        msg = "Parsing error, try updating the schemas."
+        msg = "Parsing error, Pydantic updated, try again."
         raise ValueError(msg) from e
