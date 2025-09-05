@@ -11,38 +11,40 @@ import just_scrape.wrappers.get_title_detail_article_ as get_title_detail_articl
 import just_scrape.wrappers.get_url_title_details_ as get_url_title_details
 
 ROOT_DIR = Path(__file__).parent.parent
-DATA_DIR = ROOT_DIR / "src/just_scrape/data"
+SCHEMA_DIR = ROOT_DIR / "src/just_scrape/schema"
 TEST_FILE_DIR = ROOT_DIR / "tests/files"
 
 
 class TestParsing:
     def test_get_buy_box_offers(self) -> None:
-        for file in (DATA_DIR / "get_buy_box_offers" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_buy_box_offers" / "response").glob("*.json"):
             file_content = json.loads(file.read_text())
             get_buy_box_offers.parse(file_content)
 
     def test_get_new_titles(self) -> None:
-        for file in (DATA_DIR / "get_new_titles" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_new_titles" / "response").glob("*.json"):
             file_content = json.loads(file.read_text())
             get_new_titles.parse(file_content)
 
     def test_get_new_title_buckets(self) -> None:
-        for file in (DATA_DIR / "get_new_title_buckets" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_new_title_buckets" / "response").glob("*.json"):
             file_content = json.loads(file.read_text())
             get_new_title_buckets.parse(file_content)
 
     def test_get_url_title_details(self) -> None:
-        for file in (DATA_DIR / "get_url_title_details" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_url_title_details" / "response").glob("*.json"):
             file_content = json.loads(file.read_text())
             get_url_title_details.parse(file_content)
 
     def test_get_title_detail_article(self) -> None:
-        for file in (DATA_DIR / "get_title_detail_article" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_title_detail_article" / "response").glob(
+            "*.json",
+        ):
             file_content = json.loads(file.read_text())
             get_title_detail_article.parse(file_content)
 
     def test_get_season_episodes(self) -> None:
-        for file in (DATA_DIR / "get_season_episodes" / "response").glob("*.json"):
+        for file in (SCHEMA_DIR / "get_season_episodes" / "response").glob("*.json"):
             file_content = json.loads(file.read_text())
             get_season_episodes.parse(file_content)
 
