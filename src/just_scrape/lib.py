@@ -6,6 +6,8 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
+from just_scrape.utils.update_files import update_response
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 11.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko)"
@@ -58,11 +60,13 @@ def parse_response[T: BaseModel](
             suffix=".json",
         ) as file:
             file.write(json.dumps(data).encode("utf-8"))
-        endpoint_folder = Path(__file__).parent / "data" / name
-        response_folder = endpoint_folder / "response"
+        endpoint_schema_folder = Path(__file__).parent / "schema" / name
+        response_folder = endpoint_schema_folder / "response"
         temp_file = Path(file.name)
         new_json_path = response_folder / temp_file.name
+        new_json_path.parent.mkdir(parents=True, exist_ok=True)
         temp_file.rename(new_json_path)
+        update_response(endpoint_schema_folder)
 
         msg = "Parsing error, try updating the schemas."
         raise ValueError(msg) from e

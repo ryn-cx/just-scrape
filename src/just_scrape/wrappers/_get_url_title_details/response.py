@@ -390,6 +390,141 @@ class SimilarTitlesV2(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class SeenState(BaseModel):
+    progress: int
+    seen_episode_count: int | None = Field(None, alias="seenEpisodeCount")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Package4(BaseModel):
+    id: str
+    short_name: str = Field(..., alias="shortName")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class AvailableToItem1(BaseModel):
+    available_to_date: str = Field(..., alias="availableToDate")
+    available_count_down: int = Field(..., alias="availableCountDown")
+    package: Package4
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Package5(BaseModel):
+    clear_name: str = Field(..., alias="clearName")
+    short_name: str = Field(..., alias="shortName")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Offer1(BaseModel):
+    package: Package5
+    monetization_type: str = Field(..., alias="monetizationType")
+    retail_price: str = Field(..., alias="retailPrice")
+    retail_price_value: float = Field(..., alias="retailPriceValue")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class UpcomingRelease1(BaseModel):
+    release_date: str = Field(..., alias="releaseDate")
+    release_count_down: int = Field(..., alias="releaseCountDown")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Content2(BaseModel):
+    poster_url: str = Field(..., alias="posterUrl")
+    season_number: int = Field(..., alias="seasonNumber")
+    full_path: str = Field(..., alias="fullPath")
+    title: str
+    upcoming_releases: list[UpcomingRelease1] = Field(..., alias="upcomingReleases")
+    is_released: bool = Field(..., alias="isReleased")
+    original_release_year: int = Field(..., alias="originalReleaseYear")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Content3(BaseModel):
+    title: str
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Show(BaseModel):
+    field__typename: str = Field(..., alias="__typename")
+    id: str
+    object_id: int = Field(..., alias="objectId")
+    object_type: str = Field(..., alias="objectType")
+    watchlist_entry_v2: None = Field(..., alias="watchlistEntryV2")
+    content: Content3
+
+
+class FallBackClips1(BaseModel):
+    clips: list[Clip]
+    videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
+    dailymotion_clips: list[DailymotionClip] = Field(..., alias="dailymotionClips")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Season(BaseModel):
+    id: str
+    object_id: int = Field(..., alias="objectId")
+    object_type: str = Field(..., alias="objectType")
+    total_episode_count: int = Field(..., alias="totalEpisodeCount")
+    available_to: list[AvailableToItem1] = Field(..., alias="availableTo")
+    offers: list[Offer1]
+    content: Content2
+    show: Show
+    fall_back_clips: FallBackClips1 = Field(..., alias="fallBackClips")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Package6(BaseModel):
+    id: str
+    clear_name: str = Field(..., alias="clearName")
+    package_id: int = Field(..., alias="packageId")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FlatrateItem(BaseModel):
+    id: str
+    package: Package6
+    field__typename: str = Field(..., alias="__typename")
+
+
+class BuyItem(BaseModel):
+    id: str
+    package: Package6
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FreeItem(BaseModel):
+    id: str
+    package: Package6
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Content4(BaseModel):
+    field__typename: str = Field(..., alias="__typename")
+    title: str
+    short_description: str = Field(..., alias="shortDescription")
+    episode_number: int = Field(..., alias="episodeNumber")
+    season_number: int = Field(..., alias="seasonNumber")
+    is_released: bool = Field(..., alias="isReleased")
+    runtime: int
+    upcoming_releases: list = Field(..., alias="upcomingReleases")
+
+
+class RecentEpisode(BaseModel):
+    id: str
+    object_id: int = Field(..., alias="objectId")
+    object_type: str = Field(..., alias="objectType")
+    seenlist_entry: None = Field(..., alias="seenlistEntry")
+    unique_offer_count: int = Field(..., alias="uniqueOfferCount")
+    flatrate: list[FlatrateItem]
+    buy: list[BuyItem]
+    rent: list
+    free: list[FreeItem]
+    fast: list
+    content: Content4
+    field__typename: str = Field(..., alias="__typename")
+
+
 class PlanOffer2(BaseModel):
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -400,7 +535,7 @@ class PlanOffer2(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package4(BaseModel):
+class Package9(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -422,7 +557,7 @@ class Plan1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class FlatrateItem(BaseModel):
+class FlatrateItem1(BaseModel):
     id: str
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
@@ -436,7 +571,7 @@ class FlatrateItem(BaseModel):
     )
     type: str
     country: str
-    package: Package4
+    package: Package9
     plans: list[Plan1]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -454,7 +589,7 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package5(BaseModel):
+class Package10(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -466,7 +601,7 @@ class Package5(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class BuyItem(BaseModel):
+class BuyItem1(BaseModel):
     id: str
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
@@ -480,7 +615,7 @@ class BuyItem(BaseModel):
     )
     type: str
     country: str
-    package: Package5
+    package: Package10
     plans: list
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -510,7 +645,7 @@ class PlanOffer3(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package6(BaseModel):
+class Package11(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -532,7 +667,7 @@ class Plan2(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class FreeItem(BaseModel):
+class FreeItem1(BaseModel):
     id: str
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
@@ -546,7 +681,7 @@ class FreeItem(BaseModel):
     )
     type: str
     country: str
-    package: Package6
+    package: Package11
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -564,7 +699,7 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package7(BaseModel):
+class Package12(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -590,7 +725,7 @@ class FastItem(BaseModel):
     )
     type: str
     country: str
-    package: Package7
+    package: Package12
     plans: list
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -610,7 +745,7 @@ class FastItem(BaseModel):
     available_to_time: str = Field(..., alias="availableToTime")
 
 
-class Package8(BaseModel):
+class Package13(BaseModel):
     icon: str
     id: str
     icon_wide: str = Field(..., alias="iconWide")
@@ -625,11 +760,11 @@ class Node1(BaseModel):
     icon: str
     technical_name: str = Field(..., alias="technicalName")
     bundle_id: int = Field(..., alias="bundleId")
-    packages: list[Package8]
+    packages: list[Package13]
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package9(BaseModel):
+class Package14(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -641,7 +776,7 @@ class Package9(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Offer1(BaseModel):
+class Offer2(BaseModel):
     id: str
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
@@ -655,7 +790,7 @@ class Offer1(BaseModel):
     )
     type: str
     country: str
-    package: Package9
+    package: Package14
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -676,11 +811,11 @@ class Offer1(BaseModel):
 class Bundle(BaseModel):
     node: Node1
     promotion_url: str = Field(..., alias="promotionUrl")
-    offer: Offer1
+    offer: Offer2
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package10(BaseModel):
+class Package15(BaseModel):
     id: str
     package_id: int = Field(..., alias="packageId")
     clear_name: str = Field(..., alias="clearName")
@@ -706,7 +841,7 @@ class PromotedOffer(BaseModel):
     )
     type: str
     country: str
-    package: Package10
+    package: Package15
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -768,7 +903,7 @@ class Interactions1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Content3(BaseModel):
+class Content6(BaseModel):
     title: str
     poster_url: str | None = Field(..., alias="posterUrl")
     full_path: str = Field(..., alias="fullPath")
@@ -780,37 +915,37 @@ class Content3(BaseModel):
     season_number: int | None = Field(None, alias="seasonNumber")
 
 
-class SeenState(BaseModel):
+class SeenState1(BaseModel):
     progress: int
     seen_episode_count: int = Field(..., alias="seenEpisodeCount")
     field__typename: str = Field(..., alias="__typename")
 
 
-class Content4(BaseModel):
+class Content7(BaseModel):
     title: str
     field__typename: str = Field(..., alias="__typename")
 
 
-class Show(BaseModel):
+class Show1(BaseModel):
     id: str
     object_id: int = Field(..., alias="objectId")
     object_type: str = Field(..., alias="objectType")
     field__typename: str = Field(..., alias="__typename")
-    content: Content4
+    content: Content7
 
 
 class Node2(BaseModel):
     id: str
     object_id: int = Field(..., alias="objectId")
     object_type: str = Field(..., alias="objectType")
-    content: Content3
+    content: Content6
     watchlist_entry_v2: None = Field(None, alias="watchlistEntryV2")
     likelist_entry: None = Field(None, alias="likelistEntry")
     dislikelist_entry: None = Field(None, alias="dislikelistEntry")
     field__typename: str = Field(..., alias="__typename")
+    seen_state: SeenState1 | None = Field(None, alias="seenState")
+    show: Show1 | None = None
     seenlist_entry: None = Field(None, alias="seenlistEntry")
-    seen_state: SeenState | None = Field(None, alias="seenState")
-    show: Show | None = None
 
 
 class Titles1Item(BaseModel):
@@ -818,7 +953,7 @@ class Titles1Item(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Content2(BaseModel):
+class Content5(BaseModel):
     titles: list[Title] | None = Field(None, alias="Titles")
     field__typename: str = Field(..., alias="__typename")
     titles_1: list[Titles1Item] | None = Field(None, alias="titles")
@@ -832,122 +967,32 @@ class Template(BaseModel):
 
 
 class TitleModules(BaseModel):
-    content: Content2
+    content: Content5
     fomo_score: int = Field(..., alias="fomoScore")
     template: Template
     field__typename: str = Field(..., alias="__typename")
 
 
-class SeenState1(BaseModel):
-    progress: int
-    seen_episode_count: int | None = Field(None, alias="seenEpisodeCount")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Package11(BaseModel):
-    id: str
-    short_name: str = Field(..., alias="shortName")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class AvailableToItem1(BaseModel):
-    available_to_date: str = Field(..., alias="availableToDate")
-    available_count_down: int = Field(..., alias="availableCountDown")
-    package: Package11
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Package12(BaseModel):
-    clear_name: str = Field(..., alias="clearName")
-    short_name: str = Field(..., alias="shortName")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Offer2(BaseModel):
-    package: Package12
-    monetization_type: str = Field(..., alias="monetizationType")
-    retail_price: str = Field(..., alias="retailPrice")
-    retail_price_value: float = Field(..., alias="retailPriceValue")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class UpcomingRelease1(BaseModel):
-    release_date: str = Field(..., alias="releaseDate")
-    release_count_down: int = Field(..., alias="releaseCountDown")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Content5(BaseModel):
-    poster_url: str = Field(..., alias="posterUrl")
-    season_number: int = Field(..., alias="seasonNumber")
-    full_path: str = Field(..., alias="fullPath")
-    title: str
-    upcoming_releases: list[UpcomingRelease1] = Field(..., alias="upcomingReleases")
-    is_released: bool = Field(..., alias="isReleased")
-    original_release_year: int = Field(..., alias="originalReleaseYear")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Content6(BaseModel):
-    title: str
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Show1(BaseModel):
-    field__typename: str = Field(..., alias="__typename")
-    id: str
-    object_id: int = Field(..., alias="objectId")
-    object_type: str = Field(..., alias="objectType")
-    watchlist_entry_v2: None = Field(..., alias="watchlistEntryV2")
-    content: Content6
-
-
-class FallBackClips1(BaseModel):
-    clips: list[Clip]
-    videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
-    dailymotion_clips: list[DailymotionClip] = Field(..., alias="dailymotionClips")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Season(BaseModel):
-    id: str
-    object_id: int = Field(..., alias="objectId")
-    object_type: str = Field(..., alias="objectType")
-    total_episode_count: int = Field(..., alias="totalEpisodeCount")
-    available_to: list[AvailableToItem1] = Field(..., alias="availableTo")
-    offers: list[Offer2]
-    content: Content5
-    show: Show1
-    fall_back_clips: FallBackClips1 = Field(..., alias="fallBackClips")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Package13(BaseModel):
+class Package16(BaseModel):
     id: str
     clear_name: str = Field(..., alias="clearName")
     package_id: int = Field(..., alias="packageId")
     field__typename: str = Field(..., alias="__typename")
 
 
-class FlatrateItem1(BaseModel):
+class FlatrateItem2(BaseModel):
     id: str
-    package: Package13
+    package: Package16
     field__typename: str = Field(..., alias="__typename")
 
 
-class BuyItem1(BaseModel):
+class BuyItem2(BaseModel):
     id: str
-    package: Package13
+    package: Package16
     field__typename: str = Field(..., alias="__typename")
 
 
-class FreeItem1(BaseModel):
-    id: str
-    package: Package13
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Content7(BaseModel):
+class Content8(BaseModel):
     field__typename: str = Field(..., alias="__typename")
     title: str
     short_description: str = Field(..., alias="shortDescription")
@@ -956,33 +1001,6 @@ class Content7(BaseModel):
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
     upcoming_releases: list = Field(..., alias="upcomingReleases")
-
-
-class RecentEpisode(BaseModel):
-    id: str
-    object_id: int = Field(..., alias="objectId")
-    object_type: str = Field(..., alias="objectType")
-    seenlist_entry: None = Field(..., alias="seenlistEntry")
-    unique_offer_count: int = Field(..., alias="uniqueOfferCount")
-    flatrate: list[FlatrateItem1]
-    buy: list[BuyItem1]
-    rent: list
-    free: list[FreeItem1]
-    fast: list
-    content: Content7
-    field__typename: str = Field(..., alias="__typename")
-
-
-class FlatrateItem2(BaseModel):
-    id: str
-    package: Package13
-    field__typename: str = Field(..., alias="__typename")
-
-
-class BuyItem2(BaseModel):
-    id: str
-    package: Package13
-    field__typename: str = Field(..., alias="__typename")
 
 
 class Episode(BaseModel):
@@ -996,7 +1014,7 @@ class Episode(BaseModel):
     rent: list
     free: list
     fast: list
-    content: Content7
+    content: Content8
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1103,24 +1121,24 @@ class Node(BaseModel):
     customlist_entries: list | None = Field(None, alias="customlistEntries")
     similar_titles_v2: SimilarTitlesV2 | None = Field(None, alias="similarTitlesV2")
     permanent_audiences: list[str] | None = Field(None, alias="permanentAudiences")
-    seenlist_entry: None = Field(None, alias="seenlistEntry")
+    total_season_count: int | None = Field(None, alias="totalSeasonCount")
+    seen_state: SeenState | None = Field(None, alias="seenState")
+    tv_show_tracking_entry: None = Field(None, alias="tvShowTrackingEntry")
+    seasons: list[Season] | None = None
+    recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
     offer_count: int = Field(..., alias="offerCount")
     max_offer_updated_at: str = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list = Field(..., alias="offersHistory")
-    flatrate: list[FlatrateItem]
-    buy: list[BuyItem]
+    flatrate: list[FlatrateItem1]
+    buy: list[BuyItem1]
     rent: list
-    free: list[FreeItem]
+    free: list[FreeItem1]
     fast: list[FastItem]
     bundles: list[Bundle]
     promoted_bundles: list = Field(..., alias="promotedBundles")
     promoted_offers: list[PromotedOffer] = Field(..., alias="promotedOffers")
     title_modules: list[TitleModules | None] = Field(..., alias="titleModules")
-    total_season_count: int | None = Field(None, alias="totalSeasonCount")
-    seen_state: SeenState1 | None = Field(None, alias="seenState")
-    tv_show_tracking_entry: None = Field(None, alias="tvShowTrackingEntry")
-    seasons: list[Season] | None = None
-    recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
+    seenlist_entry: None = Field(None, alias="seenlistEntry")
     total_episode_count: int | None = Field(None, alias="totalEpisodeCount")
     episodes: list[Episode] | None = None
     show: Show2 | None = None
