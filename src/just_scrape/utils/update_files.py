@@ -39,6 +39,7 @@ def update_response(endpoint: Path) -> None:
         "--formatters",
         "ruff-check",
         "--disable-timestamp",
+        "--extra-fields=forbid",
     ]
 
     subprocess.run(command, check=True, capture_output=True, text=True)
@@ -46,8 +47,8 @@ def update_response(endpoint: Path) -> None:
     # Remove the last 3 lines which will contain the extra wrapper class used to combine
     # files into a single json file.
     lines = output_schema.read_text().splitlines()
-    lines = "\n".join(lines[:-3])
-    content = "# ruff: noqa: ERA001, E742\n" + lines
+    lines = "\n".join(lines[:-4])
+    content = "# ruff: noqa: ERA001, E742, E501\n" + lines
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
@@ -84,6 +85,7 @@ def update_request(endpoint: Path) -> None:
         "--formatters",
         "ruff-check",
         "--disable-timestamp",
+        "--extra-fields=forbid",
     ]
 
     subprocess.run(command, check=True, capture_output=True, text=True)
@@ -91,7 +93,7 @@ def update_request(endpoint: Path) -> None:
     # Remove the last 3 lines which will contain the extra wrapper class used to combine
     # files into a single json file.
     lines = output_schema.read_text().splitlines()
-    lines = "\n".join(lines[:-3])
+    lines = "\n".join(lines[:-4])
     content = "# ruff: noqa: ERA001\n" + lines
     output_schema.write_text(content)
 

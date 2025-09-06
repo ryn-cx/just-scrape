@@ -4,10 +4,13 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 
 
 class PageInfo(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
     has_previous_page: bool = Field(..., alias="hasPreviousPage")
@@ -16,6 +19,9 @@ class PageInfo(BaseModel):
 
 
 class Package(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     package_id: int = Field(..., alias="packageId")
     short_name: str = Field(..., alias="shortName")
@@ -24,12 +30,18 @@ class Package(BaseModel):
 
 
 class Key(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     date: str
     package: Package
 
 
 class PageInfo1(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
     has_next_page: bool = Field(..., alias="hasNextPage")
@@ -38,26 +50,41 @@ class PageInfo1(BaseModel):
 
 
 class Node(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     total_count: int = Field(..., alias="totalCount")
     page_info: PageInfo1 = Field(..., alias="pageInfo")
     field__typename: str = Field(..., alias="__typename")
 
 
 class Edge(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     key: Key
     node: Node
     field__typename: str = Field(..., alias="__typename")
 
 
 class NewTitleBuckets(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     page_info: PageInfo = Field(..., alias="pageInfo")
     edges: list[Edge]
     field__typename: str = Field(..., alias="__typename")
 
 
 class Data(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     new_title_buckets: NewTitleBuckets = Field(..., alias="newTitleBuckets")
 
 
 class ModelItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     data: Data

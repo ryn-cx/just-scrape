@@ -4,10 +4,13 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 
 
 class Content1(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     synopsis: str
     what_to_know: None = Field(..., alias="whatToKnow")
@@ -15,31 +18,49 @@ class Content1(BaseModel):
 
 
 class Article(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     content: Content1
     field__typename: str = Field(..., alias="__typename")
 
 
 class Content(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     articles: list[Article]
     field__typename: str = Field(..., alias="__typename")
 
 
 class Node(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     content: Content
     field__typename: str = Field(..., alias="__typename")
 
 
 class UrlV2(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     node: Node
     field__typename: str = Field(..., alias="__typename")
 
 
 class Data(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
 class ModelItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     data: Data

@@ -4,10 +4,13 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 
 
 class Package(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     icon: str
     package_id: int = Field(..., alias="packageId")
@@ -20,6 +23,9 @@ class Package(BaseModel):
 
 
 class NewOffer(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     id: str
     standard_web_url: str = Field(..., alias="standardWebURL")
@@ -32,7 +38,7 @@ class NewOffer(BaseModel):
     package: Package
     retail_price: str | None = Field(..., alias="retailPrice")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    last_change_retail_price_value: None = Field(
+    last_change_retail_price_value: float | None = Field(
         ...,
         alias="lastChangeRetailPriceValue",
     )
@@ -42,11 +48,14 @@ class NewOffer(BaseModel):
     available_to: str | None = Field(..., alias="availableTo")
     date_created: str = Field(..., alias="dateCreated")
     new_element_count: int = Field(..., alias="newElementCount")
-    last_change_retail_price: None = Field(..., alias="lastChangeRetailPrice")
-    last_change_percent: int = Field(..., alias="lastChangePercent")
+    last_change_retail_price: str | None = Field(..., alias="lastChangeRetailPrice")
+    last_change_percent: float = Field(..., alias="lastChangePercent")
 
 
 class Scoring(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     imdb_votes: int | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
@@ -57,11 +66,17 @@ class Scoring(BaseModel):
 
 
 class Genre(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     translation: str
     field__typename: str = Field(..., alias="__typename")
 
 
 class Content(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     title: str
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
@@ -75,6 +90,9 @@ class Content(BaseModel):
 
 
 class Scoring1(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     imdb_votes: int | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
@@ -83,6 +101,9 @@ class Scoring1(BaseModel):
 
 
 class Content1(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     title: str
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
@@ -94,11 +115,17 @@ class Content1(BaseModel):
 
 
 class SeenState(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     progress: int
     field__typename: str = Field(..., alias="__typename")
 
 
 class Show(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -111,6 +138,9 @@ class Show(BaseModel):
 
 
 class Node(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -124,6 +154,9 @@ class Node(BaseModel):
 
 
 class Edge(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     cursor: str
     new_offer: NewOffer | None = Field(..., alias="newOffer")
     node: Node
@@ -131,6 +164,9 @@ class Edge(BaseModel):
 
 
 class PageInfo(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     end_cursor: str = Field(..., alias="endCursor")
     has_previous_page: bool = Field(..., alias="hasPreviousPage")
     has_next_page: bool = Field(..., alias="hasNextPage")
@@ -138,6 +174,9 @@ class PageInfo(BaseModel):
 
 
 class NewTitles(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     total_count: int = Field(..., alias="totalCount")
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias="pageInfo")
@@ -145,8 +184,14 @@ class NewTitles(BaseModel):
 
 
 class Data(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     new_titles: NewTitles = Field(..., alias="newTitles")
 
 
 class ModelItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     data: Data

@@ -4,10 +4,13 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 
 
 class Package(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     clear_name: str = Field(..., alias="clearName")
     package_id: int = Field(..., alias="packageId")
@@ -15,18 +18,27 @@ class Package(BaseModel):
 
 
 class FlatrateItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     package: Package
     field__typename: str = Field(..., alias="__typename")
 
 
 class BuyItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     package: Package
     field__typename: str = Field(..., alias="__typename")
 
 
 class Content(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     field__typename: str = Field(..., alias="__typename")
     title: str
     short_description: str = Field(..., alias="shortDescription")
@@ -38,6 +50,9 @@ class Content(BaseModel):
 
 
 class Episode(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     object_id: int = Field(..., alias="objectId")
     object_type: str = Field(..., alias="objectType")
@@ -53,14 +68,23 @@ class Episode(BaseModel):
 
 
 class Node(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     id: str
     field__typename: str = Field(..., alias="__typename")
     episodes: list[Episode]
 
 
 class Data(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     node: Node
 
 
 class ModelItem(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
     data: Data
