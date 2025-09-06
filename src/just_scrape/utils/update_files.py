@@ -49,6 +49,7 @@ def update_response(endpoint: Path) -> None:
     lines = output_schema.read_text().splitlines()
     lines = "\n".join(lines[:-4])
     content = "# ruff: noqa: ERA001, E742, E501\n" + lines
+    content = content.replace("extra = Extra.forbid", "extra='forbid'")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
@@ -95,6 +96,7 @@ def update_request(endpoint: Path) -> None:
     lines = output_schema.read_text().splitlines()
     lines = "\n".join(lines[:-4])
     content = "# ruff: noqa: ERA001\n" + lines
+    content = content.replace("extra = Extra.forbid", "extra='forbid'")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()

@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 
 
 class Child(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -21,7 +21,7 @@ class Child(BaseModel):
 
 class PlanOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -34,7 +34,7 @@ class PlanOffer(BaseModel):
 
 class Package(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -49,7 +49,7 @@ class Package(BaseModel):
 
 class Plan(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -62,7 +62,7 @@ class Plan(BaseModel):
 
 class FlatrateItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -97,7 +97,7 @@ class FlatrateItem(BaseModel):
 
 class Package1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -112,7 +112,7 @@ class Package1(BaseModel):
 
 class BuyItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -149,7 +149,7 @@ class BuyItem(BaseModel):
 
 class Child2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: None = Field(..., alias="retailPrice")
@@ -161,7 +161,7 @@ class Child2(BaseModel):
 
 class PlanOffer1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -174,7 +174,7 @@ class PlanOffer1(BaseModel):
 
 class Package2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -189,7 +189,7 @@ class Package2(BaseModel):
 
 class Plan1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -202,7 +202,7 @@ class Plan1(BaseModel):
 
 class FreeItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -237,7 +237,7 @@ class FreeItem(BaseModel):
 
 class Package3(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     icon: str
     id: str
@@ -249,7 +249,7 @@ class Package3(BaseModel):
 
 class Node1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -262,7 +262,7 @@ class Node1(BaseModel):
 
 class PlanOffer2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str = Field(..., alias="retailPrice")
@@ -275,7 +275,7 @@ class PlanOffer2(BaseModel):
 
 class Package4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -290,7 +290,7 @@ class Package4(BaseModel):
 
 class Plan2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str = Field(..., alias="retailPrice")
@@ -303,7 +303,7 @@ class Plan2(BaseModel):
 
 class Offer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -338,7 +338,7 @@ class Offer(BaseModel):
 
 class Bundle(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     node: Node1
     promotion_url: str = Field(..., alias="promotionUrl")
@@ -348,7 +348,7 @@ class Bundle(BaseModel):
 
 class Package5(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -363,7 +363,7 @@ class Package5(BaseModel):
 
 class PromotedOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -399,7 +399,7 @@ class PromotedOffer(BaseModel):
 
 class Node(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     field__typename: str = Field(..., alias="__typename")
@@ -418,13 +418,13 @@ class Node(BaseModel):
 
 class Data(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     node: Node
 
 
 class ModelItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     data: Data

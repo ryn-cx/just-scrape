@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 
 
 class PageInfo(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
@@ -20,7 +20,7 @@ class PageInfo(BaseModel):
 
 class Package(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -31,7 +31,7 @@ class Package(BaseModel):
 
 class Key(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     date: str
@@ -40,7 +40,7 @@ class Key(BaseModel):
 
 class PageInfo1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
@@ -51,7 +51,7 @@ class PageInfo1(BaseModel):
 
 class Node(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     total_count: int = Field(..., alias="totalCount")
     page_info: PageInfo1 = Field(..., alias="pageInfo")
@@ -60,7 +60,7 @@ class Node(BaseModel):
 
 class Edge(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     key: Key
     node: Node
@@ -69,7 +69,7 @@ class Edge(BaseModel):
 
 class NewTitleBuckets(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     page_info: PageInfo = Field(..., alias="pageInfo")
     edges: list[Edge]
@@ -78,13 +78,13 @@ class NewTitleBuckets(BaseModel):
 
 class Data(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     new_title_buckets: NewTitleBuckets = Field(..., alias="newTitleBuckets")
 
 
 class ModelItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     data: Data

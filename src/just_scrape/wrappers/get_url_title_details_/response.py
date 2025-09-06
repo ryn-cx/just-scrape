@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 
 
 class Child(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -21,7 +21,7 @@ class Child(BaseModel):
 
 class PlanOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -34,7 +34,7 @@ class PlanOffer(BaseModel):
 
 class Package(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -49,7 +49,7 @@ class Package(BaseModel):
 
 class Plan(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -62,7 +62,7 @@ class Plan(BaseModel):
 
 class Offer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -97,7 +97,7 @@ class Offer(BaseModel):
 
 class Package1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     icon: str
@@ -112,7 +112,7 @@ class Package1(BaseModel):
 
 class WatchNowOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -140,7 +140,7 @@ class WatchNowOffer(BaseModel):
 
 class Package2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     short_name: str = Field(..., alias="shortName")
@@ -149,7 +149,7 @@ class Package2(BaseModel):
 
 class AvailableToItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     available_count_down: int = Field(..., alias="availableCountDown")
     available_to_date: str = Field(..., alias="availableToDate")
@@ -159,7 +159,7 @@ class AvailableToItem(BaseModel):
 
 class Clip(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     source_url: str = Field(..., alias="sourceUrl")
     external_id: str = Field(..., alias="externalId")
@@ -170,7 +170,7 @@ class Clip(BaseModel):
 
 class VideobusterClip(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     source_url: str = Field(..., alias="sourceUrl")
     external_id: str = Field(..., alias="externalId")
@@ -181,7 +181,7 @@ class VideobusterClip(BaseModel):
 
 class DailymotionClip(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     source_url: str = Field(..., alias="sourceUrl")
     external_id: str = Field(..., alias="externalId")
@@ -192,7 +192,7 @@ class DailymotionClip(BaseModel):
 
 class FallBackClips(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     clips: list[Clip]
     videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
@@ -202,7 +202,7 @@ class FallBackClips(BaseModel):
 
 class Backdrop(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     backdrop_url: str = Field(..., alias="backdropUrl")
     field__typename: str = Field(..., alias="__typename")
@@ -210,7 +210,7 @@ class Backdrop(BaseModel):
 
 class FullBackdrop(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     backdrop_url: str = Field(..., alias="backdropUrl")
     field__typename: str = Field(..., alias="__typename")
@@ -218,7 +218,7 @@ class FullBackdrop(BaseModel):
 
 class ExternalIds(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_id: str = Field(..., alias="imdbId")
     wikidata_id: str | None = Field(..., alias="wikidataId")
@@ -227,7 +227,7 @@ class ExternalIds(BaseModel):
 
 class Scoring(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_score: float = Field(..., alias="imdbScore")
     imdb_votes: int = Field(..., alias="imdbVotes")
@@ -241,7 +241,7 @@ class Scoring(BaseModel):
 
 class PlanOffer1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     retail_price: str | None = Field(..., alias="retailPrice")
     duration_days: int = Field(..., alias="durationDays")
@@ -254,7 +254,7 @@ class PlanOffer1(BaseModel):
 
 class Package3(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -270,7 +270,7 @@ class Package3(BaseModel):
 
 class UpcomingRelease(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     release_count_down: int = Field(..., alias="releaseCountDown")
     release_date: str = Field(..., alias="releaseDate")
@@ -282,7 +282,7 @@ class UpcomingRelease(BaseModel):
 
 class Genre(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     short_name: str = Field(..., alias="shortName")
     translation: str
@@ -291,7 +291,7 @@ class Genre(BaseModel):
 
 class Url(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     full_path: str = Field(..., alias="fullPath")
     field__typename: str = Field(..., alias="__typename")
@@ -299,7 +299,7 @@ class Url(BaseModel):
 
 class Content1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     short_name: str = Field(..., alias="shortName")
     name: str
@@ -309,7 +309,7 @@ class Content1(BaseModel):
 
 class Subgenre(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     content: Content1
     field__typename: str = Field(..., alias="__typename")
@@ -317,7 +317,7 @@ class Subgenre(BaseModel):
 
 class WatchedOn(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     clear_name: str = Field(..., alias="clearName")
     id: str
@@ -333,7 +333,7 @@ class WatchedOn(BaseModel):
 
 class Profile(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -355,7 +355,7 @@ class Profile(BaseModel):
 
 class TextRecommendation(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -381,7 +381,7 @@ class TextRecommendation(BaseModel):
 
 class Credit(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     role: str
     name: str
@@ -394,7 +394,7 @@ class Credit(BaseModel):
 
 class Interactions(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     dislikelist_additions: int = Field(..., alias="dislikelistAdditions")
     likelist_additions: int = Field(..., alias="likelistAdditions")
@@ -404,7 +404,7 @@ class Interactions(BaseModel):
 
 class Tag(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     technical_name: str = Field(..., alias="technicalName")
     translated_name: str = Field(..., alias="translatedName")
@@ -413,7 +413,7 @@ class Tag(BaseModel):
 
 class Content(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     backdrops: list[Backdrop]
     full_backdrops: list[FullBackdrop] = Field(..., alias="fullBackdrops")
@@ -450,7 +450,7 @@ class Content(BaseModel):
 
 class PopularityRank(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     rank: int
     trend: str
@@ -460,7 +460,7 @@ class PopularityRank(BaseModel):
 
 class StreamingChartInfo(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     rank: int
     trend: str
@@ -476,7 +476,7 @@ class StreamingChartInfo(BaseModel):
 
 class Edge(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     streaming_chart_info: StreamingChartInfo = Field(..., alias="streamingChartInfo")
     field__typename: str = Field(..., alias="__typename")
@@ -484,7 +484,7 @@ class Edge(BaseModel):
 
 class StreamingCharts(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     edges: list[Edge]
     field__typename: str = Field(..., alias="__typename")
@@ -492,7 +492,7 @@ class StreamingCharts(BaseModel):
 
 class SimilarTitlesV2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     sponsored_ad: None = Field(..., alias="sponsoredAd")
     field__typename: str = Field(..., alias="__typename")
@@ -500,7 +500,7 @@ class SimilarTitlesV2(BaseModel):
 
 class SeenState(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     progress: int
     seen_episode_count: int | None = Field(None, alias="seenEpisodeCount")
@@ -509,7 +509,7 @@ class SeenState(BaseModel):
 
 class Package4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     short_name: str = Field(..., alias="shortName")
@@ -518,7 +518,7 @@ class Package4(BaseModel):
 
 class AvailableToItem1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     available_to_date: str = Field(..., alias="availableToDate")
     available_count_down: int = Field(..., alias="availableCountDown")
@@ -528,7 +528,7 @@ class AvailableToItem1(BaseModel):
 
 class Package5(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     clear_name: str = Field(..., alias="clearName")
     short_name: str = Field(..., alias="shortName")
@@ -537,7 +537,7 @@ class Package5(BaseModel):
 
 class Offer1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     package: Package5
     monetization_type: str = Field(..., alias="monetizationType")
@@ -548,7 +548,7 @@ class Offer1(BaseModel):
 
 class UpcomingRelease1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     release_date: str = Field(..., alias="releaseDate")
     release_count_down: int = Field(..., alias="releaseCountDown")
@@ -557,7 +557,7 @@ class UpcomingRelease1(BaseModel):
 
 class Content2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     poster_url: str = Field(..., alias="posterUrl")
     season_number: int = Field(..., alias="seasonNumber")
@@ -571,7 +571,7 @@ class Content2(BaseModel):
 
 class Content3(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     field__typename: str = Field(..., alias="__typename")
@@ -579,7 +579,7 @@ class Content3(BaseModel):
 
 class Show(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -591,7 +591,7 @@ class Show(BaseModel):
 
 class FallBackClips1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     clips: list[Clip]
     videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
@@ -601,7 +601,7 @@ class FallBackClips1(BaseModel):
 
 class Season(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -617,7 +617,7 @@ class Season(BaseModel):
 
 class Package6(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -627,7 +627,7 @@ class Package6(BaseModel):
 
 class FlatrateItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package: Package6
@@ -636,7 +636,7 @@ class FlatrateItem(BaseModel):
 
 class BuyItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package: Package6
@@ -645,7 +645,7 @@ class BuyItem(BaseModel):
 
 class FreeItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package: Package6
@@ -654,7 +654,7 @@ class FreeItem(BaseModel):
 
 class Content4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     title: str
@@ -668,7 +668,7 @@ class Content4(BaseModel):
 
 class RecentEpisode(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -686,7 +686,7 @@ class RecentEpisode(BaseModel):
 
 class PlanOffer2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -699,7 +699,7 @@ class PlanOffer2(BaseModel):
 
 class Package9(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -714,7 +714,7 @@ class Package9(BaseModel):
 
 class Plan1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -727,7 +727,7 @@ class Plan1(BaseModel):
 
 class FlatrateItem1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -762,7 +762,7 @@ class FlatrateItem1(BaseModel):
 
 class Package10(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -777,7 +777,7 @@ class Package10(BaseModel):
 
 class BuyItem1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -814,7 +814,7 @@ class BuyItem1(BaseModel):
 
 class Child4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: None = Field(..., alias="retailPrice")
@@ -826,7 +826,7 @@ class Child4(BaseModel):
 
 class PlanOffer3(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -839,7 +839,7 @@ class PlanOffer3(BaseModel):
 
 class Package11(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -854,7 +854,7 @@ class Package11(BaseModel):
 
 class Plan2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -867,7 +867,7 @@ class Plan2(BaseModel):
 
 class FreeItem1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -902,7 +902,7 @@ class FreeItem1(BaseModel):
 
 class Package12(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -917,7 +917,7 @@ class Package12(BaseModel):
 
 class FastItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -954,7 +954,7 @@ class FastItem(BaseModel):
 
 class Package13(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     icon: str
     id: str
@@ -966,7 +966,7 @@ class Package13(BaseModel):
 
 class Node1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -979,7 +979,7 @@ class Node1(BaseModel):
 
 class PlanOffer4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str = Field(..., alias="retailPrice")
@@ -992,7 +992,7 @@ class PlanOffer4(BaseModel):
 
 class Package14(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -1007,7 +1007,7 @@ class Package14(BaseModel):
 
 class Plan3(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str = Field(..., alias="retailPrice")
@@ -1020,7 +1020,7 @@ class Plan3(BaseModel):
 
 class Offer2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -1055,7 +1055,7 @@ class Offer2(BaseModel):
 
 class Bundle(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     node: Node1
     promotion_url: str = Field(..., alias="promotionUrl")
@@ -1065,7 +1065,7 @@ class Bundle(BaseModel):
 
 class PlanOffer5(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -1078,7 +1078,7 @@ class PlanOffer5(BaseModel):
 
 class Package15(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -1093,7 +1093,7 @@ class Package15(BaseModel):
 
 class Plan4(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -1106,7 +1106,7 @@ class Plan4(BaseModel):
 
 class PromotedOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     presentation_type: str = Field(..., alias="presentationType")
@@ -1142,7 +1142,7 @@ class PromotedOffer(BaseModel):
 
 class RankInfo(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     rank: int
     trend: str
@@ -1158,7 +1158,7 @@ class RankInfo(BaseModel):
 
 class Title(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     full_path: str = Field(..., alias="fullPath")
     jw_entity_id: str = Field(..., alias="jwEntityID")
@@ -1172,7 +1172,7 @@ class Title(BaseModel):
 
 class Genre1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     translation: str
     field__typename: str = Field(..., alias="__typename")
@@ -1180,7 +1180,7 @@ class Genre1(BaseModel):
 
 class Scoring1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_votes: float | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
@@ -1192,7 +1192,7 @@ class Scoring1(BaseModel):
 
 class Interactions1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     votes_number: int = Field(..., alias="votesNumber")
     field__typename: str = Field(..., alias="__typename")
@@ -1200,7 +1200,7 @@ class Interactions1(BaseModel):
 
 class Content6(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     poster_url: str | None = Field(..., alias="posterUrl")
@@ -1215,7 +1215,7 @@ class Content6(BaseModel):
 
 class SeenState1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     progress: int
     seen_episode_count: int = Field(..., alias="seenEpisodeCount")
@@ -1224,7 +1224,7 @@ class SeenState1(BaseModel):
 
 class Content7(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     field__typename: str = Field(..., alias="__typename")
@@ -1232,7 +1232,7 @@ class Content7(BaseModel):
 
 class Show1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -1243,7 +1243,7 @@ class Show1(BaseModel):
 
 class Node2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -1260,7 +1260,7 @@ class Node2(BaseModel):
 
 class Titles1Item(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     node: Node2
     field__typename: str = Field(..., alias="__typename")
@@ -1268,7 +1268,7 @@ class Titles1Item(BaseModel):
 
 class Content5(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     titles: list[Title] | None = Field(None, alias="Titles")
     field__typename: str = Field(..., alias="__typename")
@@ -1277,7 +1277,7 @@ class Content5(BaseModel):
 
 class Template(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     anchor: str
     content_type: str = Field(..., alias="contentType")
@@ -1287,7 +1287,7 @@ class Template(BaseModel):
 
 class TitleModules(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     content: Content5
     fomo_score: int = Field(..., alias="fomoScore")
@@ -1297,7 +1297,7 @@ class TitleModules(BaseModel):
 
 class Package16(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -1307,7 +1307,7 @@ class Package16(BaseModel):
 
 class FlatrateItem2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package: Package16
@@ -1316,7 +1316,7 @@ class FlatrateItem2(BaseModel):
 
 class BuyItem2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     package: Package16
@@ -1325,7 +1325,7 @@ class BuyItem2(BaseModel):
 
 class Content8(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     title: str
@@ -1339,7 +1339,7 @@ class Content8(BaseModel):
 
 class Episode(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -1357,7 +1357,7 @@ class Episode(BaseModel):
 
 class FallBackClips2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     clips: list[Clip]
     videobuster_clips: list = Field(..., alias="videobusterClips")
@@ -1367,7 +1367,7 @@ class FallBackClips2(BaseModel):
 
 class Genre2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     short_name: str = Field(..., alias="shortName")
     field__typename: str = Field(..., alias="__typename")
@@ -1375,7 +1375,7 @@ class Genre2(BaseModel):
 
 class Content10(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     short_name: str = Field(..., alias="shortName")
     name: str
@@ -1384,7 +1384,7 @@ class Content10(BaseModel):
 
 class Subgenre1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     content: Content10
     field__typename: str = Field(..., alias="__typename")
@@ -1392,7 +1392,7 @@ class Subgenre1(BaseModel):
 
 class Credit1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     role: str
     name: str
@@ -1405,7 +1405,7 @@ class Credit1(BaseModel):
 
 class ExternalIds1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_id: str = Field(..., alias="imdbId")
     field__typename: str = Field(..., alias="__typename")
@@ -1413,7 +1413,7 @@ class ExternalIds1(BaseModel):
 
 class Content9(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     age_certification: str = Field(..., alias="ageCertification")
@@ -1435,7 +1435,7 @@ class Content9(BaseModel):
 
 class SeenState2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     progress: int
     field__typename: str = Field(..., alias="__typename")
@@ -1443,7 +1443,7 @@ class SeenState2(BaseModel):
 
 class Show2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -1463,7 +1463,7 @@ class Show2(BaseModel):
 
 class Node(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     object_type: str = Field(..., alias="objectType")
@@ -1513,7 +1513,7 @@ class Node(BaseModel):
 
 class UrlV2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     meta_description: str = Field(..., alias="metaDescription")
@@ -1529,13 +1529,13 @@ class UrlV2(BaseModel):
 
 class Data(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
 class ModelItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     data: Data

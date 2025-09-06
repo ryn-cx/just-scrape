@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 
 
 class Content1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     synopsis: str
@@ -19,7 +19,7 @@ class Content1(BaseModel):
 
 class Article(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     content: Content1
@@ -28,7 +28,7 @@ class Article(BaseModel):
 
 class Content(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     articles: list[Article]
     field__typename: str = Field(..., alias="__typename")
@@ -36,7 +36,7 @@ class Content(BaseModel):
 
 class Node(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     content: Content
@@ -45,7 +45,7 @@ class Node(BaseModel):
 
 class UrlV2(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     node: Node
@@ -54,13 +54,13 @@ class UrlV2(BaseModel):
 
 class Data(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
 class ModelItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     data: Data

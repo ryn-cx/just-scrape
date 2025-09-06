@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Field
 
 
 class Package(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     id: str
     icon: str
@@ -24,7 +24,7 @@ class Package(BaseModel):
 
 class NewOffer(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -54,7 +54,7 @@ class NewOffer(BaseModel):
 
 class Scoring(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_votes: int | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
@@ -67,7 +67,7 @@ class Scoring(BaseModel):
 
 class Genre(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     translation: str
     field__typename: str = Field(..., alias="__typename")
@@ -75,7 +75,7 @@ class Genre(BaseModel):
 
 class Content(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     short_description: str = Field(..., alias="shortDescription")
@@ -91,7 +91,7 @@ class Content(BaseModel):
 
 class Scoring1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     imdb_votes: int | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
@@ -102,7 +102,7 @@ class Scoring1(BaseModel):
 
 class Content1(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     title: str
     short_description: str = Field(..., alias="shortDescription")
@@ -116,7 +116,7 @@ class Content1(BaseModel):
 
 class SeenState(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     progress: int
     field__typename: str = Field(..., alias="__typename")
@@ -124,7 +124,7 @@ class SeenState(BaseModel):
 
 class Show(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -139,7 +139,7 @@ class Show(BaseModel):
 
 class Node(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -155,7 +155,7 @@ class Node(BaseModel):
 
 class Edge(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     cursor: str
     new_offer: NewOffer | None = Field(..., alias="newOffer")
@@ -165,7 +165,7 @@ class Edge(BaseModel):
 
 class PageInfo(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     end_cursor: str = Field(..., alias="endCursor")
     has_previous_page: bool = Field(..., alias="hasPreviousPage")
@@ -175,7 +175,7 @@ class PageInfo(BaseModel):
 
 class NewTitles(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     total_count: int = Field(..., alias="totalCount")
     edges: list[Edge]
@@ -185,13 +185,13 @@ class NewTitles(BaseModel):
 
 class Data(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     new_titles: NewTitles = Field(..., alias="newTitles")
 
 
 class ModelItem(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = "forbid"
 
     data: Data
