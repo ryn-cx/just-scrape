@@ -48,8 +48,11 @@ def update_response(endpoint: Path) -> None:
     # files into a single json file.
     lines = output_schema.read_text().splitlines()
     lines = "\n".join(lines[:-4])
-    content = "# ruff: noqa: ERA001, E742, E501\n" + lines
-    content = content.replace("extra = Extra.forbid", "extra='forbid'")
+    content = (
+        "# ruff: noqa: ERA001, E742, E501\nfrom pydantic import ConfigDict\n" + lines
+    )
+    content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
+    content = content.replace("class Config:", "")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
@@ -59,8 +62,6 @@ def update_request(endpoint: Path) -> None:
     name = endpoint.name
 
     request_folder = endpoint / "request"
-    if not request_folder.exists():
-        return
 
     file_content: list[Any] = [
         json.loads(file.read_text()) for file in request_folder.glob("*.json")
@@ -95,8 +96,9 @@ def update_request(endpoint: Path) -> None:
     # files into a single json file.
     lines = output_schema.read_text().splitlines()
     lines = "\n".join(lines[:-4])
-    content = "# ruff: noqa: ERA001\n" + lines
-    content = content.replace("extra = Extra.forbid", "extra='forbid'")
+    content = "# ruff: noqa: ERA001\nfrom pydantic import ConfigDict\n" + lines
+    content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
+    content = content.replace("class Config:", "")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
