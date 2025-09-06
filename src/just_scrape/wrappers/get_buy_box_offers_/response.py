@@ -7,10 +7,10 @@ from pydantic import BaseModel, ConfigDict, Field
 class Child(BaseModel):
     ConfigDict(extra="forbid")
     title: str
-    retail_price: None = Field(..., alias="retailPrice")
+    retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: None = Field(..., alias="retailPriceValue")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -104,7 +104,7 @@ class BuyItem(BaseModel):
     retail_price: str = Field(..., alias="retailPrice")
     retail_price_value: float = Field(..., alias="retailPriceValue")
     currency: str
-    last_change_retail_price_value: None = Field(
+    last_change_retail_price_value: float | None = Field(
         ...,
         alias="lastChangeRetailPriceValue",
     )
@@ -121,13 +121,23 @@ class BuyItem(BaseModel):
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
     available_to: None = Field(..., alias="availableTo")
-    subtitle_languages: list = Field(..., alias="subtitleLanguages")
-    video_technology: list = Field(..., alias="videoTechnology")
+    subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
+    video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list = Field(..., alias="audioTechnology")
     audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
     offer_seasons: None = Field(..., alias="offerSeasons")
     min_retail_price: None = Field(..., alias="minRetailPrice")
+
+
+class Child2(BaseModel):
+    ConfigDict(extra="forbid")
+    title: str
+    retail_price: None = Field(..., alias="retailPrice")
+    is_trial: bool = Field(..., alias="isTrial")
+    duration_days: int = Field(..., alias="durationDays")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    field__typename: str = Field(..., alias="__typename")
 
 
 class PlanOffer1(BaseModel):
@@ -137,7 +147,7 @@ class PlanOffer1(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child]
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -161,7 +171,7 @@ class Plan1(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child]
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -190,7 +200,7 @@ class FreeItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: None = Field(..., alias="availableTo")
+    available_to: str | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list = Field(..., alias="audioTechnology")
@@ -198,18 +208,66 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class Package3(BaseModel):
+    ConfigDict(extra="forbid")
+    id: str
+    package_id: int = Field(..., alias="packageId")
+    clear_name: str = Field(..., alias="clearName")
+    short_name: str = Field(..., alias="shortName")
+    technical_name: str = Field(..., alias="technicalName")
+    icon: str
+    icon_wide: str = Field(..., alias="iconWide")
+    plan_offers: list = Field(..., alias="planOffers")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FastItem(BaseModel):
+    ConfigDict(extra="forbid")
+    id: str
+    presentation_type: str = Field(..., alias="presentationType")
+    monetization_type: str = Field(..., alias="monetizationType")
+    new_element_count: int = Field(..., alias="newElementCount")
+    retail_price: None = Field(..., alias="retailPrice")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    currency: str
+    last_change_retail_price_value: None = Field(
+        ...,
+        alias="lastChangeRetailPriceValue",
+    )
+    type: str
+    country: str
+    package: Package3
+    plans: list
+    standard_web_url: str = Field(..., alias="standardWebURL")
+    pre_affiliated_standard_web_url: None = Field(
+        ...,
+        alias="preAffiliatedStandardWebURL",
+    )
+    stream_url: None = Field(..., alias="streamUrl")
+    stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
+    element_count: int = Field(..., alias="elementCount")
+    available_to: str = Field(..., alias="availableTo")
+    subtitle_languages: list = Field(..., alias="subtitleLanguages")
+    video_technology: list = Field(..., alias="videoTechnology")
+    audio_technology: list = Field(..., alias="audioTechnology")
+    audio_languages: list = Field(..., alias="audioLanguages")
+    field__typename: str = Field(..., alias="__typename")
+    available_from_time: str = Field(..., alias="availableFromTime")
+    available_to_time: str = Field(..., alias="availableToTime")
+
+
 class Node(BaseModel):
     ConfigDict(extra="forbid")
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: str = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: str | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
     rent: list
     free: list[FreeItem]
-    fast: list
+    fast: list[FastItem]
     bundles: list
 
 
