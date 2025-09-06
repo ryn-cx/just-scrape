@@ -53,6 +53,7 @@ def update_response(endpoint: Path) -> None:
     )
     content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
     content = content.replace("class Config:", "")
+    content = content.replace("from __future__ import annotations:", "")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
@@ -99,6 +100,7 @@ def update_request(endpoint: Path) -> None:
     content = "# ruff: noqa: ERA001\nfrom pydantic import ConfigDict\n" + lines
     content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
     content = content.replace("class Config:", "")
+    content = content.replace("from __future__ import annotations", "")
     output_schema.write_text(content)
 
     combined_schema_path.unlink()
