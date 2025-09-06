@@ -6,6 +6,7 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
+from just_scrape.exceptions import GraphQLError, HTTPError
 from just_scrape.utils.update_files import update_response
 
 HEADERS = {
@@ -35,13 +36,13 @@ def graphql_request(
 
     if response.status_code != 200:  # noqa: PLR2004
         msg = f"Unexpected response status code: {response.status_code}"
-        raise ValueError(msg)
+        raise HTTPError(msg)
 
     output = response.json()
 
     if output.get("errors"):
         msg = f"GraphQL errors occurred: {output['errors']}"
-        raise ValueError(msg)
+        raise GraphQLError(msg)
 
     return response.json()
 
