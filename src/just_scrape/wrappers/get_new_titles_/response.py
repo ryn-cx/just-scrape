@@ -26,7 +26,7 @@ class NewOffer(BaseModel):
         ...,
         alias="preAffiliatedStandardWebURL",
     )
-    stream_url: None = Field(..., alias="streamUrl")
+    stream_url: str | None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     package: Package
     retail_price: str | None = Field(..., alias="retailPrice")

@@ -260,15 +260,15 @@ class Node(BaseModel):
     ConfigDict(extra="forbid")
     id: str
     field__typename: str = Field(..., alias="__typename")
-    offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: str | None = Field(..., alias="maxOfferUpdatedAt")
-    offers_history: list = Field(..., alias="offersHistory")
-    flatrate: list[FlatrateItem]
-    buy: list[BuyItem]
-    rent: list
-    free: list[FreeItem]
-    fast: list[FastItem]
-    bundles: list
+    offer_count: int | None = Field(None, alias="offerCount")
+    max_offer_updated_at: str | None = Field(None, alias="maxOfferUpdatedAt")
+    offers_history: list | None = Field(None, alias="offersHistory")
+    flatrate: list[FlatrateItem] | None = None
+    buy: list[BuyItem] | None = None
+    rent: list | None = None
+    free: list[FreeItem] | None = None
+    fast: list[FastItem] | None = None
+    bundles: list | None = None
 
 
 class Data(BaseModel):
