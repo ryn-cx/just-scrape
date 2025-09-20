@@ -1,129 +1,65 @@
 import json
-import subprocess
 from pathlib import Path
-from typing import Any
 
-JUST_SCRAPE_DIR = Path(__file__).parent.parent
-ROOT_DIR = JUST_SCRAPE_DIR.parent.parent
-SCHEMA_DIR = JUST_SCRAPE_DIR / "schema"
+import datamodel_code_generator
+from datamodel_code_generator.format import Formatter
+
+from just_scrape.constants import JUST_SCRAPE_DIR, TEST_FILE_DIR
+
+
+def combine_json_files(input_folder: Path) -> str:
+    input_files = input_folder.glob("*.json")
+    input_contents = [file.read_text() for file in input_files]
+    input_parsed = [json.loads(content) for content in input_contents]
+    return json.dumps(input_parsed)
+
+
+def generate_schema(input_data: str, output_file: Path) -> None:
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    datamodel_code_generator.generate(
+        input_=input_data,
+        output=output_file,
+        input_file_type=datamodel_code_generator.InputFileType.Json,
+        output_model_type=datamodel_code_generator.DataModelType.PydanticV2BaseModel,
+        snake_case_field=True,
+        disable_timestamp=True,
+        extra_fields="forbid",
+        formatters=[Formatter.RUFF_CHECK, Formatter.RUFF_FORMAT],
+        target_python_version=datamodel_code_generator.PythonVersion.PY_313,
+    )
+
+    # Remove the last 3 lines which will contain the extra wrapper class used to combine
+    # files into a single json file which is not actually used by the API
+    lines = output_file.read_text().splitlines()
+    lines = "\n".join(lines[:-3])
+
+    output_file.write_text(lines)
 
 
 def update_response(endpoint: Path) -> None:
-    name = endpoint.name
-
-    response_folder = endpoint / "response"
-    if not response_folder.exists():
-        return
-
-    file_content: list[Any] = [
-        json.loads(file.read_text()) for file in response_folder.glob("*.json")
-    ]
-
-    combined_schema_path = SCHEMA_DIR / "temp.json"
-    combined_schema_path.write_text(json.dumps(file_content))
-
-    # Generate Python schema using datamodel-codegen
-    output_schema = JUST_SCRAPE_DIR / f"wrappers/{name}_/response.py"
-    output_schema.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        "uv",
-        "run",
-        "datamodel-codegen",
-        "--input-file-type",
-        "json",
-        "--input",
-        str(combined_schema_path),
-        "--output",
-        str(output_schema),
-        "--snake-case-field",
-        "--formatters",
-        "ruff-check",
-        "--disable-timestamp",
-        "--extra-fields=forbid",
-    ]
-
-    subprocess.run(command, check=True, capture_output=True, text=True)
-
-    # Remove the last 3 lines which will contain the extra wrapper class used to combine
-    # files into a single json file.
-    lines = output_schema.read_text().splitlines()
-    lines = "\n".join(lines[:-4])
-    content = (
-        "# ruff: noqa: ERA001, E742, E501\nfrom pydantic import ConfigDict\n" + lines
-    )
-    content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
-    content = content.replace("class Config:", "")
-    content = content.replace("from __future__ import annotations", "")
-    output_schema.write_text(content)
-
-    combined_schema_path.unlink()
+    response_input_dumped = combine_json_files(endpoint / "response")
+    output_schema = JUST_SCRAPE_DIR / f"models/response/{endpoint.name}.py"
+    generate_schema(response_input_dumped, output_schema)
 
 
 def update_request(endpoint: Path) -> None:
-    name = endpoint.name
-
-    request_folder = endpoint / "request"
-
-    file_content: list[Any] = [
-        json.loads(file.read_text()) for file in request_folder.glob("*.json")
-    ]
-
-    combined_schema_path = SCHEMA_DIR / "temp.json"
-    combined_schema_path.write_text(json.dumps(file_content))
-
-    # Generate Python schema using datamodel-codegen
-    output_schema = JUST_SCRAPE_DIR / f"wrappers/{name}_/request.py"
-    output_schema.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        "uv",
-        "run",
-        "datamodel-codegen",
-        "--input-file-type",
-        "json",
-        "--input",
-        str(combined_schema_path),
-        "--output",
-        str(output_schema),
-        "--snake-case-field",
-        "--formatters",
-        "ruff-check",
-        "--disable-timestamp",
-        "--extra-fields=forbid",
-    ]
-
-    subprocess.run(command, check=True, capture_output=True, text=True)
-
-    # Remove the last 3 lines which will contain the extra wrapper class used to combine
-    # files into a single json file.
-    lines = output_schema.read_text().splitlines()
-    lines = "\n".join(lines[:-4])
-    content = "# ruff: noqa: ERA001\nfrom pydantic import ConfigDict\n" + lines
-    content = content.replace("    extra = Extra.forbid", "ConfigDict(extra='forbid')")
-    content = content.replace("class Config:", "")
-    content = content.replace("from __future__ import annotations", "")
-    output_schema.write_text(content)
-
-    combined_schema_path.unlink()
+    request_input_dumped = combine_json_files(endpoint / "request")
+    output_schema = JUST_SCRAPE_DIR / f"models/request/{endpoint.name}.py"
+    generate_schema(request_input_dumped, output_schema)
 
 
 def update_query(endpoint: Path) -> None:
     name = endpoint.name
     request_folder = endpoint / "request"
-    file = next(request_folder.glob("*.json"), None)
-
-    # The provider API lookup doesn't have a regular request because it uses a different
-    # API.
-    if not file:
-        return
-
-    file_content = json.loads(file.read_text())
-    output_file = JUST_SCRAPE_DIR / f"wrappers/{name}_/query.py"
+    first_file = next(request_folder.glob("*.json"))
+    file_content = json.loads(first_file.read_text())
+    output_file = JUST_SCRAPE_DIR / f"queries/{name}.py"
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(f'# ruff: noqa: E501\nQUERY="""{file_content["query"]}"""')
 
 
 def update_all_schemas() -> None:
-    for endpoint in SCHEMA_DIR.glob("*"):
+    for endpoint in TEST_FILE_DIR.glob("*"):
         if endpoint.is_dir():
             update_response(endpoint)
             update_request(endpoint)
