@@ -1,39 +1,137 @@
+import contextlib
 import json
+import re
+import subprocess
+from datetime import datetime
 from pathlib import Path
 
 import datamodel_code_generator
-from datamodel_code_generator.format import Formatter
 
 from just_scrape.constants import JUST_SCRAPE_DIR, TEST_FILE_DIR
+from just_scrape.overrides import EXTRA_IMPORTS, OVERRIDES, Override
 
 
 def combine_json_files(input_folder: Path) -> str:
     input_files = input_folder.glob("*.json")
-    input_contents = [file.read_text() for file in input_files]
+    input_contents = [file.read_bytes() for file in input_files]
     input_parsed = [json.loads(content) for content in input_contents]
     return json.dumps(input_parsed)
 
 
+def apply_overrides(lines: list[str], name: str) -> None:
+    for override in OVERRIDES:
+        apply_override(lines, override, name)
+
+
+def apply_override(lines: list[str], override: Override, name: str) -> None:
+    """Replace specific field definitions in the generated code.
+
+    Args:
+        lines: List of code lines to modify
+        override: Override configuration specifying model, field, and replacement
+        name: Name of the file being processed
+
+    Raises:
+        ValueError: If the override target is not found
+    """
+    if name != f"{override.endpoint}.py":
+        return
+
+    current_class = None
+
+    for i, line in enumerate(lines):
+        if line.startswith("class ") and line.endswith(":"):
+            current_class = line.split("class ")[1].split("(")[0]
+            continue
+
+        if current_class != override.model:
+            continue
+
+        if line.startswith(f"    {override.field_name}:"):
+            lines[i] = re.sub(
+                rf"\b{re.escape(override.original)}\b",
+                override.replacement,
+                lines[i],
+                count=1,
+            )
+            return
+
+    # If we reach here, the override wasn't applied
+    msg = (
+        "Unable to apply override "
+        f"{override.endpoint}.{override.model}.{override.field_name}"
+    )
+    raise ValueError(msg)
+
+
+def add_extra_imports(lines: list[str], extra_imports: str) -> None:
+    """Add extra import statements to the generated code.
+
+    Args:
+        lines: List of code lines to modify
+        extra_imports: String containing extra import statements to add
+    """
+    line_with_first_class = next(
+        (i for i, line in enumerate(lines) if line.startswith("class ")),
+    )
+    lines.insert(line_with_first_class, extra_imports)
+
+
+INPUT_TYPE = dict[str, "INPUT_TYPE | datetime"] | list["INPUT_TYPE | datetime"]
+
+
+def try_to_convert_everything_to_datetime(input_data: INPUT_TYPE) -> None:
+    if isinstance(input_data, dict):
+        for key, value in input_data.items():
+            if isinstance(value, str):
+                with contextlib.suppress(ValueError):
+                    input_data[key] = datetime.fromisoformat(value)
+            elif isinstance(value, (dict, list)):
+                try_to_convert_everything_to_datetime(value)
+    # reportUnnecessaryIsInstance - isinstance is not required but it is easier to read.
+    elif isinstance(input_data, list):  # type: ignore[reportUnnecessaryIsInstance]
+        for i, item in enumerate(input_data):
+            if isinstance(item, str):
+                with contextlib.suppress(ValueError):
+                    input_data[i] = datetime.fromisoformat(item)
+            elif isinstance(item, (dict, list)):
+                try_to_convert_everything_to_datetime(item)
+
+
 def generate_schema(input_data: str, output_file: Path) -> None:
+    """Generate a Pydantic model schema from JSON data."""
+    loaded_data = json.loads(input_data)
+    try_to_convert_everything_to_datetime(loaded_data)
     output_file.parent.mkdir(parents=True, exist_ok=True)
     datamodel_code_generator.generate(
-        input_=input_data,
+        input_=loaded_data,
         output=output_file,
-        input_file_type=datamodel_code_generator.InputFileType.Json,
+        input_file_type=datamodel_code_generator.InputFileType.Dict,
         output_model_type=datamodel_code_generator.DataModelType.PydanticV2BaseModel,
         snake_case_field=True,
         disable_timestamp=True,
         extra_fields="forbid",
-        formatters=[Formatter.RUFF_CHECK, Formatter.RUFF_FORMAT],
         target_python_version=datamodel_code_generator.PythonVersion.PY_313,
+        output_datetime_class=datamodel_code_generator.DatetimeClassType.Awaredatetime,
     )
+
+    lines = output_file.read_text().splitlines()
+    apply_overrides(lines, output_file.name)
+    add_extra_imports(lines, EXTRA_IMPORTS)
 
     # Remove the last 3 lines which will contain the extra wrapper class used to combine
     # files into a single json file which is not actually used by the API
-    lines = output_file.read_text().splitlines()
     lines = "\n".join(lines[:-3])
-
     output_file.write_text(lines)
+
+    subprocess.run(
+        ["uv", "run", "ruff", "check", "--fix", str(output_file)],  # noqa: S607
+        check=False,
+    )
+    subprocess.run(
+        ["uv", "run", "ruff", "format", str(output_file)],  # noqa: S607
+        check=False,
+    )
 
 
 def update_response(endpoint: Path) -> None:
