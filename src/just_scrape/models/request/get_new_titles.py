@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from datetime import date as date_aliased
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -29,7 +31,7 @@ class Variables(BaseModel):
     )
     first: int
     page_type: str = Field(..., alias="pageType")
-    date: str
+    date: date_aliased
     filter: Filter
     language: str
     country: str

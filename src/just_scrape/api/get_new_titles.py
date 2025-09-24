@@ -1,10 +1,12 @@
-from datetime import UTC, datetime
+from datetime import UTC
 from typing import Any
 
+import datetime
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_new_titles import Filter, Variables
 from just_scrape.models.response.get_new_titles import Edge, Model, NewTitles
 from just_scrape.queries.get_new_titles import QUERY
+import json
 
 
 class GetNewTitles(JustWatchProtocol):
@@ -15,7 +17,7 @@ class GetNewTitles(JustWatchProtocol):
         *,
         first: int = 10,
         page_type: str = "NEW",
-        date: str | None = None,
+        date: datetime.date | None = None,
         language: str = "en",
         country: str = "US",
         price_drops: bool = False,
@@ -35,7 +37,7 @@ class GetNewTitles(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> Variables:
-        date = date or datetime.now(tz=UTC).date().strftime("%Y-%m-%d")
+        date = date or datetime.datetime.now(tz=datetime.UTC).date()
         available_to_packages = available_to_packages or []
         filter_age_certifications = filter_age_certifications or []
         filter_exclude_genres = filter_exclude_genres or []
@@ -81,7 +83,7 @@ class GetNewTitles(JustWatchProtocol):
         *,
         first: int = 10,
         page_type: str = "NEW",
-        date: str | None = None,
+        date: datetime.date | None = None,
         language: str = "en",
         country: str = "US",
         price_drops: bool = False,
@@ -124,10 +126,13 @@ class GetNewTitles(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
+        # The object passed to variables needs to be dumpable by JSON, the easiest way
+        # to achieve this is to dump it to a JSON string and then load it back.
+        dumped_variables = json.loads(variables.model_dump_json(by_alias=True))
         return self.graphql_request(
             operation_name="GetNewTitles",
             query=QUERY,
-            variables=variables.model_dump(by_alias=True),
+            variables=dumped_variables,
         )
 
     def parse_get_new_titles(self, data: dict[str, Any]) -> NewTitles:
@@ -138,7 +143,7 @@ class GetNewTitles(JustWatchProtocol):
         *,
         first: int = 10,
         page_type: str = "NEW",
-        date: str | None = None,
+        date: datetime.date | None = None,
         language: str = "en",
         country: str = "US",
         price_drops: bool = False,
@@ -189,7 +194,7 @@ class GetNewTitles(JustWatchProtocol):
         *,
         available_to_packages: list[str] | None = None,
         country: str = "US",
-        date: str | None = None,
+        date: datetime.date | None = None,
         filter_age_certifications: list[Any] | None = None,
         filter_exclude_genres: list[Any] | None = None,
         filter_exclude_irrelevant_titles: bool = False,

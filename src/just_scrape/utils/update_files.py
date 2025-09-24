@@ -35,17 +35,7 @@ def update_all_schemas() -> None:
         if endpoint.is_dir():
             logger.info("Updating schema for %s", endpoint.name)
             updater = Updater(endpoint.parent.name, endpoint.name)
-            overrides: list[Override] = []
-            if updater.endpoint_type == "request" and endpoint.name == "get_new_titles":
-                overrides.append(
-                    Override(
-                        class_name="Variables",
-                        variable_name="date",
-                        replacement="str",
-                    ),
-                )
-
-            updater.generate_schema(overrides)
+            updater.generate_schema()
             updater.remove_redundant_files()
             if updater.endpoint_type == "request":
                 update_query(endpoint)
