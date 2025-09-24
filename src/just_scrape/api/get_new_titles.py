@@ -1,12 +1,11 @@
-from datetime import UTC
+import datetime
+import json
 from typing import Any
 
-import datetime
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_new_titles import Filter, Variables
 from just_scrape.models.response.get_new_titles import Edge, Model, NewTitles
 from just_scrape.queries.get_new_titles import QUERY
-import json
 
 
 class GetNewTitles(JustWatchProtocol):
