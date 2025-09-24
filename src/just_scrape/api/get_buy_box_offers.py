@@ -3,7 +3,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_buy_box_offers import Variables
-from just_scrape.models.response.get_buy_box_offers import ModelItem, Node
+from just_scrape.models.response.get_buy_box_offers import Model, Node
 from just_scrape.queries.get_buy_box_offers import QUERY
 
 DEFAULT_EXCLUDE_PACKAGES = (
@@ -83,7 +83,7 @@ class GetBuyBoxOffers(JustWatchProtocol):
         )
 
     def parse_get_buy_box_offers(self, data: dict[str, Any]) -> Node:
-        return self.parse_response(ModelItem, data, "get_buy_box_offers").data.node
+        return self.parse_response(Model, data, "get_buy_box_offers").data.node
 
     def get_buy_box_offers(  # noqa: PLR0913
         self,

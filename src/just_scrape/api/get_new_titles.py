@@ -3,7 +3,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_new_titles import Filter, Variables
-from just_scrape.models.response.get_new_titles import Edge, ModelItem, NewTitles
+from just_scrape.models.response.get_new_titles import Edge, Model, NewTitles
 from just_scrape.queries.get_new_titles import QUERY
 
 
@@ -131,7 +131,7 @@ class GetNewTitles(JustWatchProtocol):
         )
 
     def parse_get_new_titles(self, data: dict[str, Any]) -> NewTitles:
-        return self.parse_response(ModelItem, data, "get_new_titles").data.new_titles
+        return self.parse_response(Model, data, "get_new_titles").data.new_titles
 
     def get_new_titles(  # noqa: PLR0913
         self,

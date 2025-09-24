@@ -58,7 +58,7 @@ class Data(BaseModel):
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

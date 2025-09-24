@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from datetime import date as date_aliased
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PageInfo(BaseModel):
@@ -33,7 +35,7 @@ class Key(BaseModel):
         extra="forbid",
     )
     field__typename: str = Field(..., alias="__typename")
-    date: AwareDatetime
+    date: date_aliased
     package: Package
 
 
@@ -82,7 +84,7 @@ class Data(BaseModel):
     new_title_buckets: NewTitleBuckets = Field(..., alias="newTitleBuckets")
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

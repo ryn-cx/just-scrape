@@ -2,7 +2,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_season_episodes import Variables
-from just_scrape.models.response.get_season_episodes import Episode, ModelItem, Node
+from just_scrape.models.response.get_season_episodes import Episode, Model, Node
 from just_scrape.queries.get_season_episodes import QUERY
 
 DEFAULT_LIMIT = 20
@@ -55,7 +55,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
         )
 
     def parse_get_season_episodes(self, data: dict[str, Any]) -> Node:
-        return self.parse_response(ModelItem, data, "get_season_episodes").data.node
+        return self.parse_response(Model, data, "get_season_episodes").data.node
 
     def get_season_episodes(  # noqa: PLR0913
         self,

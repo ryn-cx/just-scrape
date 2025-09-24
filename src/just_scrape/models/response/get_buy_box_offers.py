@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from datetime import date
+
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
@@ -86,7 +88,7 @@ class FlatrateItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: AwareDatetime | None = Field(..., alias="availableTo")
+    available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
@@ -226,7 +228,7 @@ class FreeItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: AwareDatetime | None = Field(..., alias="availableTo")
+    available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list = Field(..., alias="audioTechnology")
@@ -276,7 +278,7 @@ class FastItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: AwareDatetime = Field(..., alias="availableTo")
+    available_to: date = Field(..., alias="availableTo")
     subtitle_languages: list = Field(..., alias="subtitleLanguages")
     video_technology: list = Field(..., alias="videoTechnology")
     audio_technology: list = Field(..., alias="audioTechnology")
@@ -293,7 +295,7 @@ class Node(BaseModel):
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int | None = Field(None, alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(None, alias="maxOfferUpdatedAt")
+    max_offer_updated_at: str | None = Field(None, alias="maxOfferUpdatedAt")
     offers_history: list | None = Field(None, alias="offersHistory")
     flatrate: list[FlatrateItem] | None = None
     buy: list[BuyItem] | None = None
@@ -310,7 +312,7 @@ class Data(BaseModel):
     node: Node
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

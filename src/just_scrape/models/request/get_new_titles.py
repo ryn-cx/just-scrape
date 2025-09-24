@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Filter(BaseModel):
@@ -29,7 +29,7 @@ class Variables(BaseModel):
     )
     first: int
     page_type: str = Field(..., alias="pageType")
-    date: AwareDatetime
+    date: str
     filter: Filter
     language: str
     country: str
@@ -40,7 +40,7 @@ class Variables(BaseModel):
     after: str | None = None
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

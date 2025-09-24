@@ -2,7 +2,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_title_detail_article import Variables
-from just_scrape.models.response.get_title_detail_article import ModelItem, UrlV2
+from just_scrape.models.response.get_title_detail_article import Model, UrlV2
 from just_scrape.queries.get_title_detail_article import QUERY
 
 
@@ -42,7 +42,7 @@ class GetTitleDetailArticle(JustWatchProtocol):
 
     def parse_get_title_detail_article(self, data: dict[str, Any]) -> UrlV2:
         return self.parse_response(
-            ModelItem,
+            Model,
             data,
             "get_title_detail_article",
         ).data.url_v2

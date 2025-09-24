@@ -15,7 +15,7 @@ class Variables(BaseModel):
     country: str
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

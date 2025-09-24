@@ -3,7 +3,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_url_title_details import Variables
-from just_scrape.models.response.get_url_title_details import ModelItem, UrlV2
+from just_scrape.models.response.get_url_title_details import Model, UrlV2
 from just_scrape.queries.get_url_title_details import QUERY
 
 DEFAULT_EXCLUDE_PACKAGES = [
@@ -44,13 +44,13 @@ class GetUrlTitleDetails(JustWatchProtocol):
 
     def _variables_get_url_title_details(  # noqa: PLR0913
         self,
+        full_path: str,
         *,
         platform: str = "WEB",
         exclude_text_recommendation_title: bool = True,
         first: int = 10,
         fallback_to_foreign_offers: bool = False,
         exclude_packages: Sequence[str] | None = None,
-        full_path: str,
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
@@ -72,13 +72,13 @@ class GetUrlTitleDetails(JustWatchProtocol):
 
     def download_get_url_title_details(  # noqa: PLR0913
         self,
+        full_path: str,
         *,
         platform: str = "WEB",
         exclude_text_recommendation_title: bool = True,
         first: int = 10,
         fallback_to_foreign_offers: bool = False,
         exclude_packages: Sequence[str] | None = None,
-        full_path: str,
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
@@ -101,12 +101,12 @@ class GetUrlTitleDetails(JustWatchProtocol):
         )
 
     def parse_get_url_title_details(self, data: dict[str, Any]) -> UrlV2:
-        return self.parse_response(ModelItem, data, "get_url_title_details").data.url_v2
+        return self.parse_response(Model, data, "get_url_title_details").data.url_v2
 
     def get_url_title_details(  # noqa: PLR0913
         self,
-        *,
         full_path: str,
+        *,
         platform: str = "WEB",
         exclude_text_recommendation_title: bool = True,
         first: int = 10,

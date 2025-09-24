@@ -2,7 +2,7 @@ from typing import Any
 
 from just_scrape.api.just_watch_protocol import JustWatchProtocol
 from just_scrape.models.request.get_new_title_buckets import NewTitlesFilter, Variables
-from just_scrape.models.response.get_new_title_buckets import ModelItem, NewTitleBuckets
+from just_scrape.models.response.get_new_title_buckets import Model, NewTitleBuckets
 from just_scrape.queries.get_new_title_buckets import QUERY
 
 
@@ -118,7 +118,7 @@ class GetNewTitleBuckets(JustWatchProtocol):
 
     def parse_get_new_title_buckets(self, data: dict[str, Any]) -> NewTitleBuckets:
         return self.parse_response(
-            ModelItem,
+            Model,
             data,
             "get_new_title_buckets",
         ).data.new_title_buckets

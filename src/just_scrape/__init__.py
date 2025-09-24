@@ -1,6 +1,3 @@
-import json
-import tempfile
-from pathlib import Path
 from typing import Any
 
 import requests
@@ -12,9 +9,8 @@ from just_scrape.api.get_new_titles import GetNewTitles
 from just_scrape.api.get_season_episodes import GetSeasonEpisodes
 from just_scrape.api.get_title_detail_article import GetTitleDetailArticle
 from just_scrape.api.get_url_title_details import GetUrlTitleDetails
-from just_scrape.constants import TEST_FILE_DIR
 from just_scrape.exceptions import GraphQLError, HTTPError
-from just_scrape.utils.update_files import update_response
+from just_scrape.utils.update_files import Updater
 
 
 class JustScrape(
@@ -82,19 +78,9 @@ class JustScrape(
         try:
             return response_model.model_validate(data)
         except ValidationError as e:
-            with tempfile.NamedTemporaryFile(
-                delete=False,
-                delete_on_close=False,
-                suffix=".json",
-            ) as file:
-                file.write(json.dumps(data).encode("utf-8"))
-            endpoint_folder = TEST_FILE_DIR / name
-            response_folder = endpoint_folder / "response"
-            temp_file = Path(file.name)
-            new_json_path = response_folder / temp_file.name
-            new_json_path.parent.mkdir(parents=True, exist_ok=True)
-            temp_file.rename(new_json_path)
-            update_response(endpoint_folder)
-
-            msg = "Parsing error, Pydantic updated, try again."
+            updater = Updater("response", name)
+            updater.add_test_file(data)
+            updater.generate_schema()
+            updater.remove_redundant_files()
+            msg = "Parsing error, models updated, try again."
             raise ValueError(msg) from e

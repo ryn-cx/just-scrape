@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from datetime import date
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Package(BaseModel):
@@ -44,8 +46,8 @@ class NewOffer(BaseModel):
     currency: str
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
-    available_to: AwareDatetime | None = Field(..., alias="availableTo")
-    date_created: AwareDatetime = Field(..., alias="dateCreated")
+    available_to: date | None = Field(..., alias="availableTo")
+    date_created: date = Field(..., alias="dateCreated")
     new_element_count: int = Field(..., alias="newElementCount")
     last_change_retail_price: str | None = Field(..., alias="lastChangeRetailPrice")
     last_change_percent: float = Field(..., alias="lastChangePercent")
@@ -189,7 +191,7 @@ class Data(BaseModel):
     new_titles: NewTitles = Field(..., alias="newTitles")
 
 
-class ModelItem(BaseModel):
+class Model(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
