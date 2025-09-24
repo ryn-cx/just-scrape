@@ -1,9 +1,9 @@
 import json
 import logging
+import subprocess
 from pathlib import Path
 from typing import Literal
 
-from gapi import Override
 from gapix import GAPIX
 
 from just_scrape.constants import JUST_SCRAPE_DIR, TEST_FILE_DIR
@@ -47,6 +47,19 @@ def update_query(endpoint: Path) -> None:
     output_file = JUST_SCRAPE_DIR / f"queries/{endpoint.name}.py"
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(f'# ruff: noqa: E501\nQUERY="""{file_content["query"]}"""')
+
+    subprocess.run(
+        ["uv", "run", "ruff", "check", "--fix", str(output_file)],  # noqa: S607
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+    )
+    subprocess.run(
+        ["uv", "run", "ruff", "format", str(output_file)],  # noqa: S607
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+    )
 
 
 if __name__ == "__main__":

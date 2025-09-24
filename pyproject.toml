@@ -11,6 +11,7 @@ dependencies = [
     "datamodel-code-generator>=0.33.0",
     "gapix",
     "requests>=2.32.5",
+    "ruff>=0.12.11",
 ]
 
 [build-system]
@@ -22,7 +23,6 @@ dev = [
     "pre-commit>=4.3.0",
     "pylint>=3.3.8",
     "pytest>=8.4.1",
-    "ruff>=0.12.11",
 ]
 
 [tool.ruff.lint]

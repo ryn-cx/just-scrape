@@ -266,6 +266,7 @@ dependencies = [
     { name = "datamodel-code-generator" },
     { name = "gapix" },
     { name = "requests" },
+    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
@@ -273,7 +274,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pylint" },
     { name = "pytest" },
-    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -281,6 +281,7 @@ requires-dist = [
     { name = "datamodel-code-generator", specifier = ">=0.33.0" },
     { name = "gapix", git = "https://github.com/ryn-cx/gapix" },
     { name = "requests", specifier = ">=2.32.5" },
+    { name = "ruff", specifier = ">=0.12.11" },
 ]
 
 [package.metadata.requires-dev]
@@ -288,7 +289,6 @@ dev = [
     { name = "pre-commit", specifier = ">=4.3.0" },
     { name = "pylint", specifier = ">=3.3.8" },
     { name = "pytest", specifier = ">=8.4.1" },
-    { name = "ruff", specifier = ">=0.12.11" },
 ]
 
 [[package]]
