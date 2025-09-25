@@ -184,7 +184,7 @@ dependencies = [
 [[package]]
 name = "gapix"
 version = "0.1.0"
-source = { git = "https://github.com/ryn-cx/gapix#24f17d0235b6e3e7e7b2c6deb314b6dee75c4882" }
+source = { git = "https://github.com/ryn-cx/gapix#f3b808a0a2ec969bf49e185e01c187e74d01cf02" }
 dependencies = [
     { name = "gapi" },
 ]

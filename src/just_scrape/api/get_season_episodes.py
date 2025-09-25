@@ -87,10 +87,10 @@ class GetSeasonEpisodes(JustWatchProtocol):
         platform: str = "WEB",
     ) -> list[Episode]:
         offset = 0
-        combined_results: Node | None = None
+        all_episodes: list[Episode] = []
 
         while True:
-            data = self.download_get_season_episodes(
+            result = self.get_season_episodes(
                 node_id=node_id,
                 country=country,
                 language=language,
@@ -98,18 +98,12 @@ class GetSeasonEpisodes(JustWatchProtocol):
                 limit=DEFAULT_LIMIT,
                 offset=offset,
             )
-            result = self.parse_get_season_episodes(data)
 
-            if combined_results is None:
-                combined_results = result
-            else:
-                combined_results.episodes.extend(result.episodes)
+            all_episodes.extend(result.episodes)
 
             # TODO: This can download one more page than needed, there may be a better
             # way to do this.
             if len(result.episodes) < DEFAULT_LIMIT:
-                break
+                return all_episodes
 
             offset += DEFAULT_LIMIT
-
-        return combined_results.episodes if combined_results else []

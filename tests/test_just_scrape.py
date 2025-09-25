@@ -1,5 +1,6 @@
 import json
 from collections.abc import Iterator
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -60,6 +61,15 @@ class TestGetAll:
         )
         # Amazon seems to always have at least 10 new episode every day so this will
         # probably always be true without looking weird hitting JustWatch's backlog.
+        assert len(new_titles) > 10  # noqa: PLR2004
+
+    def test_get_all_new_titles_since(self) -> None:
+        new_titles = client.get_all_new_titles_since(
+            filter_packages=["cru"],
+            available_to_packages=["cru"],
+            end_date=datetime.now().astimezone().date() - timedelta(days=7),
+        )
+        # There will probably always be at least 10 new titles on a weekly basis
         assert len(new_titles) > 10  # noqa: PLR2004
 
     def test_get_all_season_episodes(self) -> None:

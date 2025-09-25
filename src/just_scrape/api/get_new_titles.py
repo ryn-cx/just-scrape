@@ -191,31 +191,34 @@ class GetNewTitles(JustWatchProtocol):
     def get_all_new_titles(  # noqa: PLR0913
         self,
         *,
-        available_to_packages: list[str] | None = None,
-        country: str = "US",
+        first: int = 10,
+        page_type: str = "NEW",
         date: datetime.date | None = None,
+        language: str = "en",
+        country: str = "US",
+        price_drops: bool = False,
+        platform: str = "WEB",
+        show_date_badge: bool = False,
+        available_to_packages: list[str] | None = None,
         filter_age_certifications: list[Any] | None = None,
         filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
         filter_exclude_production_countries: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
         filter_object_types: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_presentation_types: list[Any] | None = None,
         filter_production_countries: list[Any] | None = None,
         filter_subgenres: list[Any] | None = None,
-        language: str = "en",
-        page_type: str = "NEW",
-        platform: str = "WEB",
-        price_drops: bool = False,
-        show_date_badge: bool = False,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[str] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+        after: str | None = None,
     ) -> list[Edge]:
-        all_edges: list[Edge] = []
         after = None
+        all_edges: list[Edge] = []
 
         while True:
             response = self.get_new_titles(
+                first=first,
                 after=after,
                 available_to_packages=available_to_packages,
                 country=country,
@@ -241,8 +244,68 @@ class GetNewTitles(JustWatchProtocol):
             all_edges.extend(response.edges)
 
             if not response.page_info.has_next_page:
-                break
+                return all_edges
 
             after = response.page_info.end_cursor
+
+    def get_all_new_titles_since(  # noqa: PLR0913
+        self,
+        *,
+        first: int = 10,
+        page_type: str = "NEW",
+        start_date: datetime.date | None = None,
+        end_date: datetime.date,
+        language: str = "en",
+        country: str = "US",
+        price_drops: bool = False,
+        platform: str = "WEB",
+        show_date_badge: bool = False,
+        available_to_packages: list[str] | None = None,
+        filter_age_certifications: list[Any] | None = None,
+        filter_exclude_genres: list[Any] | None = None,
+        filter_exclude_production_countries: list[Any] | None = None,
+        filter_object_types: list[Any] | None = None,
+        filter_production_countries: list[Any] | None = None,
+        filter_subgenres: list[Any] | None = None,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[str] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+    ) -> list[Edge]:
+        """Get new titles for a range of dates.
+
+        Downloads all paginated data for each date from start_date down to end_date.
+        """
+        current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
+        all_edges: list[Edge] = []
+
+        while current_date >= end_date:
+            day_edges = self.get_all_new_titles(
+                first=first,
+                page_type=page_type,
+                date=current_date,
+                language=language,
+                country=country,
+                price_drops=price_drops,
+                platform=platform,
+                show_date_badge=show_date_badge,
+                available_to_packages=available_to_packages,
+                filter_age_certifications=filter_age_certifications,
+                filter_exclude_genres=filter_exclude_genres,
+                filter_exclude_production_countries=filter_exclude_production_countries,
+                filter_object_types=filter_object_types,
+                filter_production_countries=filter_production_countries,
+                filter_subgenres=filter_subgenres,
+                filter_genres=filter_genres,
+                filter_packages=filter_packages,
+                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+                filter_presentation_types=filter_presentation_types,
+                filter_monetization_types=filter_monetization_types,
+            )
+
+            all_edges.extend(day_edges)
+
+            current_date -= datetime.timedelta(days=1)
 
         return all_edges
