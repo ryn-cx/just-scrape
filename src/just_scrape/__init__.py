@@ -3,13 +3,13 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
-from just_scrape.api.get_buy_box_offers import GetBuyBoxOffers
-from just_scrape.api.get_new_title_buckets import GetNewTitleBuckets
-from just_scrape.api.get_new_titles import GetNewTitles
-from just_scrape.api.get_season_episodes import GetSeasonEpisodes
-from just_scrape.api.get_title_detail_article import GetTitleDetailArticle
-from just_scrape.api.get_url_title_details import GetUrlTitleDetails
 from just_scrape.exceptions import GraphQLError, HTTPError
+from just_scrape.get_buy_box_offers import GetBuyBoxOffers
+from just_scrape.get_new_title_buckets import GetNewTitleBuckets
+from just_scrape.get_new_titles import GetNewTitles
+from just_scrape.get_season_episodes import GetSeasonEpisodes
+from just_scrape.get_title_detail_article import GetTitleDetailArticle
+from just_scrape.get_url_title_details import GetUrlTitleDetails
 from just_scrape.utils.update_files import Updater
 
 
@@ -72,14 +72,14 @@ class JustScrape(
     def parse_response[T: BaseModel](
         self,
         response_model: type[T],
-        data: dict[str, Any],
+        response: dict[str, Any],
         name: str,
     ) -> T:
         try:
-            return response_model.model_validate(data)
+            return response_model.model_validate(response)
         except ValidationError as e:
-            updater = Updater("response", name)
-            updater.add_test_file(data)
+            updater = Updater(name, "response")
+            updater.add_test_file(response)
             updater.generate_schema()
             updater.remove_redundant_files()
             msg = "Parsing error, models updated, try again."

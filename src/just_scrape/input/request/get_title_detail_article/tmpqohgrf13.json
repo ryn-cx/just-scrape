@@ -1,9 +1,0 @@
-{
-  "operationName": "GetTitleDetailArticle",
-  "variables": {
-    "fullPath": "/us/tv-show/south-park",
-    "language": "en",
-    "country": "US"
-  },
-  "query": "query GetTitleDetailArticle($fullPath: String!, $country: Country!, $language: Language!) {\n  urlV2(fullPath: $fullPath) {\n    id\n    node {\n      id\n      ... on MovieOrShowOrSeason {\n        content(country: $country, language: $language) {\n          articles(articleTypes: TITLE_DETAIL_ARTICLE) {\n            ...TitleDetailArticle\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment TitleDetailArticle on Article {\n  id\n  content {\n    __typename\n    synopsis\n    whatToKnow\n    productionNews\n  }\n  __typename\n}\n"
-}

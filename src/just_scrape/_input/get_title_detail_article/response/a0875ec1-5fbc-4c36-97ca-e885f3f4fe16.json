@@ -1,0 +1,27 @@
+{
+  "data": {
+    "urlV2": {
+      "id": "dXJ8MjEyOTEwOTU=",
+      "node": {
+        "id": "tm1593177",
+        "content": {
+          "articles": [
+            {
+              "id": "YXJ8MjI3MTc=",
+              "content": {
+                "__typename": "ArticleContent",
+                "synopsis": "<h3>Helen Mirren and Pierce Brosnan lead this Netflix adaptation of the Richard Osman novel</h3>\n<p>Elizabeth, Ron, Ibrahim, and Joyce are four retired friends who love to solve cold case murders for fun. With their combined skill set of a spy, a union leader, a psychiatrist, and a nurse, they are a formidable team ready to take on any case. But when a murder occurs on their own doorstep, the four amateur detectives find themselves wrapped up in a live investigation.</p>",
+                "whatToKnow": null,
+                "productionNews": null
+              },
+              "__typename": "Article"
+            }
+          ],
+          "__typename": "MovieContent"
+        },
+        "__typename": "Movie"
+      },
+      "__typename": "Url"
+    }
+  }
+}
