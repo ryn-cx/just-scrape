@@ -7,7 +7,7 @@ import pytest
 
 from just_scrape import JustScrape
 from just_scrape.exceptions import GraphQLError
-from just_scrape.utils.update_files import Updater
+from just_scrape.update_files import Updater
 
 client = JustScrape()
 

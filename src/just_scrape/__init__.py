@@ -10,7 +10,7 @@ from just_scrape.get_new_titles import GetNewTitles
 from just_scrape.get_season_episodes import GetSeasonEpisodes
 from just_scrape.get_title_detail_article import GetTitleDetailArticle
 from just_scrape.get_url_title_details import GetUrlTitleDetails
-from just_scrape.utils.update_files import Updater
+from just_scrape.update_files import Updater
 
 
 class JustScrape(
