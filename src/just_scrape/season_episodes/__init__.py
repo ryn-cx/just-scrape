@@ -10,7 +10,7 @@ DEFAULT_LIMIT = 20
 
 
 class GetSeasonEpisodes(JustWatchProtocol):
-    def _variables_get_season_episodes(  # noqa: PLR0913
+    def _season_episodes_variables(  # noqa: PLR0913
         self,
         *,
         node_id: str,
@@ -29,7 +29,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
             offset=offset,
         )
 
-    def _download_get_season_episodes(  # noqa: PLR0913
+    def _download_season_episodes(  # noqa: PLR0913
         self,
         *,
         node_id: str,
@@ -39,7 +39,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> dict[str, Any]:
-        variables = self._variables_get_season_episodes(
+        variables = self._season_episodes_variables(
             node_id=node_id,
             country=country,
             language=language,
@@ -47,14 +47,14 @@ class GetSeasonEpisodes(JustWatchProtocol):
             limit=limit,
             offset=offset,
         )
-        return self.graphql_request(
+        return self._graphql_request(
             operation_name="GetSeasonEpisodes",
             query=QUERY,
             variables=variables.model_dump(by_alias=True),
         )
 
-    def parse_get_season_episodes(self, response: dict[str, Any]) -> Model:
-        return self.parse_response(Model, response, "get_season_episodes")
+    def parse_season_episodes(self, response: dict[str, Any]) -> Model:
+        return self._parse_response(Model, response, "season_episodes")
 
     def get_season_episodes(  # noqa: PLR0913
         self,
@@ -66,7 +66,19 @@ class GetSeasonEpisodes(JustWatchProtocol):
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> Model:
-        response = self._download_get_season_episodes(
+        """Get episodes for a specific season.
+
+        This API request occurs when visiting a specific season page for a TV show.
+
+        Args:
+            node_id: The ID of the season.
+            country: ???
+            language: ???
+            platform: ???
+            limit: Number of episodes to return.
+            offset: Offset to start getting episodes from.
+        """
+        response = self._download_season_episodes(
             node_id=node_id,
             country=country,
             language=language,
@@ -75,7 +87,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
             offset=offset,
         )
 
-        return self.parse_get_season_episodes(response)
+        return self.parse_season_episodes(response)
 
     def get_all_season_episodes(
         self,
@@ -85,6 +97,16 @@ class GetSeasonEpisodes(JustWatchProtocol):
         language: str = "en",
         platform: str = "WEB",
     ) -> list[Model]:
+        """Get all of the episodes for a specific season.
+
+        This API request occurs when visiting a specific season page for a TV show.
+
+        Args:
+            node_id: The ID of the season.
+            country: ???
+            language: ???
+            platform: ???
+        """
         offset = 0
         all_episodes: list[Model] = []
 
@@ -106,13 +128,16 @@ class GetSeasonEpisodes(JustWatchProtocol):
 
             offset += DEFAULT_LIMIT
 
-    def get_all_season_episodes_get_episodes(
+    def get_actual_season_episodes(
         self,
-        all_episodes: list[Model],
+        all_episodes: Model | list[Model],
     ) -> list[Episode]:
         """Combine multiple GetSeasonEpisodes responses into a single response."""
+        if isinstance(all_episodes, Model):
+            return all_episodes.data.node.episodes
+
         return [
             episode
-            for response in all_episodes
-            for episode in response.data.node.episodes
+            for episode_page in all_episodes
+            for episode in self.get_actual_season_episodes(episode_page)
         ]

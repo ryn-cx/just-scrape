@@ -1,44 +1,16 @@
 from collections.abc import Sequence
 from typing import Any
 
+from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
 from .response import Model
 
-DEFAULT_EXCLUDE_PACKAGES = (
-    "3ca",
-    "als",
-    "amo",
-    "bfi",
-    "cgv",
-    "chi",
-    "cnv",
-    "daf",
-    "kod",
-    "koc",
-    "mrp",
-    "mte",
-    "mvt",
-    "nxp",
-    "org",
-    "ply",
-    "rvl",
-    "tak",
-    "tbv",
-    "tf1",
-    "uat",
-    "vld",
-    "yot",
-    "yrk",
-    "jpc",
-    "thl",
-)
-
 
 class GetBuyBoxOffers(JustWatchProtocol):
-    def _variables_get_buy_box_offers(  # noqa: PLR0913
+    def _buy_box_offers_variables(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -57,7 +29,7 @@ class GetBuyBoxOffers(JustWatchProtocol):
             language=language,
         )
 
-    def _download_get_buy_box_offers(  # noqa: PLR0913
+    def _download_buy_box_offers(  # noqa: PLR0913
         self,
         *,
         platform: str = "WEB",
@@ -67,7 +39,7 @@ class GetBuyBoxOffers(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        variables = self._variables_get_buy_box_offers(
+        variables = self._buy_box_offers_variables(
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
             exclude_packages=exclude_packages,
@@ -75,14 +47,22 @@ class GetBuyBoxOffers(JustWatchProtocol):
             country=country,
             language=language,
         )
-        return self.graphql_request(
+        return self._graphql_request(
             operation_name="GetBuyBoxOffers",
             query=QUERY,
             variables=variables.model_dump(by_alias=True),
         )
 
-    def parse_get_buy_box_offers(self, response: dict[str, Any]) -> Model:
-        return self.parse_response(Model, response, "get_buy_box_offers")
+    def parse_buy_box_offers(
+        self,
+        response: dict[str, Any],
+        *,
+        update: bool = False,
+    ) -> Model:
+        if update:
+            return self._parse_response(Model, response, "buy_box_offers")
+
+        return Model.model_validate(response)
 
     def get_buy_box_offers(  # noqa: PLR0913
         self,
@@ -94,7 +74,19 @@ class GetBuyBoxOffers(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> Model:
-        response = self._download_get_buy_box_offers(
+        """Get all of the different websites that a specific episode can be watched.
+
+        This API request normally occurs when clicking on an episode.
+
+        Args:
+            node_id: The ID of the episode.
+            platform: ???
+            fallback_to_foreign_offers: ???
+            exclude_packages: ???
+            country: ???
+            language: ???
+        """
+        response = self._download_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -103,4 +95,4 @@ class GetBuyBoxOffers(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_get_buy_box_offers(response)
+        return self.parse_buy_box_offers(response, update=True)

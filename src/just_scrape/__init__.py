@@ -3,14 +3,14 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
-from just_scrape.exceptions import GraphQLError, HTTPError
-from just_scrape.get_buy_box_offers import GetBuyBoxOffers
-from just_scrape.get_new_title_buckets import GetNewTitleBuckets
-from just_scrape.get_new_titles import GetNewTitles
-from just_scrape.get_season_episodes import GetSeasonEpisodes
-from just_scrape.get_title_detail_article import GetTitleDetailArticle
-from just_scrape.get_url_title_details import GetUrlTitleDetails
-from just_scrape.update_files import Updater
+from .buy_box_offers import GetBuyBoxOffers
+from .exceptions import GraphQLError, HTTPError
+from .new_title_buckets import GetNewTitleBuckets
+from .new_titles import GetNewTitles
+from .season_episodes import GetSeasonEpisodes
+from .title_detail_article import GetTitleDetailArticle
+from .update_files import Updater
+from .url_title_details import GetUrlTitleDetails
 
 
 class JustScrape(
@@ -33,14 +33,14 @@ class JustScrape(
         self.referer = referer
         self.origin = origin
 
-    def headers(self) -> dict[str, str]:
+    def _headers(self) -> dict[str, str]:
         return {
             "User-Agent": self.user_agent,
             "Referer": self.referer,
             "Origin": self.origin,
         }
 
-    def graphql_request(
+    def _graphql_request(
         self,
         operation_name: str,
         query: str,
@@ -53,7 +53,7 @@ class JustScrape(
                 "query": query,
                 "variables": variables,
             },
-            headers=self.headers(),
+            headers=self._headers(),
             timeout=60,
         )
 
@@ -69,7 +69,7 @@ class JustScrape(
 
         return response.json()
 
-    def parse_response[T: BaseModel](
+    def _parse_response[T: BaseModel](
         self,
         response_model: type[T],
         response: dict[str, Any],

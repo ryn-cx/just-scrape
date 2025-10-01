@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from typing import Any
 
+from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
@@ -8,45 +9,8 @@ from .request import Variables
 from .response import Model
 
 
-class OutputModel(Model):
-    raw_response: dict[str, Any]
-
-
-DEFAULT_EXCLUDE_PACKAGES = [
-    "3ca",
-    "als",
-    "amo",
-    "bfi",
-    "cgv",
-    "chi",
-    "cnv",
-    "cut",
-    "daf",
-    "kod",
-    "koc",
-    "mrp",
-    "mte",
-    "mvt",
-    "nxp",
-    "org",
-    "ply",
-    "rvl",
-    "tak",
-    "tbv",
-    "tf1",
-    "uat",
-    "vld",
-    "wa4",
-    "wdt",
-    "yot",
-    "yrk",
-    "jpc",
-    "thl",
-]
-
-
 class GetUrlTitleDetails(JustWatchProtocol):
-    def _variables_get_url_title_details(  # noqa: PLR0913
+    def _url_title_details_variables(  # noqa: PLR0913
         self,
         full_path: str,
         *,
@@ -74,7 +38,7 @@ class GetUrlTitleDetails(JustWatchProtocol):
             episodeMaxLimit=episode_max_limit,
         )
 
-    def _download_get_url_title_details(  # noqa: PLR0913
+    def _download_url_title_details(  # noqa: PLR0913
         self,
         full_path: str,
         *,
@@ -87,7 +51,7 @@ class GetUrlTitleDetails(JustWatchProtocol):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> dict[str, Any]:
-        variables = self._variables_get_url_title_details(
+        variables = self._url_title_details_variables(
             platform=platform,
             exclude_text_recommendation_title=exclude_text_recommendation_title,
             first=first,
@@ -98,14 +62,14 @@ class GetUrlTitleDetails(JustWatchProtocol):
             country=country,
             episode_max_limit=episode_max_limit,
         )
-        return self.graphql_request(
+        return self._graphql_request(
             operation_name="GetUrlTitleDetails",
             query=QUERY,
             variables=variables.model_dump(by_alias=True),
         )
 
-    def parse_get_url_title_details(self, response: dict[str, Any]) -> Model:
-        return self.parse_response(Model, response, "get_url_title_details")
+    def parse_url_title_details(self, response: dict[str, Any]) -> Model:
+        return self._parse_response(Model, response, "url_title_details")
 
     def get_url_title_details(  # noqa: PLR0913
         self,
@@ -120,7 +84,24 @@ class GetUrlTitleDetails(JustWatchProtocol):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> Model:
-        response = self._download_get_url_title_details(
+        """Get information about a specific TV show.
+
+        This API request normally occurs when visiting a the page for a specific season
+        of a TV show, on the TV show's main page, the information is embedded in the
+        HTML.
+
+        Args:
+            full_path: The full URL of the TV show excluding the domain.
+            platform: ???
+            exclude_text_recommendation_title: ???
+            first: ???
+            fallback_to_foreign_offers: ???
+            exclude_packages: ???
+            language: ???
+            country: ???
+            episode_max_limit: ???
+        """
+        response = self._download_url_title_details(
             platform=platform,
             exclude_text_recommendation_title=exclude_text_recommendation_title,
             first=first,
@@ -132,4 +113,4 @@ class GetUrlTitleDetails(JustWatchProtocol):
             episode_max_limit=episode_max_limit,
         )
 
-        return self.parse_get_url_title_details(response)
+        return self.parse_url_title_details(response)

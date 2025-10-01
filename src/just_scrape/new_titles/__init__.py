@@ -2,24 +2,11 @@ import datetime
 import json
 from typing import Any
 
-from pydantic import BaseModel
-
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Filter, Variables
 from .response import Edge, Model
-
-
-class GetNewTitlesResponse(BaseModel):
-    raw_response: dict[str, Any]
-    model: Model
-
-
-class GetNewTitlesResponses(BaseModel):
-    raw_response: dict[str, Any]
-    models: list[Model]
-    combined_models: Model
 
 
 class GetNewTitles(JustWatchProtocol):
@@ -141,14 +128,14 @@ class GetNewTitles(JustWatchProtocol):
         # The object passed to variables needs to be dumpable by JSON, the easiest way
         # to achieve this is to dump it to a JSON string and then load it back.
         dumped_variables = json.loads(variables.model_dump_json(by_alias=True))
-        return self.graphql_request(
+        return self._graphql_request(
             operation_name="GetNewTitles",
             query=QUERY,
             variables=dumped_variables,
         )
 
-    def parse_get_new_titles(self, response: dict[str, Any]) -> Model:
-        return self.parse_response(Model, response, "get_new_titles")
+    def parse_new_titles(self, response: dict[str, Any]) -> Model:
+        return self._parse_response(Model, response, "new_titles")
 
     def get_new_titles(  # noqa: PLR0913
         self,
@@ -175,6 +162,39 @@ class GetNewTitles(JustWatchProtocol):
         filter_monetization_types: list[Any] | None = None,
         after: str | None = None,
     ) -> Model:
+        """Get new episodes for a specific website and date.
+
+        This API request normally occurs when visiting the new episodes page
+        (https://www.justwatch.com/us/new).
+
+        Args:
+            first: Number of titles to return.
+            date: The date to get new titles for.
+            filter_packages: What websites to include, uses the shortName like "amz",
+            "nfx", etc. This values should probably always match available_to_packages.
+            available_to_packages: What websites to include, uses the shortName like
+            "amz", "nfx", etc. This values should probably always match filter_packages
+            after: Cursor to start getting titles from.
+
+            page_type: ???
+            language: ???
+            country: ???
+            price_drops: ???
+            platform: ???
+            show_date_badge: ???
+            available_to_packages.
+            filter_age_certifications: ???
+            filter_exclude_genres: ???
+            filter_exclude_production_countries: ???
+            filter_object_types: ???
+            filter_production_countries: ???
+            filter_subgenres: ???
+            filter_genres: ???
+            filter_exclude_irrelevant_titles: ???
+            filter_presentation_types: ???
+            filter_monetization_types: ???
+
+        """
         response = self._download_get_new_titles(
             first=first,
             page_type=page_type,
@@ -198,7 +218,7 @@ class GetNewTitles(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
-        return self.parse_get_new_titles(response)
+        return self.parse_new_titles(response)
 
     def get_all_new_titles_for_date(  # noqa: PLR0913
         self,
@@ -222,9 +242,36 @@ class GetNewTitles(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-        after: str | None = None,
         date: datetime.date | None = None,
     ) -> list[Model]:
+        """Get all of the new titles for a specific date.
+
+        Args:
+            first: Number of titles to return.
+            date: The date to get new titles for.
+            filter_packages: What websites to include, uses the shortName like "amz",
+            "nfx", etc. This values should probably always match available_to_packages.
+            available_to_packages: What websites to include, uses the shortName like
+            "amz", "nfx", etc. This values should probably always match filter_packages
+
+            page_type: ???
+            language: ???
+            country: ???
+            price_drops: ???
+            platform: ???
+            show_date_badge: ???
+            available_to_packages.
+            filter_age_certifications: ???
+            filter_exclude_genres: ???
+            filter_exclude_production_countries: ???
+            filter_object_types: ???
+            filter_production_countries: ???
+            filter_subgenres: ???
+            filter_genres: ???
+            filter_exclude_irrelevant_titles: ???
+            filter_presentation_types: ???
+            filter_monetization_types: ???
+        """
         after = None
         output: list[Model] = []
 
@@ -285,9 +332,35 @@ class GetNewTitles(JustWatchProtocol):
         start_date: datetime.date | None = None,
         end_date: datetime.date,
     ) -> list[list[Model]]:
-        """Get new titles for a range of dates.
+        """Get all of the new titles for a specific date range.
 
-        Downloads all paginated data for each date from start_date down to end_date.
+        Args:
+            start_date: The earliest date to get new titles for.
+            end_date: The latest date to get new titles for.
+
+            first: Number of titles to return.
+            filter_packages: What websites to include, uses the shortName like "amz",
+            "nfx", etc. This values should probably always match available_to_packages.
+            available_to_packages: What websites to include, uses the shortName like
+            "amz", "nfx", etc. This values should probably always match filter_packages
+
+            page_type: ???
+            language: ???
+            country: ???
+            price_drops: ???
+            platform: ???
+            show_date_badge: ???
+            available_to_packages.
+            filter_age_certifications: ???
+            filter_exclude_genres: ???
+            filter_exclude_production_countries: ???
+            filter_object_types: ???
+            filter_production_countries: ???
+            filter_subgenres: ???
+            filter_genres: ???
+            filter_exclude_irrelevant_titles: ???
+            filter_presentation_types: ???
+            filter_monetization_types: ???
         """
         current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
         output: list[list[Model]] = []
@@ -322,15 +395,22 @@ class GetNewTitles(JustWatchProtocol):
 
         return output
 
-    def get_all_new_titles_get_edges(
+    def new_titles_edges(
         self,
-        responses: Model | list[Model] | list[list[Model]],
+        responses: Model
+        | list[Model]
+        | list[list[Model]]
+        | dict[str, Any]
+        | list[dict[str, Any]],
     ) -> list[Edge]:
-        """Combine multiple GetNewTitles responses into a single response."""
+        """Get all of the edges for a new titles input."""
         if isinstance(responses, list):
             result: list[Edge] = []
             for response in responses:
-                result.extend(self.get_all_new_titles_get_edges(response))
+                result.extend(self.new_titles_edges(response))
             return result
+
+        if isinstance(responses, dict):
+            responses = self.parse_new_titles(responses)
 
         return responses.data.new_titles.edges

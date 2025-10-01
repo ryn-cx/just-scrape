@@ -33,14 +33,14 @@ class GetTitleDetailArticle(JustWatchProtocol):
             language=language,
             country=country,
         )
-        return self.graphql_request(
+        return self._graphql_request(
             operation_name="GetTitleDetailArticle",
             query=QUERY,
             variables=variables.model_dump(by_alias=True),
         )
 
     def parse_get_title_detail_article(self, response: dict[str, Any]) -> Model:
-        return self.parse_response(Model, response, "get_title_detail_article")
+        return self._parse_response(Model, response, "title_detail_article")
 
     def get_title_detail_article(
         self,
@@ -49,6 +49,7 @@ class GetTitleDetailArticle(JustWatchProtocol):
         language: str = "en",
         country: str = "US",
     ) -> Model:
+        """This may be deprecated and no longer used."""
         response = self._download_get_title_detail_article(
             full_path=full_path,
             language=language,
