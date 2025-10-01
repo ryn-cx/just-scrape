@@ -46,7 +46,7 @@ class GetTitleDetailArticle(JustWatchProtocol):
         update: bool = False,
     ) -> Model:
         if update:
-            return self._parse_response(Model, response, "buy_box_offers")
+            return self._parse_response(Model, response, "title_detail_article")
 
         return Model.model_validate(response)
 

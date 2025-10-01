@@ -75,7 +75,7 @@ class GetUrlTitleDetails(JustWatchProtocol):
         update: bool = False,
     ) -> Model:
         if update:
-            return self._parse_response(Model, response, "buy_box_offers")
+            return self._parse_response(Model, response, "url_title_details")
 
         return Model.model_validate(response)
 

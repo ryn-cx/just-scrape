@@ -141,7 +141,7 @@ class GetNewTitles(JustWatchProtocol):
         update: bool = False,
     ) -> Model:
         if update:
-            return self._parse_response(Model, response, "buy_box_offers")
+            return self._parse_response(Model, response, "new_titles")
 
         return Model.model_validate(response)
 
