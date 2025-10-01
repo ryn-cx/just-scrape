@@ -134,8 +134,16 @@ class GetNewTitles(JustWatchProtocol):
             variables=dumped_variables,
         )
 
-    def parse_new_titles(self, response: dict[str, Any]) -> Model:
-        return self._parse_response(Model, response, "new_titles")
+    def parse_new_titles(
+        self,
+        response: dict[str, Any],
+        *,
+        update: bool = False,
+    ) -> Model:
+        if update:
+            return self._parse_response(Model, response, "buy_box_offers")
+
+        return Model.model_validate(response)
 
     def get_new_titles(  # noqa: PLR0913
         self,
@@ -218,7 +226,7 @@ class GetNewTitles(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
-        return self.parse_new_titles(response)
+        return self.parse_new_titles(response, update=True)
 
     def get_all_new_titles_for_date(  # noqa: PLR0913
         self,

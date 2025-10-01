@@ -194,4 +194,4 @@ class GetNewTitleBuckets(JustWatchProtocol):
             filter_monetization_types=filter_monetization_types,
         )
 
-        return self.parse_new_title_buckets(response)
+        return self.parse_new_title_buckets(response, update=True)

@@ -68,8 +68,16 @@ class GetUrlTitleDetails(JustWatchProtocol):
             variables=variables.model_dump(by_alias=True),
         )
 
-    def parse_url_title_details(self, response: dict[str, Any]) -> Model:
-        return self._parse_response(Model, response, "url_title_details")
+    def parse_url_title_details(
+        self,
+        response: dict[str, Any],
+        *,
+        update: bool = False,
+    ) -> Model:
+        if update:
+            return self._parse_response(Model, response, "buy_box_offers")
+
+        return Model.model_validate(response)
 
     def get_url_title_details(  # noqa: PLR0913
         self,
@@ -113,4 +121,4 @@ class GetUrlTitleDetails(JustWatchProtocol):
             episode_max_limit=episode_max_limit,
         )
 
-        return self.parse_url_title_details(response)
+        return self.parse_url_title_details(response, update=True)
