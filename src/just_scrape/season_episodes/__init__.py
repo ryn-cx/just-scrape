@@ -136,7 +136,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
 
             offset += DEFAULT_LIMIT
 
-    def get_actual_season_episodes(
+    def season_episodes_entries(
         self,
         all_episodes: Model | list[Model],
     ) -> list[Episode]:
@@ -147,5 +147,5 @@ class GetSeasonEpisodes(JustWatchProtocol):
         return [
             episode
             for episode_page in all_episodes
-            for episode in self.get_actual_season_episodes(episode_page)
+            for episode in self.season_episodes_entries(episode_page)
         ]

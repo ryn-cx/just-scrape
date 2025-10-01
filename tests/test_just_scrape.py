@@ -111,7 +111,7 @@ class TestCustomGet:
             # Amazon seems to usually have at least 10 new episode every day so this
             # will USUALLY test true on the first iteration but sometimes extra loops
             # are required.
-            all_edges = client.new_titles_edges(all_new_titles_for_date)
+            all_edges = client.new_titles_entries(all_new_titles_for_date)
             assert len(all_edges) == expected_episodes
 
             if expected_episodes > 10:  # noqa: PLR2004
@@ -136,7 +136,7 @@ class TestCustomGet:
         for responses in responseses:
             expected_edges += responses[0].data.new_titles.total_count
 
-        actual_edges = len(client.new_titles_edges(responseses))
+        actual_edges = len(client.new_titles_entries(responseses))
 
         assert expected_edges == actual_edges
 
@@ -144,5 +144,5 @@ class TestCustomGet:
         season_id = "tss23744"
         number_of_episodes = 23
         season_episodes = client.get_all_season_episodes(node_id=season_id)
-        episodes = client.get_actual_season_episodes(season_episodes)
+        episodes = client.season_episodes_entries(season_episodes)
         assert len(episodes) == number_of_episodes

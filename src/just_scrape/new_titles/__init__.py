@@ -403,7 +403,7 @@ class GetNewTitles(JustWatchProtocol):
 
         return output
 
-    def new_titles_edges(
+    def new_titles_entries(
         self,
         responses: Model
         | list[Model]
@@ -415,7 +415,7 @@ class GetNewTitles(JustWatchProtocol):
         if isinstance(responses, list):
             result: list[Edge] = []
             for response in responses:
-                result.extend(self.new_titles_edges(response))
+                result.extend(self.new_titles_entries(response))
             return result
 
         if isinstance(responses, dict):
