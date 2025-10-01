@@ -136,9 +136,7 @@ class TestCustomGet:
         for responses in responseses:
             expected_edges += responses[0].data.new_titles.total_count
 
-        actual_edges = len(client.new_titles_entries(responseses))
-
-        assert expected_edges == actual_edges
+        assert len(client.new_titles_entries(responseses)) == expected_edges
 
     def test_get_all_season_episodes(self) -> None:
         season_id = "tss23744"
