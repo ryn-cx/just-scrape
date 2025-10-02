@@ -26,43 +26,37 @@ class TestParsing:
         for json_file in self.get_test_files("buy_box_offers"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_buy_box_offers(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
     def test_get_new_titles(self) -> None:
         for json_file in self.get_test_files("new_titles"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_new_titles(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
     def test_get_new_title_buckets(self) -> None:
         for json_file in self.get_test_files("new_title_buckets"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_new_title_buckets(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
     def test_get_url_title_details(self) -> None:
         for json_file in self.get_test_files("url_title_details"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_url_title_details(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
     def test_get_title_detail_article(self) -> None:
         for json_file in self.get_test_files("title_detail_article"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_get_title_detail_article(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
     def test_get_season_episodes(self) -> None:
         for json_file in self.get_test_files("season_episodes"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_season_episodes(file_content)
-            dumped = parsed.model_dump(mode="json", by_alias=True, exclude_unset=True)
-            assert file_content == dumped
+            assert file_content == client.dump_response(parsed)
 
 
 class TestGet:

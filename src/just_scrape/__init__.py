@@ -1,16 +1,31 @@
-from typing import Any
+from typing import Any, overload
 
 import requests
 from pydantic import BaseModel, ValidationError
 
 from .buy_box_offers import BuyBoxOffersMixin
+from .buy_box_offers.response import BuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
 from .new_title_buckets import NewTitleBucketsMixin
+from .new_title_buckets.response import NewTitleBuckets
 from .new_titles import NewTitlesMixin
+from .new_titles.response import NewTitles
 from .season_episodes import SeasonEpisodesMixin
+from .season_episodes.response import SeasonEpisodes
 from .title_detail_article import TitleDetailArticleMixin
+from .title_detail_article.response import TitleDetailArticle
 from .update_files import Updater
 from .url_title_details import UrlTitleDetailsMixin
+from .url_title_details.response import UrlTitleDetails
+
+RESPONSE_MODELS = (
+    BuyBoxOffers
+    | NewTitles
+    | NewTitleBuckets
+    | SeasonEpisodes
+    | TitleDetailArticle
+    | UrlTitleDetails
+)
 
 
 class JustScrape(
@@ -84,3 +99,22 @@ class JustScrape(
             updater.remove_redundant_files()
             msg = "Parsing error, models updated, try again."
             raise ValueError(msg) from e
+
+    @overload
+    def dump_response(
+        self,
+        data: list[list[RESPONSE_MODELS]],
+    ) -> list[list[dict[str, Any]]]: ...
+    @overload
+    def dump_response(self, data: list[RESPONSE_MODELS]) -> list[dict[str, Any]]: ...
+    @overload
+    def dump_response(self, data: RESPONSE_MODELS) -> dict[str, Any]: ...
+    def dump_response(
+        self,
+        data: RESPONSE_MODELS | list[RESPONSE_MODELS] | list[list[RESPONSE_MODELS]],
+    ) -> dict[str, Any] | list[dict[str, Any]] | list[list[dict[str, Any]]]:
+        """Dump an API response to a JSON serializable object."""
+        if isinstance(data, list):
+            return [self.dump_response(response) for response in data]
+
+        return data.model_dump(mode="json", by_alias=True, exclude_unset=True)
