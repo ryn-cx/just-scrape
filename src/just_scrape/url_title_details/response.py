@@ -996,7 +996,7 @@ class Data(BaseModel):
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
-class Model(BaseModel):
+class UrlTitleDetails(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

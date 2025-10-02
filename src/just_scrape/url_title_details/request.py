@@ -24,7 +24,7 @@ class Variables(BaseModel):
     episode_max_limit: int = Field(..., alias="episodeMaxLimit")
 
 
-class Model(BaseModel):
+class UrlTitleDetails(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

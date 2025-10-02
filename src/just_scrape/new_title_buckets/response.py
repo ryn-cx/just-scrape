@@ -68,7 +68,7 @@ class Edge(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class NewTitleBuckets(BaseModel):
+class NewTitleBuckets1(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -81,10 +81,10 @@ class Data(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    new_title_buckets: NewTitleBuckets = Field(..., alias="newTitleBuckets")
+    new_title_buckets: NewTitleBuckets1 = Field(..., alias="newTitleBuckets")
 
 
-class Model(BaseModel):
+class NewTitleBuckets(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

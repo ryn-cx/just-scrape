@@ -18,7 +18,7 @@ class Variables(BaseModel):
     language: str
 
 
-class Model(BaseModel):
+class BuyBoxOffers(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

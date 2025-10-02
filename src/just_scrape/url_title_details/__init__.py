@@ -6,10 +6,10 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
-from .response import Model
+from .response import UrlTitleDetails
 
 
-class GetUrlTitleDetails(JustWatchProtocol):
+class UrlTitleDetailsMixin(JustWatchProtocol):
     def _url_title_details_variables(  # noqa: PLR0913
         self,
         full_path: str,
@@ -73,11 +73,11 @@ class GetUrlTitleDetails(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> Model:
+    ) -> UrlTitleDetails:
         if update:
-            return self._parse_response(Model, response, "url_title_details")
+            return self._parse_response(UrlTitleDetails, response, "url_title_details")
 
-        return Model.model_validate(response)
+        return UrlTitleDetails.model_validate(response)
 
     def get_url_title_details(  # noqa: PLR0913
         self,
@@ -91,7 +91,7 @@ class GetUrlTitleDetails(JustWatchProtocol):
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
-    ) -> Model:
+    ) -> UrlTitleDetails:
         """Get information about a specific TV show.
 
         This API request normally occurs when visiting a the page for a specific season

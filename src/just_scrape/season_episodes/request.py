@@ -18,7 +18,7 @@ class Variables(BaseModel):
     offset: int
 
 
-class Model(BaseModel):
+class SeasonEpisodes(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

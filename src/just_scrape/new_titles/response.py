@@ -174,7 +174,7 @@ class PageInfo(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class NewTitles(BaseModel):
+class NewTitles1(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -188,10 +188,10 @@ class Data(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    new_titles: NewTitles = Field(..., alias="newTitles")
+    new_titles: NewTitles1 = Field(..., alias="newTitles")
 
 
-class Model(BaseModel):
+class NewTitles(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

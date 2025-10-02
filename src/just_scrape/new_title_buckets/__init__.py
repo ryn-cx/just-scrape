@@ -4,10 +4,10 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import NewTitlesFilter, Variables
-from .response import Model
+from .response import NewTitleBuckets
 
 
-class GetNewTitleBuckets(JustWatchProtocol):
+class NewTitleBucketsMixin(JustWatchProtocol):
     def _new_title_buckets_variables(  # noqa: PLR0913
         self,
         *,
@@ -120,11 +120,11 @@ class GetNewTitleBuckets(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> Model:
+    ) -> NewTitleBuckets:
         if update:
-            return self._parse_response(Model, response, "new_title_buckets")
+            return self._parse_response(NewTitleBuckets, response, "new_title_buckets")
 
-        return Model.model_validate(response)
+        return NewTitleBuckets.model_validate(response)
 
     def get_new_title_buckets(  # noqa: PLR0913
         self,
@@ -147,7 +147,7 @@ class GetNewTitleBuckets(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> Model:
+    ) -> NewTitleBuckets:
         """Get websites with new episodes.
 
         This API request normally occurs when visiting the new episodes page

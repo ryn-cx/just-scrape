@@ -4,12 +4,12 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
-from .response import Episode, Model
+from .response import Episode, SeasonEpisodes
 
 DEFAULT_LIMIT = 20
 
 
-class GetSeasonEpisodes(JustWatchProtocol):
+class SeasonEpisodesMixin(JustWatchProtocol):
     def _season_episodes_variables(  # noqa: PLR0913
         self,
         *,
@@ -58,11 +58,11 @@ class GetSeasonEpisodes(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> Model:
+    ) -> SeasonEpisodes:
         if update:
-            return self._parse_response(Model, response, "season_episodes")
+            return self._parse_response(SeasonEpisodes, response, "season_episodes")
 
-        return Model.model_validate(response)
+        return SeasonEpisodes.model_validate(response)
 
     def get_season_episodes(  # noqa: PLR0913
         self,
@@ -73,7 +73,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
         platform: str = "WEB",
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
-    ) -> Model:
+    ) -> SeasonEpisodes:
         """Get episodes for a specific season.
 
         This API request occurs when visiting a specific season page for a TV show.
@@ -104,7 +104,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
-    ) -> list[Model]:
+    ) -> list[SeasonEpisodes]:
         """Get all of the episodes for a specific season.
 
         This API request occurs when visiting a specific season page for a TV show.
@@ -116,7 +116,7 @@ class GetSeasonEpisodes(JustWatchProtocol):
             platform: ???
         """
         offset = 0
-        all_episodes: list[Model] = []
+        all_episodes: list[SeasonEpisodes] = []
 
         while True:
             response = self.get_season_episodes(
@@ -138,10 +138,10 @@ class GetSeasonEpisodes(JustWatchProtocol):
 
     def season_episodes_entries(
         self,
-        all_episodes: Model | list[Model],
+        all_episodes: SeasonEpisodes | list[SeasonEpisodes],
     ) -> list[Episode]:
         """Combine multiple GetSeasonEpisodes responses into a single response."""
-        if isinstance(all_episodes, Model):
+        if isinstance(all_episodes, SeasonEpisodes):
             return all_episodes.data.node.episodes
 
         return [

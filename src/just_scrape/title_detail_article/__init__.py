@@ -4,10 +4,10 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
-from .response import Model
+from .response import TitleDetailArticle
 
 
-class GetTitleDetailArticle(JustWatchProtocol):
+class TitleDetailArticleMixin(JustWatchProtocol):
     def _variables_get_title_detail_article(
         self,
         *,
@@ -44,11 +44,15 @@ class GetTitleDetailArticle(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> Model:
+    ) -> TitleDetailArticle:
         if update:
-            return self._parse_response(Model, response, "title_detail_article")
+            return self._parse_response(
+                TitleDetailArticle,
+                response,
+                "title_detail_article",
+            )
 
-        return Model.model_validate(response)
+        return TitleDetailArticle.model_validate(response)
 
     def get_title_detail_article(
         self,
@@ -56,7 +60,7 @@ class GetTitleDetailArticle(JustWatchProtocol):
         full_path: str,
         language: str = "en",
         country: str = "US",
-    ) -> Model:
+    ) -> TitleDetailArticle:
         """This may be deprecated and no longer used."""
         response = self._download_get_title_detail_article(
             full_path=full_path,

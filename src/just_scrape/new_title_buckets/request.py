@@ -37,7 +37,7 @@ class Variables(BaseModel):
     price_drops: bool = Field(..., alias="priceDrops")
 
 
-class Model(BaseModel):
+class NewTitleBuckets(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

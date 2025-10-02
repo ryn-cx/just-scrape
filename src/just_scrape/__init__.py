@@ -3,23 +3,23 @@ from typing import Any
 import requests
 from pydantic import BaseModel, ValidationError
 
-from .buy_box_offers import GetBuyBoxOffers
+from .buy_box_offers import BuyBoxOffersMixin
 from .exceptions import GraphQLError, HTTPError
-from .new_title_buckets import GetNewTitleBuckets
-from .new_titles import GetNewTitles
-from .season_episodes import GetSeasonEpisodes
-from .title_detail_article import GetTitleDetailArticle
+from .new_title_buckets import NewTitleBucketsMixin
+from .new_titles import NewTitlesMixin
+from .season_episodes import SeasonEpisodesMixin
+from .title_detail_article import TitleDetailArticleMixin
 from .update_files import Updater
-from .url_title_details import GetUrlTitleDetails
+from .url_title_details import UrlTitleDetailsMixin
 
 
 class JustScrape(
-    GetBuyBoxOffers,
-    GetNewTitleBuckets,
-    GetNewTitles,
-    GetSeasonEpisodes,
-    GetTitleDetailArticle,
-    GetUrlTitleDetails,
+    BuyBoxOffersMixin,
+    NewTitleBucketsMixin,
+    NewTitlesMixin,
+    SeasonEpisodesMixin,
+    TitleDetailArticleMixin,
+    UrlTitleDetailsMixin,
 ):
     def __init__(
         self,

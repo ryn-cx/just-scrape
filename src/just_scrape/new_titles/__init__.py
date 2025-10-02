@@ -6,10 +6,10 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Filter, Variables
-from .response import Edge, Model
+from .response import Edge, NewTitles
 
 
-class GetNewTitles(JustWatchProtocol):
+class NewTitlesMixin(JustWatchProtocol):
     def _variables_get_new_titles(  # noqa: PLR0913
         self,
         *,
@@ -139,11 +139,11 @@ class GetNewTitles(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> Model:
+    ) -> NewTitles:
         if update:
-            return self._parse_response(Model, response, "new_titles")
+            return self._parse_response(NewTitles, response, "new_titles")
 
-        return Model.model_validate(response)
+        return NewTitles.model_validate(response)
 
     def get_new_titles(  # noqa: PLR0913
         self,
@@ -169,7 +169,7 @@ class GetNewTitles(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         after: str | None = None,
-    ) -> Model:
+    ) -> NewTitles:
         """Get new episodes for a specific website and date.
 
         This API request normally occurs when visiting the new episodes page
@@ -251,7 +251,7 @@ class GetNewTitles(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         date: datetime.date | None = None,
-    ) -> list[Model]:
+    ) -> list[NewTitles]:
         """Get all of the new titles for a specific date.
 
         Args:
@@ -281,7 +281,7 @@ class GetNewTitles(JustWatchProtocol):
             filter_monetization_types: ???
         """
         after = None
-        output: list[Model] = []
+        output: list[NewTitles] = []
 
         while True:
             parsed = self.get_new_titles(
@@ -339,7 +339,7 @@ class GetNewTitles(JustWatchProtocol):
         # Specialized parameters for this function.
         start_date: datetime.date | None = None,
         end_date: datetime.date,
-    ) -> list[list[Model]]:
+    ) -> list[list[NewTitles]]:
         """Get all of the new titles for a specific date range.
 
         Args:
@@ -371,7 +371,7 @@ class GetNewTitles(JustWatchProtocol):
             filter_monetization_types: ???
         """
         current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
-        output: list[list[Model]] = []
+        output: list[list[NewTitles]] = []
 
         while current_date >= end_date:
             response = self.get_all_new_titles_for_date(
@@ -405,9 +405,9 @@ class GetNewTitles(JustWatchProtocol):
 
     def new_titles_entries(
         self,
-        responses: Model
-        | list[Model]
-        | list[list[Model]]
+        responses: NewTitles
+        | list[NewTitles]
+        | list[list[NewTitles]]
         | dict[str, Any]
         | list[dict[str, Any]],
     ) -> list[Edge]:

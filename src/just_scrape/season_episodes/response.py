@@ -82,7 +82,7 @@ class Data(BaseModel):
     node: Node
 
 
-class Model(BaseModel):
+class SeasonEpisodes(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
