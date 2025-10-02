@@ -138,9 +138,15 @@ class SeasonEpisodesMixin(JustWatchProtocol):
 
     def season_episodes_entries(
         self,
-        all_episodes: SeasonEpisodes | list[SeasonEpisodes],
+        all_episodes: SeasonEpisodes
+        | list[SeasonEpisodes]
+        | list[dict[str, Any]]
+        | dict[str, Any],
     ) -> list[Episode]:
         """Combine multiple GetSeasonEpisodes responses into a single response."""
+        if isinstance(all_episodes, dict):
+            all_episodes = self.parse_season_episodes(all_episodes)
+
         if isinstance(all_episodes, SeasonEpisodes):
             return all_episodes.data.node.episodes
 
