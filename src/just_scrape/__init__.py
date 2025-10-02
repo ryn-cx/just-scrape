@@ -1,3 +1,4 @@
+import logging
 from typing import Any, overload
 
 import requests
@@ -28,6 +29,8 @@ RESPONSE_MODELS = (
 )
 RESPONSE_MODELS_LIST = list[NewTitles] | list[SeasonEpisodes]
 RESPONSE_MODELS_LIST_LIST = list[list[NewTitles]]
+
+logger = logging.getLogger(__name__)
 
 
 class JustScrape(
@@ -61,14 +64,16 @@ class JustScrape(
         self,
         operation_name: str,
         query: str,
-        variables: dict[str, Any],
+        variables: BaseModel,
     ) -> dict[str, Any]:
+        logger.info("Downloading %s: %s", operation_name, variables)
+
         response = requests.post(
             "https://apis.justwatch.com/graphql",
             json={
                 "operationName": operation_name,
                 "query": query,
-                "variables": variables,
+                "variables": variables.model_dump(mode="json", by_alias=True),
             },
             headers=self._headers(),
             timeout=60,

@@ -8,7 +8,7 @@ class JustWatchProtocol(Protocol):
         self,
         operation_name: str,
         query: str,
-        variables: dict[str, Any],
+        variables: BaseModel,
     ) -> dict[str, Any]: ...
 
     def _parse_response[T: BaseModel](

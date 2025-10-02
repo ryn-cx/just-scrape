@@ -65,7 +65,7 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         return self._graphql_request(
             operation_name="GetUrlTitleDetails",
             query=QUERY,
-            variables=variables.model_dump(by_alias=True),
+            variables=variables,
         )
 
     def parse_url_title_details(

@@ -36,7 +36,7 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         return self._graphql_request(
             operation_name="GetTitleDetailArticle",
             query=QUERY,
-            variables=variables.model_dump(by_alias=True),
+            variables=variables,
         )
 
     def parse_get_title_detail_article(

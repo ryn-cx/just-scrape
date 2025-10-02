@@ -50,7 +50,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         return self._graphql_request(
             operation_name="GetBuyBoxOffers",
             query=QUERY,
-            variables=variables.model_dump(by_alias=True),
+            variables=variables,
         )
 
     def parse_buy_box_offers(

@@ -1,5 +1,4 @@
 import datetime
-import json
 from typing import Any
 
 from just_scrape.protocol import JustWatchProtocol
@@ -125,13 +124,10 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types=filter_monetization_types,
         )
 
-        # The object passed to variables needs to be dumpable by JSON, the easiest way
-        # to achieve this is to dump it to a JSON string and then load it back.
-        dumped_variables = json.loads(variables.model_dump_json(by_alias=True))
         return self._graphql_request(
             operation_name="GetNewTitles",
             query=QUERY,
-            variables=dumped_variables,
+            variables=variables,
         )
 
     def parse_new_titles(
