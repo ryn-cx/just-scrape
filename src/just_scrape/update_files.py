@@ -29,14 +29,16 @@ class Updater(GAPIX):
     def input_folder(self) -> Path:
         return TEST_FILE_DIR / self.endpoint_name()
 
+    def class_name(self) -> str | None:
+        return self.endpoint.replace("_", " ").title().replace(" ", "")
+
 
 def update_all_schemas() -> None:
     for endpoint in TEST_FILE_DIR.glob("*/*"):
         if endpoint.is_dir():
             logger.info("Updating schema for %s", endpoint.name)
             updater = Updater(endpoint.parent.name, endpoint.name)
-            class_name = endpoint.parent.name.replace("_", " ").title().replace(" ", "")
-            updater.generate_schema(class_name=class_name)
+            updater.generate_schema()
             updater.remove_redundant_files()
             if updater.endpoint_type == "request":
                 update_query(endpoint)
