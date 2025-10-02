@@ -26,6 +26,8 @@ RESPONSE_MODELS = (
     | TitleDetailArticle
     | UrlTitleDetails
 )
+RESPONSE_MODELS_LIST = list[NewTitles] | list[SeasonEpisodes]
+RESPONSE_MODELS_LIST_LIST = list[list[NewTitles]]
 
 
 class JustScrape(
@@ -103,15 +105,15 @@ class JustScrape(
     @overload
     def dump_response(
         self,
-        data: list[list[RESPONSE_MODELS]],
+        data: RESPONSE_MODELS_LIST_LIST,
     ) -> list[list[dict[str, Any]]]: ...
     @overload
-    def dump_response(self, data: list[RESPONSE_MODELS]) -> list[dict[str, Any]]: ...
+    def dump_response(self, data: RESPONSE_MODELS_LIST) -> list[dict[str, Any]]: ...
     @overload
     def dump_response(self, data: RESPONSE_MODELS) -> dict[str, Any]: ...
     def dump_response(
         self,
-        data: RESPONSE_MODELS | list[RESPONSE_MODELS] | list[list[RESPONSE_MODELS]],
+        data: RESPONSE_MODELS | RESPONSE_MODELS_LIST | RESPONSE_MODELS_LIST_LIST,
     ) -> dict[str, Any] | list[dict[str, Any]] | list[list[dict[str, Any]]]:
         """Dump an API response to a JSON serializable object."""
         if isinstance(data, list):
