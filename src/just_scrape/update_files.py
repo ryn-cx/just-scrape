@@ -1,6 +1,5 @@
 import json
 import logging
-import subprocess
 import uuid
 from pathlib import Path
 from typing import Any, Literal
@@ -15,6 +14,8 @@ logger = logging.getLogger(__name__)
 def update_all_models() -> None:
     for endpoint in TEST_FILE_DIR.glob("*/*"):
         update_model(endpoint.parent.name, endpoint.name)
+        if endpoint.name == "request":
+            update_query(endpoint)
 
 
 def update_model(endpoint: str, endpoint_type: Literal["request", "response"]) -> None:
@@ -48,19 +49,8 @@ def update_query(endpoint: Path) -> None:
     file_content = json.loads(first_file.read_text())
     output_file = JUST_SCRAPE_DIR / f"{endpoint.parent.name}/query.py"
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    output_file.write_text(f'# ruff: noqa: E501\nQUERY="""{file_content["query"]}"""')
-
-    subprocess.run(
-        ["uv", "run", "ruff", "check", "--fix", str(output_file)],  # noqa: S607
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.STDOUT,
-    )
-    subprocess.run(
-        ["uv", "run", "ruff", "format", str(output_file)],  # noqa: S607
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.STDOUT,
+    output_file.write_text(
+        f'# ruff: noqa: E501\nQUERY = """{file_content["query"]}"""\n',
     )
 
 
