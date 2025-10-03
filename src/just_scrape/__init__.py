@@ -15,7 +15,7 @@ from .season_episodes import SeasonEpisodesMixin
 from .season_episodes.response import SeasonEpisodes
 from .title_detail_article import TitleDetailArticleMixin
 from .title_detail_article.response import TitleDetailArticle
-from .update_files import Updater
+from .update_files import add_test_file, update_model
 from .url_title_details import UrlTitleDetailsMixin
 from .url_title_details.response import UrlTitleDetails
 
@@ -100,10 +100,8 @@ class JustScrape(
         try:
             return response_model.model_validate(response)
         except ValidationError as e:
-            updater = Updater(name, "response")
-            updater.add_test_file(response)
-            updater.generate_schema()
-            updater.remove_redundant_files()
+            add_test_file(name, "response", response)
+            update_model(name, "response")
             msg = "Parsing error, models updated, try again."
             raise ValueError(msg) from e
 
