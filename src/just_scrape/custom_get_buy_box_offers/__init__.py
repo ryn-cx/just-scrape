@@ -12,7 +12,7 @@ from .response import CustomBuyBoxOffers
 
 
 class CustomBuyBoxOffersMixin(JustWatchProtocol):
-    def _custom_buy_box_offers_variables(  # noqa: PLR0913
+    def _custom_get_buy_box_offers_variables(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -41,7 +41,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        variables = self._custom_buy_box_offers_variables(
+        variables = self._custom_get_buy_box_offers_variables(
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
             exclude_packages=exclude_packages,
@@ -65,7 +65,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             return self._parse_response(
                 CustomBuyBoxOffers,
                 response,
-                "custom_buy_box_offers",
+                "custom_get_buy_box_offers",
             )
 
         return CustomBuyBoxOffers.model_validate(response)

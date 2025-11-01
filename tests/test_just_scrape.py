@@ -60,7 +60,7 @@ class TestGet:
     def test_get_buy_box_offers(self) -> None:
         client.get_get_buy_box_offers(node_id="tse9298997")
 
-    def test_get_custom_buy_box_offers(self) -> None:
+    def test_get_custom_get_buy_box_offers(self) -> None:
         client.get_custom_get_buy_box_offers(node_id="tse9298997")
 
     def test_get_new_title_buckets(self) -> None:
