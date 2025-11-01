@@ -4,11 +4,11 @@ from typing import Any, overload
 import requests
 from pydantic import BaseModel, ValidationError
 
-from .buy_box_offers import BuyBoxOffersMixin
-from .buy_box_offers.response import BuyBoxOffers
-from .custom_buy_box_offers import CustomBuyBoxOffersMixin
-from .custom_buy_box_offers.response import CustomBuyBoxOffers
+from .custom_get_buy_box_offers import CustomBuyBoxOffersMixin
+from .custom_get_buy_box_offers.response import CustomBuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
+from .get_buy_box_offers import BuyBoxOffersMixin
+from .get_buy_box_offers.response import BuyBoxOffers
 from .new_title_buckets import NewTitleBucketsMixin
 from .new_title_buckets.response import NewTitleBuckets
 from .new_titles import NewTitlesMixin

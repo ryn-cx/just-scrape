@@ -10,7 +10,7 @@ from .response import BuyBoxOffers
 
 
 class BuyBoxOffersMixin(JustWatchProtocol):
-    def _buy_box_offers_variables(  # noqa: PLR0913
+    def _get_buy_box_offers_variables(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -29,7 +29,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-    def _download_buy_box_offers(  # noqa: PLR0913
+    def _download_get_buy_box_offers(  # noqa: PLR0913
         self,
         *,
         platform: str = "WEB",
@@ -39,7 +39,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        variables = self._buy_box_offers_variables(
+        variables = self._get_buy_box_offers_variables(
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
             exclude_packages=exclude_packages,
@@ -53,18 +53,18 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             variables=variables,
         )
 
-    def parse_buy_box_offers(
+    def parse_get_buy_box_offers(
         self,
         response: dict[str, Any],
         *,
         update: bool = False,
     ) -> BuyBoxOffers:
         if update:
-            return self._parse_response(BuyBoxOffers, response, "buy_box_offers")
+            return self._parse_response(BuyBoxOffers, response, "get_buy_box_offers")
 
         return BuyBoxOffers.model_validate(response)
 
-    def get_buy_box_offers(  # noqa: PLR0913
+    def get_get_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -86,7 +86,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        response = self._download_buy_box_offers(
+        response = self._download_get_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -95,4 +95,4 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_buy_box_offers(response, update=True)
+        return self.parse_get_buy_box_offers(response, update=True)

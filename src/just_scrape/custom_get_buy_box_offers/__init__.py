@@ -31,7 +31,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-    def _download_custom_buy_box_offers(  # noqa: PLR0913
+    def _download_custom_get_buy_box_offers(  # noqa: PLR0913
         self,
         *,
         platform: str = "WEB",
@@ -55,7 +55,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             variables=variables,
         )
 
-    def parse_custom_buy_box_offers(
+    def parse_custom_get_buy_box_offers(
         self,
         response: dict[str, Any],
         *,
@@ -70,7 +70,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
 
         return CustomBuyBoxOffers.model_validate(response)
 
-    def get_custom_buy_box_offers(  # noqa: PLR0913
+    def get_custom_get_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -92,7 +92,7 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        response = self._download_custom_buy_box_offers(
+        response = self._download_custom_get_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -101,4 +101,4 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_custom_buy_box_offers(response, update=True)
+        return self.parse_custom_get_buy_box_offers(response, update=True)
