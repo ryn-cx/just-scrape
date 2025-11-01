@@ -7,7 +7,6 @@ import pytest
 
 from just_scrape import JustScrape
 from just_scrape.exceptions import GraphQLError
-from just_scrape.update_files import Updater
 
 client = JustScrape()
 
@@ -15,11 +14,9 @@ client = JustScrape()
 class TestParsing:
     def get_test_files(self, endpoint: str) -> Iterator[Path]:
         """Get all JSON test files for a given endpoint."""
-        updater = Updater(endpoint, "response")
-        dir_path = updater.input_folder()
+        dir_path = Path(__file__).parent.parent / "src/just_scrape/_input" / endpoint
         if not dir_path.exists():
             pytest.fail(f"{dir_path} not found")
-
         return dir_path.glob("*.json")
 
     def test_get_buy_box_offers(self) -> None:
@@ -62,6 +59,9 @@ class TestParsing:
 class TestGet:
     def test_get_buy_box_offers(self) -> None:
         client.get_buy_box_offers(node_id="tse9298997")
+
+    def test_get_custom_buy_box_offers(self) -> None:
+        client.get_custom_buy_box_offers(node_id="tse9298997")
 
     def test_get_new_title_buckets(self) -> None:
         client.get_new_title_buckets()

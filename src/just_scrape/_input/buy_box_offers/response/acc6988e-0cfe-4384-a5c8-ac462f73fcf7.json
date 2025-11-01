@@ -1,0 +1,17 @@
+{
+  "data": {
+    "node": {
+      "id": "tse6970381",
+      "__typename": "Episode",
+      "offerCount": 0,
+      "maxOfferUpdatedAt": null,
+      "offersHistory": [],
+      "flatrate": [],
+      "buy": [],
+      "rent": [],
+      "free": [],
+      "fast": [],
+      "bundles": []
+    }
+  }
+}

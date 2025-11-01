@@ -1,0 +1,329 @@
+{
+  "data": {
+    "newTitles": {
+      "totalCount": 154,
+      "edges": [
+        {
+          "cursor": "MTUx",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dHNzMTEzMTU4OlVTOjI1NzpmbGF0cmF0ZTpzZA==",
+            "standardWebURL": "https://www.fubo.tv/welcome/series/125568292/yahoo-fantasy-forecast/?irmp=1206980&irad=599307&season=0",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8MjU3",
+              "icon": "/icon/316727345/{profile}/fubotv.{format}",
+              "packageId": 257,
+              "clearName": "fuboTV",
+              "shortName": "fuv",
+              "technicalName": "fubotv",
+              "iconWide": "/icon_wide/322151176/s160/fubotv.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FLATRATE",
+            "availableTo": "2025-10-11",
+            "dateCreated": "2025-10-08",
+            "newElementCount": 1,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Season",
+            "id": "tss113158",
+            "objectId": 113158,
+            "objectType": "SHOW_SEASON",
+            "content": {
+              "title": "Season 1",
+              "shortDescription": "",
+              "fullPath": "/us/tv-show/fantasy-forecast/season-1",
+              "scoring": {
+                "imdbVotes": null,
+                "imdbScore": null,
+                "tmdbPopularity": null,
+                "tmdbScore": null,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": null,
+              "runtime": 0,
+              "genres": [],
+              "seasonNumber": 1,
+              "__typename": "SeasonContent",
+              "isReleased": true
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "show": {
+              "__typename": "Show",
+              "id": "ts98218",
+              "objectId": 98218,
+              "objectType": "SHOW",
+              "content": {
+                "title": "Fantasy Forecast",
+                "shortDescription": "ABC News' Meterologist Mel gives viewers fantasy football advice based off of the forecast for the weekend's games.",
+                "fullPath": "/us/tv-show/fantasy-forecast",
+                "scoring": {
+                  "imdbVotes": null,
+                  "imdbScore": null,
+                  "tmdbPopularity": null,
+                  "tmdbScore": null,
+                  "__typename": "Scoring"
+                },
+                "posterUrl": null,
+                "runtime": 0,
+                "genres": [],
+                "__typename": "ShowContent"
+              },
+              "likelistEntry": null,
+              "dislikelistEntry": null,
+              "watchlistEntryV2": null,
+              "seenState": {
+                "progress": 0,
+                "__typename": "ShowSeenState"
+              }
+            }
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "MTUy",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dHNzNTIxOTA2OlVTOjI1NzpmbGF0cmF0ZTpzZA==",
+            "standardWebURL": "https://www.fubo.tv/welcome/series/125320958/scrambled-up/?irmp=1206980&irad=599307&season=1",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8MjU3",
+              "icon": "/icon/316727345/{profile}/fubotv.{format}",
+              "packageId": 257,
+              "clearName": "fuboTV",
+              "shortName": "fuv",
+              "technicalName": "fubotv",
+              "iconWide": "/icon_wide/322151176/s160/fubotv.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FLATRATE",
+            "availableTo": "2025-10-11",
+            "dateCreated": "2025-10-08",
+            "newElementCount": 1,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Season",
+            "id": "tss521906",
+            "objectId": 521906,
+            "objectType": "SHOW_SEASON",
+            "content": {
+              "title": "Season 1",
+              "shortDescription": "",
+              "fullPath": "/us/tv-show/scrambled-up/season-1",
+              "scoring": {
+                "imdbVotes": null,
+                "imdbScore": null,
+                "tmdbPopularity": null,
+                "tmdbScore": null,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/335705615/{profile}/season-1.{format}",
+              "runtime": 0,
+              "genres": [],
+              "seasonNumber": 1,
+              "__typename": "SeasonContent",
+              "isReleased": true
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "show": {
+              "__typename": "Show",
+              "id": "ts491186",
+              "objectId": 491186,
+              "objectType": "SHOW",
+              "content": {
+                "title": "Scrambled Up",
+                "shortDescription": "Contestants battle it out to solve word scrambles for the chance to win $10,000; host Michael Yo.",
+                "fullPath": "/us/tv-show/scrambled-up",
+                "scoring": {
+                  "imdbVotes": null,
+                  "imdbScore": null,
+                  "tmdbPopularity": null,
+                  "tmdbScore": null,
+                  "__typename": "Scoring"
+                },
+                "posterUrl": "/poster/335705615/{profile}/scrambled-up.{format}",
+                "runtime": 0,
+                "genres": [],
+                "__typename": "ShowContent"
+              },
+              "likelistEntry": null,
+              "dislikelistEntry": null,
+              "watchlistEntryV2": null,
+              "seenState": {
+                "progress": 0,
+                "__typename": "ShowSeenState"
+              }
+            }
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "MTUz",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xNTk4NTEwOlVTOjI1NzpmbGF0cmF0ZTpzZA==",
+            "standardWebURL": "https://www.fubo.tv/welcome/program/SH057761840000?irmp=1206980&irad=599309",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8MjU3",
+              "icon": "/icon/316727345/{profile}/fubotv.{format}",
+              "packageId": 257,
+              "clearName": "fuboTV",
+              "shortName": "fuv",
+              "technicalName": "fubotv",
+              "iconWide": "/icon_wide/322151176/s160/fubotv.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FLATRATE",
+            "availableTo": "2025-10-11",
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm1598510",
+            "objectId": 1598510,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Aliens Uncovered: Observe & Report 2",
+              "shortDescription": "UFO researchers investigate mysterious sightings near Phoenix using advanced tech. Their evidence suggests both earthly and unexplained causes, raising questions about extraterrestrial life as they prepare to share findings.",
+              "fullPath": "/us/movie/aliens-uncovered-observe-and-report-2",
+              "scoring": {
+                "imdbVotes": 249,
+                "imdbScore": 7.6,
+                "tmdbPopularity": null,
+                "tmdbScore": null,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/326380268/{profile}/aliens-uncovered-observe-and-report-2.{format}",
+              "runtime": 75,
+              "genres": [],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "MTU0",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xNjA2MDkyOlVTOjI1NzpmbGF0cmF0ZTpzZA==",
+            "standardWebURL": "https://www.fubo.tv/welcome/program/SH057761850000?irmp=1206980&irad=599309",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8MjU3",
+              "icon": "/icon/316727345/{profile}/fubotv.{format}",
+              "packageId": 257,
+              "clearName": "fuboTV",
+              "shortName": "fuv",
+              "technicalName": "fubotv",
+              "iconWide": "/icon_wide/322151176/s160/fubotv.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FLATRATE",
+            "availableTo": "2025-10-11",
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm1606092",
+            "objectId": 1606092,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Aliens Uncovered: Moments of Disclosure",
+              "shortDescription": "Set against the backdrop of their ordinary suburban lives, the team uncovers astonishing clues that lead them to a groundbreaking discovery right in their own backyards. As they connect the dots between local sightings and cosmic puzzles, they confront skepticism from the public and authorities alike. Just when they think they have the answers, a shocking revelation tests their resolve and challenges humanity's understanding of our place in the universe. Join them on this thrilling journey of exploration, where the quest for truth collides with the mysteries of the cosmos, and ordinary spaces transform into extraordinary gateways.",
+              "fullPath": "/us/movie/aliens-uncovered-moments-of-disclosure",
+              "scoring": {
+                "imdbVotes": 11,
+                "imdbScore": 7.1,
+                "tmdbPopularity": null,
+                "tmdbScore": null,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/331683331/{profile}/aliens-uncovered-moments-of-disclosure.{format}",
+              "runtime": 76,
+              "genres": [
+                {
+                  "translation": "Science-Fiction",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        }
+      ],
+      "pageInfo": {
+        "endCursor": "MTU0",
+        "hasPreviousPage": true,
+        "hasNextPage": false,
+        "__typename": "PageInfo"
+      },
+      "__typename": "NewTitlesConnection"
+    }
+  }
+}

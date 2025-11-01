@@ -1,0 +1,784 @@
+{
+  "data": {
+    "newTitles": {
+      "totalCount": 10,
+      "edges": [
+        {
+          "cursor": "MQ==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xMjg0MDYwOlVTOjUzODpyZW50OnNk",
+            "standardWebURL": "https://watch.plex.tv/movie/mickey-17?utm_content=5eb8f25e3f398b00402fbe55&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": "$2.99",
+            "retailPriceValue": 2.99,
+            "lastChangeRetailPriceValue": 4.99,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "RENT",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": "$4.99",
+            "lastChangePercent": -40.080162
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm1284060",
+            "objectId": 1284060,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Mickey 17",
+              "shortDescription": "Unlikely hero Mickey Barnes finds himself in the extraordinary circumstance of working for an employer who demands the ultimate commitment to the job\u2026 to die, for a living.",
+              "fullPath": "/us/movie/mickey-17",
+              "scoring": {
+                "imdbVotes": 202374,
+                "imdbScore": 6.7,
+                "tmdbPopularity": 11.7208,
+                "tmdbScore": 6.872,
+                "tomatoMeter": 77,
+                "certifiedFresh": true,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/326299678/{profile}/mickey-17.{format}",
+              "runtime": 137,
+              "genres": [
+                {
+                  "translation": "Science-Fiction",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Fantasy",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "Mg==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xNTE1MjIzOlVTOjUzODpyZW50Omhk",
+            "standardWebURL": "https://watch.plex.tv/movie/the-brutalist?utm_content=5d77708731d95e001f1a3a84&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": "$3.99",
+            "retailPriceValue": 3.99,
+            "lastChangeRetailPriceValue": 5.99,
+            "currency": "USD",
+            "presentationType": "HD",
+            "monetizationType": "RENT",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": "$5.99",
+            "lastChangePercent": -33.38898
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm1515223",
+            "objectId": 1515223,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "The Brutalist",
+              "shortDescription": "When a visionary architect and his wife flee post-war Europe in 1947 to rebuild their legacy and witness the birth of modern United States, their lives are changed forever by a mysterious, wealthy client.",
+              "fullPath": "/us/movie/the-brutalist",
+              "scoring": {
+                "imdbVotes": 105780,
+                "imdbScore": 7.3,
+                "tmdbPopularity": 10.6286,
+                "tmdbScore": 6.976,
+                "tomatoMeter": 93,
+                "certifiedFresh": true,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/326223302/{profile}/the-brutalist.{format}",
+              "runtime": 215,
+              "genres": [
+                {
+                  "translation": "Drama",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "Mw==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG01MzQ5MDpVUzo1Mzg6ZnJlZTpzZA==",
+            "standardWebURL": "https://watch.plex.tv/movie/get-well-soon?autoplay=1&utm_content=5d7768c4decfcd001f2f2158&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm53490",
+            "objectId": 53490,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Get Well Soon",
+              "shortDescription": "After having a nervous breakdown, a popular talk-show host confronts his ex-girlfriend who is dating a cross-dresser.",
+              "fullPath": "/us/movie/get-well-soon",
+              "scoring": {
+                "imdbVotes": 1289,
+                "imdbScore": 5.1,
+                "tmdbPopularity": 1.2365,
+                "tmdbScore": 4,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/191976910/{profile}/get-well-soon.{format}",
+              "runtime": 95,
+              "genres": [
+                {
+                  "translation": "Romance",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Drama",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "NA==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xMzcyNTg6VVM6NTM4OmZyZWU6c2Q=",
+            "standardWebURL": "https://watch.plex.tv/movie/danny-collins?autoplay=1&utm_content=5d776aa751dd69001fe267c2&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm137258",
+            "objectId": 137258,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Danny Collins",
+              "shortDescription": "An ageing hard-living 1970s rock star decides to change his life when he discovers a 40-year-old undelivered letter written to him by John Lennon.",
+              "fullPath": "/us/movie/danny-collins",
+              "scoring": {
+                "imdbVotes": 34437,
+                "imdbScore": 7,
+                "tmdbPopularity": 1.9426,
+                "tmdbScore": 6.8,
+                "tomatoMeter": 77,
+                "certifiedFresh": true,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/176598640/{profile}/danny-collins.{format}",
+              "runtime": 107,
+              "genres": [
+                {
+                  "translation": "Music & Musical",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Drama",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "NQ==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0zMTk0NzQ6VVM6NTM4OmZyZWU6c2Q=",
+            "standardWebURL": "https://watch.plex.tv/movie/monster-family?autoplay=1&utm_content=5d776d1cf617c900201866b3&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm319474",
+            "objectId": 319474,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Monster Family",
+              "shortDescription": "The Wishbone family are far from happy. In an attempt to reconnect as a family, they plan a fun night out. However, the plan backfires when they are cursed and all turned into Monsters.",
+              "fullPath": "/us/movie/happy-family",
+              "scoring": {
+                "imdbVotes": 5756,
+                "imdbScore": 4.8,
+                "tmdbPopularity": 2.922,
+                "tmdbScore": 6,
+                "tomatoMeter": 10,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/45291585/{profile}/happy-family.{format}",
+              "runtime": 93,
+              "genres": [
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Animation",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Kids & Family",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Fantasy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Horror",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Made in Europe",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "Ng==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0zNTIwODE6VVM6NTM4OmZyZWU6c2Q=",
+            "standardWebURL": "https://watch.plex.tv/movie/luis-and-the-aliens?autoplay=1&utm_content=5d77707747dd6e001f70a296&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm352081",
+            "objectId": 352081,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Luis and the Aliens",
+              "shortDescription": "The story 11-year-old Luis who makes friends with three loveable little aliens, who crash their UFO into his house. In return for Luis' help in finding the home-shopping channel stuff they came for, they save Luis from boarding school - and an exciting adventure follows.",
+              "fullPath": "/us/movie/luis-and-the-aliens",
+              "scoring": {
+                "imdbVotes": 3184,
+                "imdbScore": 6,
+                "tmdbPopularity": 2.6199,
+                "tmdbScore": 6.5,
+                "tomatoMeter": 24,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/74056712/{profile}/luis-and-the-aliens.{format}",
+              "runtime": 86,
+              "genres": [
+                {
+                  "translation": "Animation",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Kids & Family",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Science-Fiction",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Made in Europe",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "Nw==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xODA5OTE6VVM6NTM4OmZyZWU6c2Q=",
+            "standardWebURL": "https://watch.plex.tv/movie/the-hunters?autoplay=1&utm_content=5d7768c79ab54400214eb679&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm180991",
+            "objectId": 180991,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "The Hunters",
+              "shortDescription": "Alice and her friends are approaching the end of the school year where their dead-end lives will end, and the chance of a new life will begin. Before heading off to college they spend one last day together in the woods, the one part of town that has always been off limits to them growing up. As they stumble upon what they thought was an abandoned fort only to find the walls dripping in blood and decomposing body parts lying around, they are startled to learn they are now a part of an undercover investigation. After being told to get out of the woods they realize they're trapped, for the Hunters, who call the fort home, never let anyone out alive.",
+              "fullPath": "/us/movie/the-hunters",
+              "scoring": {
+                "imdbVotes": 2184,
+                "imdbScore": 4,
+                "tmdbPopularity": 1.6526,
+                "tmdbScore": 4.1,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/8861687/{profile}/the-hunters.{format}",
+              "runtime": 111,
+              "genres": [
+                {
+                  "translation": "Mystery & Thriller",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Crime",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Horror",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Made in Europe",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "OA==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0zNTU4NzA6VVM6NTM4OmZyZWU6aGQ=",
+            "standardWebURL": "https://watch.plex.tv/movie/let-there-be-light-2017?autoplay=1&utm_content=5d776d7e9ab544002151efc5&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "HD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm355870",
+            "objectId": 355870,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Let There Be Light",
+              "shortDescription": "An atheist goes through a near-death experience in an auto accident before converting to Christianity.",
+              "fullPath": "/us/movie/let-there-be-light-2017-0",
+              "scoring": {
+                "imdbVotes": 3453,
+                "imdbScore": 4.6,
+                "tmdbPopularity": 0.9395,
+                "tmdbScore": 5.629,
+                "tomatoMeter": 100,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/47667344/{profile}/let-there-be-light-2017-0.{format}",
+              "runtime": 100,
+              "genres": [
+                {
+                  "translation": "Drama",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "OQ==",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xODgwODk6VVM6NTM4OmZyZWU6c2Q=",
+            "standardWebURL": "https://watch.plex.tv/movie/interceptor?autoplay=1&utm_content=5d77687f51dd69001fe0d263&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "SD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm188089",
+            "objectId": 188089,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "Interceptor",
+              "shortDescription": "A U.S. Air Force officer tries to stop a murderous group of terrorists who are trying to steal two top secret F-117A Stealth Fighters from the cargo hold of a gigantic C-5 Galaxy Transport flying at 30,000 feet over the Atlantic Ocean.",
+              "fullPath": "/us/movie/interceptor",
+              "scoring": {
+                "imdbVotes": 760,
+                "imdbScore": 4.8,
+                "tmdbPopularity": 0.3971,
+                "tmdbScore": 5.9,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/174371075/{profile}/interceptor.{format}",
+              "runtime": 92,
+              "genres": [
+                {
+                  "translation": "Mystery & Thriller",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Science-Fiction",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Action & Adventure",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        },
+        {
+          "cursor": "MTA=",
+          "newOffer": {
+            "__typename": "Offer",
+            "id": "b2Z8dG0xNTc5NjM6VVM6NTM4OmZyZWU6aGQ=",
+            "standardWebURL": "https://watch.plex.tv/movie/a-bit-of-bad-luck?autoplay=1&utm_content=5d776aafad5437001f7858d3&utm_medium=deeplink&utm_source=justWatch-v2-catalog",
+            "preAffiliatedStandardWebURL": null,
+            "streamUrl": null,
+            "streamUrlExternalPlayer": null,
+            "package": {
+              "id": "cGF8NTM4",
+              "icon": "/icon/301832745/{profile}/plex.{format}",
+              "packageId": 538,
+              "clearName": "Plex",
+              "shortName": "plx",
+              "technicalName": "plex",
+              "iconWide": "/icon_wide/322151900/s160/plex.{format}",
+              "hasRectangularIcon": true,
+              "__typename": "Package"
+            },
+            "retailPrice": null,
+            "retailPriceValue": null,
+            "lastChangeRetailPriceValue": null,
+            "currency": "USD",
+            "presentationType": "HD",
+            "monetizationType": "FREE",
+            "availableTo": null,
+            "dateCreated": "2025-10-08",
+            "newElementCount": 0,
+            "lastChangeRetailPrice": null,
+            "lastChangePercent": 0
+          },
+          "node": {
+            "__typename": "Movie",
+            "id": "tm157963",
+            "objectId": 157963,
+            "objectType": "MOVIE",
+            "content": {
+              "title": "A Bit of Bad Luck",
+              "shortDescription": "Brooks Caldwell, (Cary Elwes) an erudite and handsome lawyer, seems to have it all: wealth, social status and a red hot career. His success is, in reality, a product of his marriage to his beautiful, socialite wife, Amanda, (Terri Polo) a wealthy timber heiress. Unlike most, who would remain content to enjoy a life of luxury and privilege, Brooks continues to risk everything by having extramarital affairs. Brooks' philandering, in addition to humiliating Amanda, has driven her to the point of a mental breakdown. Having been pushed over the edge, Amanda orchestrates a just and elaborate plan to bring her husband down. When Brooks leaves for a weekend romp with his latest squeeze, (Agnes Bruckner) his life quickly descends into a bizarre, nightmarish, downward spiral.",
+              "fullPath": "/us/movie/a-bit-of-bad-luck",
+              "scoring": {
+                "imdbVotes": 318,
+                "imdbScore": 4.8,
+                "tmdbPopularity": 0.1289,
+                "tmdbScore": 4.389,
+                "tomatoMeter": null,
+                "certifiedFresh": null,
+                "__typename": "Scoring"
+              },
+              "posterUrl": "/poster/139162594/{profile}/a-bit-of-bad-luck.{format}",
+              "runtime": 86,
+              "genres": [
+                {
+                  "translation": "Drama",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Comedy",
+                  "__typename": "Genre"
+                },
+                {
+                  "translation": "Mystery & Thriller",
+                  "__typename": "Genre"
+                }
+              ],
+              "isReleased": true,
+              "__typename": "MovieContent"
+            },
+            "likelistEntry": null,
+            "dislikelistEntry": null,
+            "seenlistEntry": null,
+            "watchlistEntryV2": null
+          },
+          "__typename": "NewTitlesEdge"
+        }
+      ],
+      "pageInfo": {
+        "endCursor": "MTA=",
+        "hasPreviousPage": false,
+        "hasNextPage": false,
+        "__typename": "PageInfo"
+      },
+      "__typename": "NewTitlesConnection"
+    }
+  }
+}
