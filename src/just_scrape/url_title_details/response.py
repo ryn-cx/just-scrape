@@ -990,6 +990,18 @@ class Node1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class Child6(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    title: str
+    retail_price: str | None = Field(..., alias="retailPrice")
+    is_trial: bool = Field(..., alias="isTrial")
+    duration_days: int = Field(..., alias="durationDays")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    field__typename: str = Field(..., alias="__typename")
+
+
 class PlanOffer5(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -999,7 +1011,7 @@ class PlanOffer5(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child4]
+    children: list[Child6]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1027,7 +1039,7 @@ class Plan3(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child4]
+    children: list[Child6]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1060,7 +1072,7 @@ class Offer2(BaseModel):
     element_count: int = Field(..., alias="elementCount")
     available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
-    video_technology: list = Field(..., alias="videoTechnology")
+    video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
     audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
@@ -1076,18 +1088,6 @@ class Bundle(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Child8(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    title: str
-    retail_price: str | None = Field(..., alias="retailPrice")
-    is_trial: bool = Field(..., alias="isTrial")
-    duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    field__typename: str = Field(..., alias="__typename")
-
-
 class PlanOffer6(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -1097,7 +1097,7 @@ class PlanOffer6(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child8]
+    children: list[Child6]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1125,7 +1125,7 @@ class Plan4(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child8]
+    children: list[Child6]
     field__typename: str = Field(..., alias="__typename")
 
 

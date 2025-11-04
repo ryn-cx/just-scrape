@@ -4,8 +4,8 @@ from typing import Any, overload
 import requests
 from pydantic import BaseModel, ValidationError
 
-from .custom_get_buy_box_offers import CustomBuyBoxOffersMixin
-from .custom_get_buy_box_offers.response import CustomBuyBoxOffers
+from .custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
+from .custom_get_buy_box_offers.response import CustomGetBuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
 from .get_buy_box_offers import BuyBoxOffersMixin
 from .get_buy_box_offers.response import BuyBoxOffers
@@ -28,7 +28,7 @@ RESPONSE_MODELS = (
     | SeasonEpisodes
     | TitleDetailArticle
     | UrlTitleDetails
-    | CustomBuyBoxOffers
+    | CustomGetBuyBoxOffers
 )
 RESPONSE_MODELS_LIST = list[NewTitles] | list[SeasonEpisodes]
 RESPONSE_MODELS_LIST_LIST = list[list[NewTitles]]
@@ -43,7 +43,7 @@ class JustScrape(
     SeasonEpisodesMixin,
     TitleDetailArticleMixin,
     UrlTitleDetailsMixin,
-    CustomBuyBoxOffersMixin,
+    CustomGetBuyBoxOffersMixin,
 ):
     def __init__(
         self,
