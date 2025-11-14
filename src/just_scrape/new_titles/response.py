@@ -50,7 +50,7 @@ class NewOffer(BaseModel):
     date_created: date = Field(..., alias="dateCreated")
     new_element_count: int = Field(..., alias="newElementCount")
     last_change_retail_price: str | None = Field(..., alias="lastChangeRetailPrice")
-    last_change_percent: float = Field(..., alias="lastChangePercent")
+    last_change_percent: int | float = Field(..., alias="lastChangePercent")
 
 
 class Scoring(BaseModel):
@@ -58,9 +58,9 @@ class Scoring(BaseModel):
         extra="forbid",
     )
     imdb_votes: int | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
-    tmdb_score: float | None = Field(..., alias="tmdbScore")
+    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
     field__typename: str = Field(..., alias="__typename")

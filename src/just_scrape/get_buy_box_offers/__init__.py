@@ -6,7 +6,7 @@ from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
-from .response import BuyBoxOffers
+from .response import GetBuyBoxOffers
 
 
 class BuyBoxOffersMixin(JustWatchProtocol):
@@ -58,11 +58,11 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         response: dict[str, Any],
         *,
         update: bool = False,
-    ) -> BuyBoxOffers:
+    ) -> GetBuyBoxOffers:
         if update:
-            return self._parse_response(BuyBoxOffers, response, "get_buy_box_offers")
+            return self._parse_response(GetBuyBoxOffers, response, "get_buy_box_offers")
 
-        return BuyBoxOffers.model_validate(response)
+        return GetBuyBoxOffers.model_validate(response)
 
     def get_get_buy_box_offers(  # noqa: PLR0913
         self,
@@ -73,7 +73,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> BuyBoxOffers:
+    ) -> GetBuyBoxOffers:
         """Get all of the different websites that a specific episode can be watched.
 
         This API request normally occurs when clicking on an episode.

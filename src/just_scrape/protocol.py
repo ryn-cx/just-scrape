@@ -1,6 +1,10 @@
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
+from gapi import GapiCustomizations
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from .__init__ import RESPONSE_MODELS
 
 
 class JustWatchProtocol(Protocol):
@@ -11,9 +15,10 @@ class JustWatchProtocol(Protocol):
         variables: BaseModel,
     ) -> dict[str, Any]: ...
 
-    def _parse_response[T: BaseModel](
+    def _parse_response[T: "RESPONSE_MODELS"](
         self,
         response_model: type[T],
         response: dict[str, Any],
         name: str,
+        customizations: GapiCustomizations | None = None,
     ) -> T: ...

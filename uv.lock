@@ -142,7 +142,7 @@ wheels = [
 [[package]]
 name = "degenson"
 version = "1.3.0"
-source = { git = "https://github.com/ryn-cx/DeGenSON#51512cfec99b752524b249c5c370bcbe31576aa8" }
+source = { git = "https://github.com/ryn-cx/DeGenSON#327a0e312169e6ce189cf88c0f7eca662c9906cf" }
 
 [[package]]
 name = "dill"
@@ -174,7 +174,7 @@ wheels = [
 [[package]]
 name = "gapi"
 version = "0.1.0"
-source = { git = "https://github.com/ryn-cx/gapi#38c90438a2aa94d69d898aa1ea068a59cccb1f60" }
+source = { git = "https://github.com/ryn-cx/gapi#c1d408a55a03ce607ccd3106ef0bb5325ba1897f" }
 dependencies = [
     { name = "datamodel-code-generator" },
     { name = "degenson" },

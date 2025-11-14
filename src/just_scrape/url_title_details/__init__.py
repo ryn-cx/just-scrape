@@ -1,15 +1,55 @@
 from collections.abc import Sequence
 from typing import Any
 
-from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from gapi import (
+    CustomSerializer,
+    GapiCustomizations,
+    update_json_schema_and_pydantic_model,
+)
+
+from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES, FILES_PATH, JUST_SCRAPE_PATH
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
 from .response import UrlTitleDetails
 
+DATETIME_SERIALIZER = '''if value is None:
+    return None
+return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"'''
+
 
 class UrlTitleDetailsMixin(JustWatchProtocol):
+    URL_TITLE_DETAILS_CUSTOMIZATIONS = GapiCustomizations(
+        custom_serializers=[
+            # There is a date field called updated_at so the class name needs to be
+            # specified.
+            CustomSerializer(
+                class_name="RankInfo",
+                field_name="updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+            CustomSerializer(
+                class_name="StreamingChartInfo",
+                field_name="updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+            CustomSerializer(
+                field_name="available_from_time",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+            CustomSerializer(
+                field_name="available_to_time",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+        ],
+    )
+
     def _url_title_details_variables(  # noqa: PLR0913
         self,
         full_path: str,
@@ -75,7 +115,12 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         update: bool = False,
     ) -> UrlTitleDetails:
         if update:
-            return self._parse_response(UrlTitleDetails, response, "url_title_details")
+            return self._parse_response(
+                UrlTitleDetails,
+                response,
+                "url_title_details",
+                self.URL_TITLE_DETAILS_CUSTOMIZATIONS,
+            )
 
         return UrlTitleDetails.model_validate(response)
 
@@ -122,3 +167,36 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         )
 
         return self.parse_url_title_details(response, update=True)
+
+    def rebuild_url_title_details_models(self) -> None:
+        """Rebuild the url_title_details request and response models from JSON files.
+
+        This function iterates through the url_title_details endpoint directory,
+        processes JSON files for both request and response types, and regenerates
+        the schema and Pydantic model files.
+        """
+        name = "url_title_details"
+        endpoint_name = FILES_PATH / "url_title_details"
+        if not endpoint_name.exists():
+            msg = f"Endpoint path does not exist: {endpoint_name}"
+            raise FileNotFoundError(msg)
+
+        name = endpoint_name.name
+        for endpoint_type in endpoint_name.iterdir():
+            if not endpoint_type.is_dir():
+                continue
+
+            schema_path = JUST_SCRAPE_PATH / f"{name}/{endpoint_type.name}.schema.json"
+            model_path = JUST_SCRAPE_PATH / f"{name}/{endpoint_type.name}.py"
+
+            schema_path.unlink(missing_ok=True)
+            model_path.unlink(missing_ok=True)
+
+            json_files = list(endpoint_type.glob("*.json"))
+            if json_files:
+                update_json_schema_and_pydantic_model(
+                    json_files,
+                    schema_path,
+                    model_path,
+                    name,
+                )
