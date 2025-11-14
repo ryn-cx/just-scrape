@@ -1,12 +1,45 @@
 from collections.abc import Sequence
 from typing import Any
 
+from gapi import CustomSerializer, GapiCustomizations
+
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
 from .response import UrlTitleDetails
+
+DATETIME_SERIALIZER = 'return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"'
+GAPI_CUSTOMIZATIONS = GapiCustomizations(
+    custom_serializers=[
+        # There is a date field called updated_at so the class name needs to be
+        # specified.
+        CustomSerializer(
+            class_name="RankInfo",
+            field_name="updated_at",
+            serializer_code=DATETIME_SERIALIZER,
+        ),
+        CustomSerializer(
+            class_name="StreamingChartInfo",
+            field_name="updated_at",
+            serializer_code=DATETIME_SERIALIZER,
+        ),
+        CustomSerializer(
+            field_name="available_from_time",
+            serializer_code=DATETIME_SERIALIZER,
+        ),
+        CustomSerializer(
+            field_name="available_to_time",
+            serializer_code=DATETIME_SERIALIZER,
+        ),
+        CustomSerializer(
+            class_name="Node",
+            field_name="max_offer_updated_at",
+            serializer_code=DATETIME_SERIALIZER,
+        ),
+    ],
+)
 
 
 class UrlTitleDetailsMixin(JustWatchProtocol):
@@ -75,7 +108,12 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         update: bool = False,
     ) -> UrlTitleDetails:
         if update:
-            return self._parse_response(UrlTitleDetails, response, "url_title_details")
+            return self._parse_response(
+                UrlTitleDetails,
+                response,
+                "url_title_details",
+                GAPI_CUSTOMIZATIONS,
+            )
 
         return UrlTitleDetails.model_validate(response)
 

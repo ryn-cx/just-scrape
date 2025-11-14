@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class Child(BaseModel):
@@ -354,7 +354,7 @@ class Node(BaseModel):
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: str | None = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
@@ -371,7 +371,7 @@ class Data(BaseModel):
     node: Node
 
 
-class BuyBoxOffers(BaseModel):
+class GetBuyBoxOffers(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from datetime import date
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class Child(BaseModel):
@@ -28,7 +29,7 @@ class PlanOffer(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -56,7 +57,7 @@ class Plan(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -231,7 +232,7 @@ class Scoring(BaseModel):
         extra="forbid",
     )
     imdb_score: float = Field(..., alias="imdbScore")
-    imdb_votes: float = Field(..., alias="imdbVotes")
+    imdb_votes: int | float = Field(..., alias="imdbVotes")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
     tmdb_score: float | None = Field(..., alias="tmdbScore")
     jw_rating: float | None = Field(..., alias="jwRating")
@@ -248,7 +249,7 @@ class PlanOffer1(BaseModel):
     duration_days: int = Field(..., alias="durationDays")
     presentation_type: str = Field(..., alias="presentationType")
     is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     currency: str
     field__typename: str = Field(..., alias="__typename")
 
@@ -277,7 +278,7 @@ class UpcomingRelease(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package3
+    package: Package3 | None = None
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -459,13 +460,17 @@ class PopularityRank(BaseModel):
 
 
 class StreamingChartInfo(BaseModel):
+    @field_serializer("updated_at")
+    def serialize_updated_at(self, value: Any, _info: Any) -> Any:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: str = Field(..., alias="updatedAt")
+    updated_at: AwareDatetime = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
@@ -652,6 +657,19 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class PlanOffer2(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    retail_price: str | None = Field(..., alias="retailPrice")
+    duration_days: int = Field(..., alias="durationDays")
+    presentation_type: str = Field(..., alias="presentationType")
+    is_trial: bool = Field(..., alias="isTrial")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    currency: str
+    field__typename: str = Field(..., alias="__typename")
+
+
 class Package9(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -664,7 +682,7 @@ class Package9(BaseModel):
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
     has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[PlanOffer1] = Field(..., alias="planOffers")
+    plan_offers: list[PlanOffer2] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -720,7 +738,7 @@ class PlanOffer3(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -748,7 +766,7 @@ class Plan1(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -969,6 +987,66 @@ class Package14(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
+    id: str
+    package_id: int = Field(..., alias="packageId")
+    clear_name: str = Field(..., alias="clearName")
+    short_name: str = Field(..., alias="shortName")
+    technical_name: str = Field(..., alias="technicalName")
+    icon: str
+    icon_wide: str = Field(..., alias="iconWide")
+    plan_offers: list = Field(..., alias="planOffers")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FastItem(BaseModel):
+    @field_serializer("available_to_time")
+    def serialize_available_to_time(self, value: Any, _info: Any) -> Any:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
+    @field_serializer("available_from_time")
+    def serialize_available_from_time(self, value: Any, _info: Any) -> Any:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    id: str
+    presentation_type: str = Field(..., alias="presentationType")
+    monetization_type: str = Field(..., alias="monetizationType")
+    new_element_count: int = Field(..., alias="newElementCount")
+    retail_price: None = Field(..., alias="retailPrice")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    currency: str
+    last_change_retail_price_value: None = Field(
+        ...,
+        alias="lastChangeRetailPriceValue",
+    )
+    type: str
+    country: str
+    package: Package14
+    plans: list
+    standard_web_url: str = Field(..., alias="standardWebURL")
+    pre_affiliated_standard_web_url: None = Field(
+        ...,
+        alias="preAffiliatedStandardWebURL",
+    )
+    stream_url: None = Field(..., alias="streamUrl")
+    stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
+    element_count: int = Field(..., alias="elementCount")
+    available_to: date = Field(..., alias="availableTo")
+    subtitle_languages: list = Field(..., alias="subtitleLanguages")
+    video_technology: list = Field(..., alias="videoTechnology")
+    audio_technology: list = Field(..., alias="audioTechnology")
+    audio_languages: list = Field(..., alias="audioLanguages")
+    field__typename: str = Field(..., alias="__typename")
+    available_from_time: AwareDatetime = Field(..., alias="availableFromTime")
+    available_to_time: AwareDatetime = Field(..., alias="availableToTime")
+
+
+class Package15(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     icon: str
     id: str
     icon_wide: str = Field(..., alias="iconWide")
@@ -986,7 +1064,7 @@ class Node1(BaseModel):
     icon: str
     technical_name: str = Field(..., alias="technicalName")
     bundle_id: int = Field(..., alias="bundleId")
-    packages: list[Package14]
+    packages: list[Package15]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1015,7 +1093,7 @@ class PlanOffer5(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package15(BaseModel):
+class Package16(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -1060,7 +1138,7 @@ class Offer2(BaseModel):
     )
     type: str
     country: str
-    package: Package15
+    package: Package16
     plans: list[Plan3]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -1101,7 +1179,7 @@ class PlanOffer6(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package16(BaseModel):
+class Package17(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -1146,7 +1224,7 @@ class PromotedOffer(BaseModel):
     )
     type: str
     country: str
-    package: Package16
+    package: Package17
     plans: list[Plan4]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -1166,13 +1244,17 @@ class PromotedOffer(BaseModel):
 
 
 class RankInfo(BaseModel):
+    @field_serializer("updated_at")
+    def serialize_updated_at(self, value: Any, _info: Any) -> Any:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: str = Field(..., alias="updatedAt")
+    updated_at: AwareDatetime = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
@@ -1207,8 +1289,8 @@ class Scoring1(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    imdb_votes: float | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_votes: int | float | None = Field(..., alias="imdbVotes")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
     jw_rating: float | None = Field(..., alias="jwRating")
@@ -1312,6 +1394,12 @@ class TitleModules(BaseModel):
 
 
 class Node(BaseModel):
+    @field_serializer("max_offer_updated_at")
+    def serialize_max_offer_updated_at(self, value: Any, _info: Any) -> Any:
+        if value is None:
+            return None
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -1344,13 +1432,13 @@ class Node(BaseModel):
     seasons: list[Season] | None = None
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: str | None = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem1]
     buy: list[BuyItem1]
     rent: list[RentItem]
     free: list[FreeItem1]
-    fast: list
+    fast: list[FastItem]
     bundles: list[Bundle]
     promoted_bundles: list = Field(..., alias="promotedBundles")
     promoted_offers: list[PromotedOffer] = Field(..., alias="promotedOffers")

@@ -2,13 +2,14 @@ import logging
 from typing import Any, overload
 
 import requests
+from gapi import GapiCustomizations
 from pydantic import BaseModel, ValidationError
 
 from .custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
 from .custom_get_buy_box_offers.response import CustomGetBuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
 from .get_buy_box_offers import BuyBoxOffersMixin
-from .get_buy_box_offers.response import BuyBoxOffers
+from .get_buy_box_offers.response import GetBuyBoxOffers
 from .new_title_buckets import NewTitleBucketsMixin
 from .new_title_buckets.response import NewTitleBuckets
 from .new_titles import NewTitlesMixin
@@ -17,12 +18,12 @@ from .season_episodes import SeasonEpisodesMixin
 from .season_episodes.response import SeasonEpisodes
 from .title_detail_article import TitleDetailArticleMixin
 from .title_detail_article.response import TitleDetailArticle
-from .update_files import add_test_file, update_model
+from .update_files import save_file, update_model
 from .url_title_details import UrlTitleDetailsMixin
 from .url_title_details.response import UrlTitleDetails
 
 RESPONSE_MODELS = (
-    BuyBoxOffers
+    GetBuyBoxOffers
     | NewTitles
     | NewTitleBuckets
     | SeasonEpisodes
@@ -95,19 +96,27 @@ class JustScrape(
 
         return response.json()
 
-    def _parse_response[T: BaseModel](
+    def _parse_response[T: RESPONSE_MODELS](
         self,
         response_model: type[T],
         response: dict[str, Any],
         name: str,
+        customizations: GapiCustomizations | None = None,
     ) -> T:
         try:
-            return response_model.model_validate(response)
-        except ValidationError as e:
-            add_test_file(name, "response", response)
-            update_model(name, "response")
+            parsed = response_model.model_validate(response)
+
+        except (ValidationError, ValueError) as e:
+            save_file(name, "response", response)
+            update_model(name, "response", response, customizations)
             msg = "Parsing error, models updated, try again."
             raise ValueError(msg) from e
+
+        if self.dump_response(parsed) != response:
+            msg = "Parsed response does not match original response."
+            raise ValueError(msg)
+
+        return parsed
 
     @overload
     def dump_response(

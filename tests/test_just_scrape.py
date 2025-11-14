@@ -4,23 +4,33 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
+from pydantic import BaseModel
 
 from just_scrape import JustScrape
+from just_scrape.constants import FILES_PATH
 from just_scrape.exceptions import GraphQLError
 
 client = JustScrape()
 
 
 class TestParsing:
+    def dump_test_file(
+        self,
+        original_content: dict[str, object],
+        parsed: BaseModel,
+    ) -> None:
+        Path("original.json").write_text(json.dumps(original_content))
+        Path("dump.json").write_text(json.dumps(client.dump_response(parsed)))
+
     def get_test_files(self, endpoint: str) -> Iterator[Path]:
         """Get all JSON test files for a given endpoint."""
-        dir_path = Path(__file__).parent.parent / "src/just_scrape/_input" / endpoint
+        dir_path = FILES_PATH / endpoint / "response"
         if not dir_path.exists():
             pytest.fail(f"{dir_path} not found")
         return dir_path.glob("*.json")
 
     def test_get_buy_box_offers(self) -> None:
-        for json_file in self.get_test_files("buy_box_offers"):
+        for json_file in self.get_test_files("get_buy_box_offers"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_get_buy_box_offers(file_content)
             assert file_content == client.dump_response(parsed)
@@ -41,6 +51,10 @@ class TestParsing:
         for json_file in self.get_test_files("url_title_details"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_url_title_details(file_content)
+            # Save both to files called temp1 and temp2
+            Path("original.json").write_text(json.dumps(file_content))
+            Path("dump.json").write_text(json.dumps(client.dump_response(parsed)))
+            parsed = client.parse_url_title_details(file_content, update=True)
             assert file_content == client.dump_response(parsed)
 
     def test_get_title_detail_article(self) -> None:

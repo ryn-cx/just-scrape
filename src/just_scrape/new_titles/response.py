@@ -57,7 +57,7 @@ class Scoring(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    imdb_votes: int | None = Field(..., alias="imdbVotes")
+    imdb_votes: int | float | None = Field(..., alias="imdbVotes")
     imdb_score: float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
     tmdb_score: float | None = Field(..., alias="tmdbScore")
