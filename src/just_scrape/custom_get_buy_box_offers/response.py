@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from datetime import date
+from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class Child(BaseModel):
@@ -352,6 +353,12 @@ class Bundle(BaseModel):
 
 
 class Node(BaseModel):
+    @field_serializer("max_offer_updated_at")
+    def serialize_max_offer_updated_at(self, value: Any, _info: Any) -> Any:
+        if value is None:
+            return None
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )

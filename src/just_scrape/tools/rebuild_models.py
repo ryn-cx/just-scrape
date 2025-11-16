@@ -1,6 +1,7 @@
 from gapi import apply_customizations, update_json_schema_and_pydantic_model
 
 from just_scrape.constants import FILES_PATH, JUST_SCRAPE_PATH
+from just_scrape.custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
 from just_scrape.url_title_details.__init__ import UrlTitleDetailsMixin
 
 if __name__ == "__main__":
@@ -27,4 +28,8 @@ if __name__ == "__main__":
     apply_customizations(
         JUST_SCRAPE_PATH / "url_title_details/response.py",
         UrlTitleDetailsMixin.URL_TITLE_DETAILS_CUSTOMIZATIONS,
+    )
+    apply_customizations(
+        JUST_SCRAPE_PATH / "custom_get_buy_box_offers/response.py",
+        CustomGetBuyBoxOffersMixin.CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
     )

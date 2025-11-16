@@ -19,8 +19,6 @@ from .response import CustomGetBuyBoxOffers
 class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
     CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
         custom_serializers=[
-            # There is a date field called updated_at so the class name needs to be
-            # specified.
             CustomSerializer(
                 class_name="Node",
                 field_name="max_offer_updated_at",
