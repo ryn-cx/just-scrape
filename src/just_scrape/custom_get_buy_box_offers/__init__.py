@@ -3,7 +3,12 @@
 from collections.abc import Sequence
 from typing import Any
 
-from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from gapi import (
+    CustomSerializer,
+    GapiCustomizations,
+)
+
+from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
@@ -12,6 +17,18 @@ from .response import CustomGetBuyBoxOffers
 
 
 class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
+    CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
+        custom_serializers=[
+            # There is a date field called updated_at so the class name needs to be
+            # specified.
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+            ),
+        ],
+    )
+
     def _custom_get_buy_box_offers_variables(  # noqa: PLR0913
         self,
         node_id: str,
@@ -66,6 +83,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
                 CustomGetBuyBoxOffers,
                 response,
                 "custom_get_buy_box_offers",
+                self.CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
             )
 
         return CustomGetBuyBoxOffers.model_validate(response)

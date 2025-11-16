@@ -696,7 +696,7 @@ class UpcomingRelease2(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package9
+    package: Package9 | None = None
     field__typename: str = Field(..., alias="__typename")
 
 

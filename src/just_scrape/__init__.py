@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Any, overload
 
@@ -5,6 +6,7 @@ import requests
 from gapi import GapiCustomizations
 from pydantic import BaseModel, ValidationError
 
+from .constants import FILES_PATH
 from .custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
 from .custom_get_buy_box_offers.response import CustomGetBuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
@@ -105,7 +107,6 @@ class JustScrape(
     ) -> T:
         try:
             parsed = response_model.model_validate(response)
-
         except (ValidationError, ValueError) as e:
             save_file(name, "response", response)
             update_model(name, "response", customizations)
@@ -113,6 +114,13 @@ class JustScrape(
             raise ValueError(msg) from e
 
         if self.dump_response(parsed) != response:
+            save_file(name, "response", response)
+            temp_path = FILES_PATH / "_temp"
+            original_path = temp_path / name / "original.json"
+            parsed_path = temp_path / name / "parsed.json"
+            temp_path.mkdir(parents=True, exist_ok=True)
+            original_path.write_text(json.dumps(response, indent=2))
+            parsed_path.write_text(json.dumps(self.dump_response(parsed), indent=2))
             msg = "Parsed response does not match original response."
             raise ValueError(msg)
 

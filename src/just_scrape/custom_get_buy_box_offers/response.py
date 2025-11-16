@@ -90,10 +90,10 @@ class FlatrateItem(BaseModel):
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
     available_to: date | None = Field(..., alias="availableTo")
-    subtitle_languages: list = Field(..., alias="subtitleLanguages")
+    subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
-    audio_languages: list = Field(..., alias="audioLanguages")
+    audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -150,16 +150,28 @@ class BuyItem(BaseModel):
     min_retail_price: None = Field(..., alias="minRetailPrice")
 
 
+class Child2(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    title: str
+    retail_price: None = Field(..., alias="retailPrice")
+    is_trial: bool = Field(..., alias="isTrial")
+    duration_days: int = Field(..., alias="durationDays")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    field__typename: str = Field(..., alias="__typename")
+
+
 class PlanOffer1(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
     title: str
-    retail_price: str = Field(..., alias="retailPrice")
+    retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float = Field(..., alias="retailPriceValue")
-    children: list
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -183,11 +195,11 @@ class Plan1(BaseModel):
         extra="forbid",
     )
     title: str
-    retail_price: str = Field(..., alias="retailPrice")
+    retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: float = Field(..., alias="retailPriceValue")
-    children: list
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -220,10 +232,10 @@ class FreeItem(BaseModel):
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
     available_to: date | None = Field(..., alias="availableTo")
-    subtitle_languages: list = Field(..., alias="subtitleLanguages")
-    video_technology: list = Field(..., alias="videoTechnology")
-    audio_technology: list = Field(..., alias="audioTechnology")
-    audio_languages: list = Field(..., alias="audioLanguages")
+    subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
+    video_technology: list[str] = Field(..., alias="videoTechnology")
+    audio_technology: list[str] = Field(..., alias="audioTechnology")
+    audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -249,18 +261,6 @@ class Node1(BaseModel):
     technical_name: str = Field(..., alias="technicalName")
     bundle_id: int = Field(..., alias="bundleId")
     packages: list[Package3]
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Child2(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    title: str
-    retail_price: None = Field(..., alias="retailPrice")
-    is_trial: bool = Field(..., alias="isTrial")
-    duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: None = Field(..., alias="retailPriceValue")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -334,10 +334,10 @@ class Offer(BaseModel):
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
     available_to: None = Field(..., alias="availableTo")
-    subtitle_languages: list = Field(..., alias="subtitleLanguages")
+    subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
-    audio_languages: list = Field(..., alias="audioLanguages")
+    audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 
 

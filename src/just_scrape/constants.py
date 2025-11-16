@@ -32,3 +32,7 @@ DEFAULT_EXCLUDE_PACKAGES = (
     "yot",
     "yrk",
 )
+
+DATETIME_SERIALIZER = '''if value is None:
+    return None
+return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"'''

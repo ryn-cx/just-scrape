@@ -7,16 +7,17 @@ from gapi import (
     update_json_schema_and_pydantic_model,
 )
 
-from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES, FILES_PATH, JUST_SCRAPE_PATH
+from just_scrape.constants import (
+    DATETIME_SERIALIZER,
+    DEFAULT_EXCLUDE_PACKAGES,
+    FILES_PATH,
+    JUST_SCRAPE_PATH,
+)
 from just_scrape.protocol import JustWatchProtocol
 
 from .query import QUERY
 from .request import Variables
 from .response import UrlTitleDetails
-
-DATETIME_SERIALIZER = '''if value is None:
-    return None
-return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"'''
 
 
 class UrlTitleDetailsMixin(JustWatchProtocol):

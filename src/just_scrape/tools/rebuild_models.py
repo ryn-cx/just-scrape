@@ -5,7 +5,7 @@ from just_scrape.url_title_details.__init__ import UrlTitleDetailsMixin
 
 if __name__ == "__main__":
     for endpoint_name in FILES_PATH.iterdir():
-        if endpoint_name.name == ".git":
+        if endpoint_name.name in {".git", "_temp"}:
             continue
 
         name = endpoint_name.name
