@@ -116,9 +116,10 @@ class JustScrape(
         if self.dump_response(parsed) != response:
             save_file(name, "response", response)
             temp_path = FILES_PATH / "_temp"
-            original_path = temp_path / name / "original.json"
-            parsed_path = temp_path / name / "parsed.json"
-            temp_path.mkdir(parents=True, exist_ok=True)
+            named_temp_path = temp_path / name
+            named_temp_path.mkdir(parents=True, exist_ok=True)
+            original_path = named_temp_path / "original.json"
+            parsed_path = named_temp_path / "parsed.json"
             original_path.write_text(json.dumps(response, indent=2))
             parsed_path.write_text(json.dumps(self.dump_response(parsed), indent=2))
             msg = "Parsed response does not match original response."
