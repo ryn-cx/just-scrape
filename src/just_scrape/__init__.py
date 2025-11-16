@@ -108,7 +108,7 @@ class JustScrape(
 
         except (ValidationError, ValueError) as e:
             save_file(name, "response", response)
-            update_model(name, "response", response, customizations)
+            update_model(name, "response", customizations)
             msg = "Parsing error, models updated, try again."
             raise ValueError(msg) from e
 

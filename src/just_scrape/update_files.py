@@ -18,12 +18,17 @@ logger = logging.getLogger(__name__)
 def update_model(
     endpoint_name: str,
     endpoint_type: Literal["request", "response"],
-    data: dict[str, Any],
     customizations: GapiCustomizations | None = None,
 ) -> None:
     schema_path = JUST_SCRAPE_PATH / f"{endpoint_name}/{endpoint_type}.schema.json"
     model_path = JUST_SCRAPE_PATH / f"{endpoint_name}/{endpoint_type}.py"
-    update_json_schema_and_pydantic_model(data, schema_path, model_path, endpoint_name)
+    files_path = FILES_PATH / endpoint_name / endpoint_type
+    update_json_schema_and_pydantic_model(
+        files_path,
+        schema_path,
+        model_path,
+        endpoint_name,
+    )
     apply_customizations(model_path, customizations)
 
 
