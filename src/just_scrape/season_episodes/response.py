@@ -45,7 +45,7 @@ class Content(BaseModel):
     season_number: int = Field(..., alias="seasonNumber")
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
-    upcoming_releases: list = Field(..., alias="upcomingReleases")
+    upcoming_releases: list[None] = Field(..., alias="upcomingReleases")
 
 
 class Episode(BaseModel):
@@ -58,10 +58,10 @@ class Episode(BaseModel):
     seenlist_entry: None = Field(..., alias="seenlistEntry")
     unique_offer_count: int = Field(..., alias="uniqueOfferCount")
     flatrate: list[FlatrateItem]
-    buy: list
-    rent: list
+    buy: list[None]
+    rent: list[None]
     free: list[FreeItem]
-    fast: list
+    fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
 

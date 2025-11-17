@@ -107,7 +107,7 @@ class Package1(BaseModel):
     technical_name: str = Field(..., alias="technicalName")
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
-    plan_offers: list = Field(..., alias="planOffers")
+    plan_offers: list[None] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -129,7 +129,7 @@ class BuyItem(BaseModel):
     type: str
     country: str
     package: Package1
-    plans: list
+    plans: list[None]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
@@ -331,8 +331,8 @@ class Offer(BaseModel):
     element_count: int = Field(..., alias="elementCount")
     available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
-    video_technology: list = Field(..., alias="videoTechnology")
-    audio_technology: list = Field(..., alias="audioTechnology")
+    video_technology: list[None] = Field(..., alias="videoTechnology")
+    audio_technology: list[None] = Field(..., alias="audioTechnology")
     audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 
@@ -355,12 +355,12 @@ class Node(BaseModel):
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
     max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
-    offers_history: list = Field(..., alias="offersHistory")
+    offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
-    rent: list
+    rent: list[None]
     free: list[FreeItem]
-    fast: list
+    fast: list[None]
     bundles: list[Bundle]
 
 

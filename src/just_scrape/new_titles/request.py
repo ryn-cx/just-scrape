@@ -12,17 +12,20 @@ class Filter(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    age_certifications: list = Field(..., alias="ageCertifications")
-    exclude_genres: list = Field(..., alias="excludeGenres")
-    exclude_production_countries: list = Field(..., alias="excludeProductionCountries")
-    object_types: list = Field(..., alias="objectTypes")
-    production_countries: list = Field(..., alias="productionCountries")
-    subgenres: list
-    genres: list
+    age_certifications: list[None] = Field(..., alias="ageCertifications")
+    exclude_genres: list[None] = Field(..., alias="excludeGenres")
+    exclude_production_countries: list[None] = Field(
+        ...,
+        alias="excludeProductionCountries",
+    )
+    object_types: list[None] = Field(..., alias="objectTypes")
+    production_countries: list[None] = Field(..., alias="productionCountries")
+    subgenres: list[None]
+    genres: list[None]
     packages: list[str]
     exclude_irrelevant_titles: bool = Field(..., alias="excludeIrrelevantTitles")
-    presentation_types: list = Field(..., alias="presentationTypes")
-    monetization_types: list = Field(..., alias="monetizationTypes")
+    presentation_types: list[None] = Field(..., alias="presentationTypes")
+    monetization_types: list[None] = Field(..., alias="monetizationTypes")
 
 
 class Variables(BaseModel):

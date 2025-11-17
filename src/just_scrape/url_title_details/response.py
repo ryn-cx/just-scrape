@@ -367,10 +367,10 @@ class TextRecommendation(BaseModel):
     original_headline: None = Field(..., alias="originalHeadline")
     original_body: None = Field(..., alias="originalBody")
     original_body_html: None = Field(..., alias="originalBodyHTML")
-    watch_if: list = Field(..., alias="watchIf")
-    skip_if: list = Field(..., alias="skipIf")
+    watch_if: list[None] = Field(..., alias="watchIf")
+    skip_if: list[None] = Field(..., alias="skipIf")
     custom_profile_type: None = Field(..., alias="customProfileType")
-    tags: list
+    tags: list[None]
     watched_at: date = Field(..., alias="watchedAt")
     watched_on: WatchedOn = Field(..., alias="watchedOn")
     like_count: int = Field(..., alias="likeCount")
@@ -725,9 +725,9 @@ class RecentEpisode(BaseModel):
     unique_offer_count: int = Field(..., alias="uniqueOfferCount")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
-    rent: list
+    rent: list[None]
     free: list[FreeItem]
-    fast: list
+    fast: list[None]
     content: Content4
     field__typename: str = Field(..., alias="__typename")
 
@@ -819,7 +819,7 @@ class Package11(BaseModel):
     technical_name: str = Field(..., alias="technicalName")
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
-    plan_offers: list = Field(..., alias="planOffers")
+    plan_offers: list[None] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -841,7 +841,7 @@ class BuyItem1(BaseModel):
     type: str
     country: str
     package: Package11
-    plans: list
+    plans: list[None]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
@@ -878,7 +878,7 @@ class RentItem(BaseModel):
     type: str
     country: str
     package: Package11
-    plans: list
+    plans: list[None]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
@@ -996,7 +996,7 @@ class Package14(BaseModel):
     technical_name: str = Field(..., alias="technicalName")
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
-    plan_offers: list = Field(..., alias="planOffers")
+    plan_offers: list[None] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1030,7 +1030,7 @@ class FastItem(BaseModel):
     type: str
     country: str
     package: Package14
-    plans: list
+    plans: list[None]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
@@ -1040,10 +1040,10 @@ class FastItem(BaseModel):
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
     available_to: date = Field(..., alias="availableTo")
-    subtitle_languages: list = Field(..., alias="subtitleLanguages")
-    video_technology: list = Field(..., alias="videoTechnology")
-    audio_technology: list = Field(..., alias="audioTechnology")
-    audio_languages: list = Field(..., alias="audioLanguages")
+    subtitle_languages: list[None] = Field(..., alias="subtitleLanguages")
+    video_technology: list[None] = Field(..., alias="videoTechnology")
+    audio_technology: list[None] = Field(..., alias="audioTechnology")
+    audio_languages: list[None] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
     available_from_time: AwareDatetime = Field(..., alias="availableFromTime")
     available_to_time: AwareDatetime = Field(..., alias="availableToTime")
@@ -1415,7 +1415,7 @@ class Node(BaseModel):
     object_type: str = Field(..., alias="objectType")
     object_id: int = Field(..., alias="objectId")
     field__typename: str = Field(..., alias="__typename")
-    justwatch_tv_offers: list = Field(..., alias="justwatchTVOffers")
+    justwatch_tv_offers: list[None] = Field(..., alias="justwatchTVOffers")
     disney_offers_count: int = Field(..., alias="disneyOffersCount")
     star_offers_count: int = Field(..., alias="starOffersCount")
     unique_offer_count: int = Field(..., alias="uniqueOfferCount")
@@ -1431,7 +1431,7 @@ class Node(BaseModel):
     likelist_entry: None = Field(..., alias="likelistEntry")
     dislikelist_entry: None = Field(..., alias="dislikelistEntry")
     watchlist_entry_v2: None = Field(..., alias="watchlistEntryV2")
-    customlist_entries: list = Field(..., alias="customlistEntries")
+    customlist_entries: list[None] = Field(..., alias="customlistEntries")
     similar_titles_v2: SimilarTitlesV2 = Field(..., alias="similarTitlesV2")
     permanent_audiences: list[str] = Field(..., alias="permanentAudiences")
     total_season_count: int | None = Field(None, alias="totalSeasonCount")
@@ -1441,14 +1441,14 @@ class Node(BaseModel):
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
     offer_count: int = Field(..., alias="offerCount")
     max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
-    offers_history: list = Field(..., alias="offersHistory")
+    offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem1]
     buy: list[BuyItem1]
     rent: list[RentItem]
     free: list[FreeItem1]
     fast: list[FastItem]
     bundles: list[Bundle]
-    promoted_bundles: list = Field(..., alias="promotedBundles")
+    promoted_bundles: list[None] = Field(..., alias="promotedBundles")
     promoted_offers: list[PromotedOffer] = Field(..., alias="promotedOffers")
     title_modules: list[TitleModules | None] = Field(..., alias="titleModules")
     seenlist_entry: None = Field(None, alias="seenlistEntry")
