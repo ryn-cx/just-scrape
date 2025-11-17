@@ -136,16 +136,18 @@ class SeasonEpisodesMixin(JustWatchProtocol):
 
             offset += DEFAULT_LIMIT
 
-    def season_episodes_entries(
+    def parse_all_season_episodes(
         self,
         all_episodes: SeasonEpisodes
         | list[SeasonEpisodes]
         | list[dict[str, Any]]
         | dict[str, Any],
+        *,
+        update: bool = False,
     ) -> list[Episode]:
         """Combine multiple GetSeasonEpisodes responses into a single response."""
         if isinstance(all_episodes, dict):
-            all_episodes = self.parse_season_episodes(all_episodes)
+            all_episodes = self.parse_season_episodes(all_episodes, update=update)
 
         if isinstance(all_episodes, SeasonEpisodes):
             return all_episodes.data.node.episodes
@@ -153,5 +155,5 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         return [
             episode
             for episode_page in all_episodes
-            for episode in self.season_episodes_entries(episode_page)
+            for episode in self.parse_all_season_episodes(episode_page)
         ]

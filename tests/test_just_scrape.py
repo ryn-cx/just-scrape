@@ -146,5 +146,5 @@ class TestCustomGet:
         season_id = "tss23744"
         number_of_episodes = 23
         season_episodes = client.get_all_season_episodes(node_id=season_id)
-        episodes = client.season_episodes_entries(season_episodes)
+        episodes = client.parse_all_season_episodes(season_episodes)
         assert len(episodes) == number_of_episodes
