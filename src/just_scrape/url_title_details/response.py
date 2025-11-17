@@ -464,7 +464,7 @@ class StreamingChartInfo(BaseModel):
     def serialize_updated_at(self, value: Any, _info: Any) -> Any:
         if value is None:
             return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     model_config = ConfigDict(
         extra="forbid",
@@ -1005,13 +1005,13 @@ class FastItem(BaseModel):
     def serialize_available_to_time(self, value: Any, _info: Any) -> Any:
         if value is None:
             return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     @field_serializer("available_from_time")
     def serialize_available_from_time(self, value: Any, _info: Any) -> Any:
         if value is None:
             return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     model_config = ConfigDict(
         extra="forbid",
@@ -1254,7 +1254,7 @@ class RankInfo(BaseModel):
     def serialize_updated_at(self, value: Any, _info: Any) -> Any:
         if value is None:
             return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     model_config = ConfigDict(
         extra="forbid",
@@ -1406,7 +1406,7 @@ class Node(BaseModel):
     def serialize_max_offer_updated_at(self, value: Any, _info: Any) -> Any:
         if value is None:
             return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0") + "Z"
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     model_config = ConfigDict(
         extra="forbid",
