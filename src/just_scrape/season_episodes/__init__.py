@@ -60,7 +60,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         update: bool = False,
     ) -> SeasonEpisodes:
         if update:
-            return self._parse_response(SeasonEpisodes, response, "season_episodes")
+            return self.parse_response(SeasonEpisodes, response, "season_episodes")
 
         return SeasonEpisodes.model_validate(response)
 

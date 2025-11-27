@@ -1,12 +1,19 @@
 import json
 import logging
-from typing import Any, overload
+import uuid
+from pathlib import Path
+from typing import Any, override
 
 import requests
-from gapi import GapiCustomizations
-from pydantic import BaseModel, ValidationError
+from gapi import (
+    AbstractGapiClient,
+    GapiCustomizations,
+    apply_customizations,
+    update_json_schema_and_pydantic_model,
+)
+from pydantic import BaseModel
 
-from .constants import FILES_PATH
+from .constants import FILES_PATH, JUST_SCRAPE_PATH
 from .custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
 from .custom_get_buy_box_offers.response import CustomGetBuyBoxOffers
 from .exceptions import GraphQLError, HTTPError
@@ -20,7 +27,6 @@ from .season_episodes import SeasonEpisodesMixin
 from .season_episodes.response import SeasonEpisodes
 from .title_detail_article import TitleDetailArticleMixin
 from .title_detail_article.response import TitleDetailArticle
-from .update_files import save_file, update_model
 from .url_title_details import UrlTitleDetailsMixin
 from .url_title_details.response import UrlTitleDetails
 
@@ -40,6 +46,7 @@ logger = logging.getLogger(__name__)
 
 
 class JustScrape(
+    AbstractGapiClient,
     BuyBoxOffersMixin,
     NewTitleBucketsMixin,
     NewTitlesMixin,
@@ -98,50 +105,30 @@ class JustScrape(
 
         return response.json()
 
-    def _parse_response[T: RESPONSE_MODELS](
+    @override
+    def save_file(
         self,
-        response_model: type[T],
-        response: dict[str, Any],
         name: str,
+        data: dict[str, Any],
+        model_type: str,
+    ) -> None:
+        input_folder = FILES_PATH / name / model_type
+        new_json_path = input_folder / f"{uuid.uuid4()}.json"
+        new_json_path.parent.mkdir(parents=True, exist_ok=True)
+        new_json_path.write_text(json.dumps(data, indent=2))
+
+    @override
+    def update_model(
+        self,
+        name: str,
+        model_type: str,
         customizations: GapiCustomizations | None = None,
-    ) -> T:
-        try:
-            parsed = response_model.model_validate(response)
-        except (ValidationError, ValueError) as e:
-            save_file(name, "response", response)
-            update_model(name, "response", customizations)
-            msg = "Parsing error, models updated, try again."
-            raise ValueError(msg) from e
+    ) -> None:
+        schema_path = JUST_SCRAPE_PATH / f"{name}/{model_type}.schema.json"
+        model_path = JUST_SCRAPE_PATH / f"{name}/{model_type}.py"
+        files_path = FILES_PATH / name / model_type
+        update_json_schema_and_pydantic_model(files_path, schema_path, model_path, name)
+        apply_customizations(model_path, customizations)
 
-        if self.dump_response(parsed) != response:
-            save_file(name, "response", response)
-            temp_path = FILES_PATH / "_temp"
-            named_temp_path = temp_path / name
-            named_temp_path.mkdir(parents=True, exist_ok=True)
-            original_path = named_temp_path / "original.json"
-            parsed_path = named_temp_path / "parsed.json"
-            original_path.write_text(json.dumps(response, indent=2))
-            parsed_path.write_text(json.dumps(self.dump_response(parsed), indent=2))
-            msg = "Parsed response does not match original response."
-            raise ValueError(msg)
-
-        return parsed
-
-    @overload
-    def dump_response(
-        self,
-        data: RESPONSE_MODELS_LIST_LIST,
-    ) -> list[list[dict[str, Any]]]: ...
-    @overload
-    def dump_response(self, data: RESPONSE_MODELS_LIST) -> list[dict[str, Any]]: ...
-    @overload
-    def dump_response(self, data: RESPONSE_MODELS) -> dict[str, Any]: ...
-    def dump_response(
-        self,
-        data: RESPONSE_MODELS | RESPONSE_MODELS_LIST | RESPONSE_MODELS_LIST_LIST,
-    ) -> dict[str, Any] | list[dict[str, Any]] | list[list[dict[str, Any]]]:
-        """Dump an API response to a JSON serializable object."""
-        if isinstance(data, list):
-            return [self.dump_response(response) for response in data]
-
-        return data.model_dump(mode="json", by_alias=True, exclude_unset=True)
+    def files_path(self) -> Path:
+        return FILES_PATH

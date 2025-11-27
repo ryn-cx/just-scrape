@@ -122,7 +122,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         update: bool = False,
     ) -> NewTitleBuckets:
         if update:
-            return self._parse_response(NewTitleBuckets, response, "new_title_buckets")
+            return self.parse_response(NewTitleBuckets, response, "new_title_buckets")
 
         return NewTitleBuckets.model_validate(response)
 

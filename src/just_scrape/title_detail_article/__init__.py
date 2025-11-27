@@ -46,7 +46,7 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         update: bool = False,
     ) -> TitleDetailArticle:
         if update:
-            return self._parse_response(
+            return self.parse_response(
                 TitleDetailArticle,
                 response,
                 "title_detail_article",

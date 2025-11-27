@@ -137,7 +137,7 @@ class NewTitlesMixin(JustWatchProtocol):
         update: bool = False,
     ) -> NewTitles:
         if update:
-            return self._parse_response(NewTitles, response, "new_titles")
+            return self.parse_response(NewTitles, response, "new_titles")
 
         return NewTitles.model_validate(response)
 

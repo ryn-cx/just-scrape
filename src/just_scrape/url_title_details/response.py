@@ -549,7 +549,7 @@ class Offer1(BaseModel):
     package: Package5
     monetization_type: str = Field(..., alias="monetizationType")
     retail_price: str | None = Field(..., alias="retailPrice")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -659,19 +659,6 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class PlanOffer2(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    retail_price: str | None = Field(..., alias="retailPrice")
-    duration_days: int = Field(..., alias="durationDays")
-    presentation_type: str = Field(..., alias="presentationType")
-    is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    currency: str
-    field__typename: str = Field(..., alias="__typename")
-
-
 class Package9(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -684,7 +671,7 @@ class Package9(BaseModel):
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
     has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[PlanOffer2] = Field(..., alias="planOffers")
+    plan_offers: list[PlanOffer1] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1039,14 +1026,14 @@ class FastItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: date = Field(..., alias="availableTo")
+    available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[None] = Field(..., alias="subtitleLanguages")
     video_technology: list[None] = Field(..., alias="videoTechnology")
     audio_technology: list[None] = Field(..., alias="audioTechnology")
     audio_languages: list[None] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
     available_from_time: AwareDatetime = Field(..., alias="availableFromTime")
-    available_to_time: AwareDatetime = Field(..., alias="availableToTime")
+    available_to_time: AwareDatetime | None = Field(..., alias="availableToTime")
 
 
 class Package15(BaseModel):

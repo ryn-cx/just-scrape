@@ -77,7 +77,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         update: bool = False,
     ) -> CustomGetBuyBoxOffers:
         if update:
-            return self._parse_response(
+            return self.parse_response(
                 CustomGetBuyBoxOffers,
                 response,
                 "custom_get_buy_box_offers",

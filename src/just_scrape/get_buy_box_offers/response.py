@@ -331,8 +331,8 @@ class Offer(BaseModel):
     element_count: int = Field(..., alias="elementCount")
     available_to: date | None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
-    video_technology: list[None] = Field(..., alias="videoTechnology")
-    audio_technology: list[None] = Field(..., alias="audioTechnology")
+    video_technology: list[str] = Field(..., alias="videoTechnology")
+    audio_technology: list[str] = Field(..., alias="audioTechnology")
     audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 

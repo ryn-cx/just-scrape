@@ -116,7 +116,7 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         update: bool = False,
     ) -> UrlTitleDetails:
         if update:
-            return self._parse_response(
+            return self.parse_response(
                 UrlTitleDetails,
                 response,
                 "url_title_details",

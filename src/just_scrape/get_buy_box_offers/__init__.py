@@ -60,7 +60,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         update: bool = False,
     ) -> GetBuyBoxOffers:
         if update:
-            return self._parse_response(GetBuyBoxOffers, response, "get_buy_box_offers")
+            return self.parse_response(GetBuyBoxOffers, response, "get_buy_box_offers")
 
         return GetBuyBoxOffers.model_validate(response)
 
