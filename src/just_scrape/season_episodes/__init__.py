@@ -1,10 +1,7 @@
 from typing import Any
 
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import Variables
-from .response import Episode, SeasonEpisodes
+from just_scrape.season_episodes import query, request, response
 
 DEFAULT_LIMIT = 20
 
@@ -19,8 +16,8 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         platform: str = "WEB",
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
-    ) -> Variables:
-        return Variables(
+    ) -> request.Variables:
+        return request.Variables(
             nodeId=node_id,
             country=country,
             language=language,
@@ -49,20 +46,20 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         )
         return self._graphql_request(
             operation_name="GetSeasonEpisodes",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_season_episodes(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> SeasonEpisodes:
+    ) -> response.SeasonEpisodes:
         if update:
-            return self.parse_response(SeasonEpisodes, response, "season_episodes")
+            return self.parse_response(response.SeasonEpisodes, data, "season_episodes")
 
-        return SeasonEpisodes.model_validate(response)
+        return response.SeasonEpisodes.model_validate(data)
 
     def get_season_episodes(  # noqa: PLR0913
         self,
@@ -73,7 +70,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         platform: str = "WEB",
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
-    ) -> SeasonEpisodes:
+    ) -> response.SeasonEpisodes:
         """Get episodes for a specific season.
 
         This API request occurs when visiting a specific season page for a TV show.
@@ -86,7 +83,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             limit: Number of episodes to return.
             offset: Offset to start getting episodes from.
         """
-        response = self._download_season_episodes(
+        resp = self._download_season_episodes(
             node_id=node_id,
             country=country,
             language=language,
@@ -95,7 +92,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             offset=offset,
         )
 
-        return self.parse_season_episodes(response, update=True)
+        return self.parse_season_episodes(resp, update=True)
 
     def get_all_season_episodes(
         self,
@@ -104,7 +101,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
-    ) -> list[SeasonEpisodes]:
+    ) -> list[response.SeasonEpisodes]:
         """Get all of the episodes for a specific season.
 
         This API request occurs when visiting a specific season page for a TV show.
@@ -116,10 +113,10 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             platform: ???
         """
         offset = 0
-        all_episodes: list[SeasonEpisodes] = []
+        all_episodes: list[response.SeasonEpisodes] = []
 
         while True:
-            response = self.get_season_episodes(
+            resp = self.get_season_episodes(
                 node_id=node_id,
                 country=country,
                 language=language,
@@ -128,28 +125,28 @@ class SeasonEpisodesMixin(JustWatchProtocol):
                 offset=offset,
             )
 
-            all_episodes.append(response)
+            all_episodes.append(resp)
             # TODO: This can download one more page than needed, there may be a better
             # way to do this.
-            if len(response.data.node.episodes) < DEFAULT_LIMIT:
+            if len(resp.data.node.episodes) < DEFAULT_LIMIT:
                 return all_episodes
 
             offset += DEFAULT_LIMIT
 
     def parse_all_season_episodes(
         self,
-        all_episodes: SeasonEpisodes
-        | list[SeasonEpisodes]
+        all_episodes: response.SeasonEpisodes
+        | list[response.SeasonEpisodes]
         | list[dict[str, Any]]
         | dict[str, Any],
         *,
         update: bool = False,
-    ) -> list[Episode]:
+    ) -> list[response.Episode]:
         """Combine multiple GetSeasonEpisodes responses into a single response."""
         if isinstance(all_episodes, dict):
             all_episodes = self.parse_season_episodes(all_episodes, update=update)
 
-        if isinstance(all_episodes, SeasonEpisodes):
+        if isinstance(all_episodes, response.SeasonEpisodes):
             return all_episodes.data.node.episodes
 
         return [

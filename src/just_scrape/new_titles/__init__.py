@@ -1,11 +1,8 @@
 import datetime
 from typing import Any
 
+from just_scrape.new_titles import query, request, response
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import Filter, Variables
-from .response import Edge, NewTitles
 
 
 class NewTitlesMixin(JustWatchProtocol):
@@ -33,7 +30,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> Variables:
+    ) -> request.Variables:
         date = date or datetime.datetime.now(tz=datetime.UTC).date()
         available_to_packages = available_to_packages or []
         filter_age_certifications = filter_age_certifications or []
@@ -47,7 +44,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types = filter_presentation_types or []
         filter_monetization_types = filter_monetization_types or []
 
-        filter_obj = Filter(
+        filter_obj = request.Filter(
             ageCertifications=filter_age_certifications,
             excludeGenres=filter_exclude_genres,
             excludeProductionCountries=filter_exclude_production_countries,
@@ -61,7 +58,7 @@ class NewTitlesMixin(JustWatchProtocol):
             monetizationTypes=filter_monetization_types,
         )
 
-        return Variables(
+        return request.Variables(
             after=after,
             first=first,
             pageType=page_type,
@@ -126,20 +123,20 @@ class NewTitlesMixin(JustWatchProtocol):
 
         return self._graphql_request(
             operation_name="GetNewTitles",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_new_titles(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> NewTitles:
+    ) -> response.NewTitles:
         if update:
-            return self.parse_response(NewTitles, response, "new_titles")
+            return self.parse_response(response.NewTitles, data, "new_titles")
 
-        return NewTitles.model_validate(response)
+        return response.NewTitles.model_validate(data)
 
     def get_new_titles(  # noqa: PLR0913
         self,
@@ -165,7 +162,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         after: str | None = None,
-    ) -> NewTitles:
+    ) -> response.NewTitles:
         """Get new episodes for a specific website and date.
 
         This API request normally occurs when visiting the new episodes page
@@ -199,7 +196,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
 
         """
-        response = self._download_get_new_titles(
+        resp = self._download_get_new_titles(
             first=first,
             page_type=page_type,
             date=date,
@@ -222,7 +219,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
-        return self.parse_new_titles(response, update=True)
+        return self.parse_new_titles(resp, update=True)
 
     def get_all_new_titles_for_date(  # noqa: PLR0913
         self,
@@ -247,7 +244,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         date: datetime.date | None = None,
-    ) -> list[NewTitles]:
+    ) -> list[response.NewTitles]:
         """Get all of the new titles for a specific date.
 
         Args:
@@ -277,7 +274,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
         """
         after = None
-        output: list[NewTitles] = []
+        output: list[response.NewTitles] = []
 
         while True:
             parsed = self.get_new_titles(
@@ -335,7 +332,7 @@ class NewTitlesMixin(JustWatchProtocol):
         # Specialized parameters for this function.
         start_date: datetime.date | None = None,
         end_date: datetime.date,
-    ) -> list[list[NewTitles]]:
+    ) -> list[list[response.NewTitles]]:
         """Get all of the new titles for a specific date range.
 
         Args:
@@ -367,10 +364,10 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
         """
         current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
-        output: list[list[NewTitles]] = []
+        output: list[list[response.NewTitles]] = []
 
         while current_date >= end_date:
-            response = self.get_all_new_titles_for_date(
+            resp = self.get_all_new_titles_for_date(
                 first=first,
                 page_type=page_type,
                 date=current_date,
@@ -393,7 +390,7 @@ class NewTitlesMixin(JustWatchProtocol):
                 filter_monetization_types=filter_monetization_types,
             )
 
-            output.append(response)
+            output.append(resp)
 
             current_date -= datetime.timedelta(days=1)
 
@@ -401,17 +398,17 @@ class NewTitlesMixin(JustWatchProtocol):
 
     def new_titles_entries(
         self,
-        responses: NewTitles
-        | list[NewTitles]
-        | list[list[NewTitles]]
+        responses: response.NewTitles
+        | list[response.NewTitles]
+        | list[list[response.NewTitles]]
         | dict[str, Any]
         | list[dict[str, Any]],
-    ) -> list[Edge]:
+    ) -> list[response.Edge]:
         """Get all of the edges for a new titles input."""
         if isinstance(responses, list):
-            result: list[Edge] = []
-            for response in responses:
-                result.extend(self.new_titles_entries(response))
+            result: list[response.Edge] = []
+            for resp in responses:
+                result.extend(self.new_titles_entries(resp))
             return result
 
         if isinstance(responses, dict):

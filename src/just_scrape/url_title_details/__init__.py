@@ -14,10 +14,7 @@ from just_scrape.constants import (
     JUST_SCRAPE_PATH,
 )
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import Variables
-from .response import UrlTitleDetails
+from just_scrape.url_title_details import query, request, response
 
 
 class UrlTitleDetailsMixin(JustWatchProtocol):
@@ -63,11 +60,11 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
-    ) -> Variables:
+    ) -> request.Variables:
         if exclude_packages is None:
             exclude_packages = DEFAULT_EXCLUDE_PACKAGES
 
-        return Variables(
+        return request.Variables(
             platform=platform,
             excludeTextRecommendationTitle=exclude_text_recommendation_title,
             first=first,
@@ -105,25 +102,25 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         )
         return self._graphql_request(
             operation_name="GetUrlTitleDetails",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_url_title_details(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> UrlTitleDetails:
+    ) -> response.UrlTitleDetails:
         if update:
             return self.parse_response(
-                UrlTitleDetails,
-                response,
+                response.UrlTitleDetails,
+                data,
                 "url_title_details",
                 self.URL_TITLE_DETAILS_CUSTOMIZATIONS,
             )
 
-        return UrlTitleDetails.model_validate(response)
+        return response.UrlTitleDetails.model_validate(data)
 
     def get_url_title_details(  # noqa: PLR0913
         self,
@@ -137,7 +134,7 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
-    ) -> UrlTitleDetails:
+    ) -> response.UrlTitleDetails:
         """Get information about a specific TV show.
 
         This API request normally occurs when visiting a the page for a specific season

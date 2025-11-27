@@ -9,11 +9,8 @@ from gapi import (
 )
 
 from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
+from just_scrape.custom_get_buy_box_offers import query, request, response
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import Variables
-from .response import CustomGetBuyBoxOffers
 
 
 class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
@@ -36,8 +33,8 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> Variables:
-        return Variables(
+    ) -> request.Variables:
+        return request.Variables(
             platform=platform,
             fallbackToForeignOffers=fallback_to_foreign_offers,
             excludePackages=list(exclude_packages),
@@ -66,25 +63,25 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         )
         return self._graphql_request(
             operation_name="GetBuyBoxOffers",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_custom_get_buy_box_offers(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> CustomGetBuyBoxOffers:
+    ) -> response.CustomGetBuyBoxOffers:
         if update:
             return self.parse_response(
-                CustomGetBuyBoxOffers,
-                response,
+                response.CustomGetBuyBoxOffers,
+                data,
                 "custom_get_buy_box_offers",
                 self.CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
             )
 
-        return CustomGetBuyBoxOffers.model_validate(response)
+        return response.CustomGetBuyBoxOffers.model_validate(data)
 
     def get_custom_get_buy_box_offers(  # noqa: PLR0913
         self,
@@ -95,7 +92,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> CustomGetBuyBoxOffers:
+    ) -> response.CustomGetBuyBoxOffers:
         """Get all of the different websites that a specific episode can be watched.
 
         This API request normally occurs when clicking on an episode.
@@ -108,7 +105,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        response = self._download_custom_get_buy_box_offers(
+        resp = self._download_custom_get_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -117,4 +114,4 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_custom_get_buy_box_offers(response, update=True)
+        return self.parse_custom_get_buy_box_offers(resp, update=True)

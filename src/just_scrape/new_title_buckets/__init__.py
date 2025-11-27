@@ -1,10 +1,7 @@
 from typing import Any
 
+from just_scrape.new_title_buckets import query, request, response
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import NewTitlesFilter, Variables
-from .response import NewTitleBuckets
 
 
 class NewTitleBucketsMixin(JustWatchProtocol):
@@ -29,7 +26,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> Variables:
+    ) -> request.Variables:
         filter_age_certifications = filter_age_certifications or []
         filter_exclude_genres = filter_exclude_genres or []
         filter_exclude_production_countries = filter_exclude_production_countries or []
@@ -41,7 +38,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_presentation_types = filter_presentation_types or []
         filter_monetization_types = filter_monetization_types or []
 
-        new_titles_filter = NewTitlesFilter(
+        new_titles_filter = request.NewTitlesFilter(
             ageCertifications=filter_age_certifications,
             excludeGenres=filter_exclude_genres,
             excludeProductionCountries=filter_exclude_production_countries,
@@ -55,7 +52,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             monetizationTypes=filter_monetization_types,
         )
 
-        return Variables(
+        return request.Variables(
             first=first,
             bucketSize=bucket_size,
             groupBy=group_by,
@@ -111,20 +108,24 @@ class NewTitleBucketsMixin(JustWatchProtocol):
 
         return self._graphql_request(
             operation_name="GetNewTitleBuckets",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_new_title_buckets(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> NewTitleBuckets:
+    ) -> response.NewTitleBuckets:
         if update:
-            return self.parse_response(NewTitleBuckets, response, "new_title_buckets")
+            return self.parse_response(
+                response.NewTitleBuckets,
+                data,
+                "new_title_buckets",
+            )
 
-        return NewTitleBuckets.model_validate(response)
+        return response.NewTitleBuckets.model_validate(data)
 
     def get_new_title_buckets(  # noqa: PLR0913
         self,
@@ -147,7 +148,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> NewTitleBuckets:
+    ) -> response.NewTitleBuckets:
         """Get websites with new episodes.
 
         This API request normally occurs when visiting the new episodes page
@@ -173,7 +174,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             filter_presentation_types: ???
             filter_monetization_types: ???
         """
-        response = self._download_new_title_buckets(
+        resp = self._download_new_title_buckets(
             first=first,
             bucket_size=bucket_size,
             group_by=group_by,
@@ -194,4 +195,4 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             filter_monetization_types=filter_monetization_types,
         )
 
-        return self.parse_new_title_buckets(response, update=True)
+        return self.parse_new_title_buckets(resp, update=True)

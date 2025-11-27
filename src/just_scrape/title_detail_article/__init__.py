@@ -1,10 +1,7 @@
 from typing import Any
 
 from just_scrape.protocol import JustWatchProtocol
-
-from .query import QUERY
-from .request import Variables
-from .response import TitleDetailArticle
+from just_scrape.title_detail_article import query, request, response
 
 
 class TitleDetailArticleMixin(JustWatchProtocol):
@@ -14,8 +11,8 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         full_path: str,
         language: str = "en",
         country: str = "US",
-    ) -> Variables:
-        return Variables(
+    ) -> request.Variables:
+        return request.Variables(
             fullPath=full_path,
             language=language,
             country=country,
@@ -35,24 +32,24 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         )
         return self._graphql_request(
             operation_name="GetTitleDetailArticle",
-            query=QUERY,
+            query=query.QUERY,
             variables=variables,
         )
 
     def parse_get_title_detail_article(
         self,
-        response: dict[str, Any],
+        data: dict[str, Any],
         *,
         update: bool = False,
-    ) -> TitleDetailArticle:
+    ) -> response.TitleDetailArticle:
         if update:
             return self.parse_response(
-                TitleDetailArticle,
-                response,
+                response.TitleDetailArticle,
+                data,
                 "title_detail_article",
             )
 
-        return TitleDetailArticle.model_validate(response)
+        return response.TitleDetailArticle.model_validate(data)
 
     def get_title_detail_article(
         self,
@@ -60,12 +57,12 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         full_path: str,
         language: str = "en",
         country: str = "US",
-    ) -> TitleDetailArticle:
+    ) -> response.TitleDetailArticle:
         """This may be deprecated and no longer used."""
-        response = self._download_get_title_detail_article(
+        resp = self._download_get_title_detail_article(
             full_path=full_path,
             language=language,
             country=country,
         )
 
-        return self.parse_get_title_detail_article(response, update=True)
+        return self.parse_get_title_detail_article(resp, update=True)
