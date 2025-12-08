@@ -18,7 +18,7 @@ class Variables(BaseModel):
     language: str
 
 
-class GetBuyBoxOffersRequest(BaseModel):
+class BuyBoxOffersRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

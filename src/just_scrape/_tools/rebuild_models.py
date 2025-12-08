@@ -1,6 +1,6 @@
 from just_scrape import JustScrape
-from just_scrape.custom_get_buy_box_offers import (
-    CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
+from just_scrape.custom_buy_box_offers import (
+    CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS,
 )
 from just_scrape.url_title_details import URL_TITLE_DETAILS_CUSTOMIZATIONS
 
@@ -8,10 +8,10 @@ if __name__ == "__main__":
     client = JustScrape()
     # No requests file because it uses get_buy_box_offers/request
     client.rebuild_models(
-        "custom_get_buy_box_offers/response",
-        CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
+        "custom_buy_box_offers/response",
+        CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS,
     )
-    client.rebuild_models("get_buy_box_offers/request")
+    client.rebuild_models("buy_box_offers/request")
 
     client.rebuild_models(
         "url_title_details/response",

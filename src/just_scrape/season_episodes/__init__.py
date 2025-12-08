@@ -125,7 +125,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         all_episodes: response_models.SeasonEpisodesResponse
         | list[response_models.SeasonEpisodesResponse],
     ) -> list[response_models.Episode]:
-        """Combine multiple GetSeasonEpisodes responses into a single response."""
+        """Combine SeasonEpisodesResponse responses into a single list of Episodes."""
         if isinstance(all_episodes, response_models.SeasonEpisodesResponse):
             return all_episodes.data.node.episodes
 

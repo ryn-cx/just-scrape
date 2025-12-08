@@ -1,14 +1,14 @@
 from typing import Any
 
+from just_scrape.buy_box_offers import query
+from just_scrape.buy_box_offers.request import models as request_models
+from just_scrape.buy_box_offers.response import models as response_models
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
-from just_scrape.get_buy_box_offers import query
-from just_scrape.get_buy_box_offers.request import models as request_models
-from just_scrape.get_buy_box_offers.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 
 
 class BuyBoxOffersMixin(JustWatchProtocol):
-    def download_get_buy_box_offers(  # noqa: PLR0913
+    def download_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -28,22 +28,22 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         )
         return self._download_graphql_request("GetBuyBoxOffers", query.QUERY, variables)
 
-    def parse_get_buy_box_offers(
+    def parse_buy_box_offers(
         self,
         data: dict[str, Any],
         *,
         update: bool = True,
-    ) -> response_models.GetBuyBoxOffersResponse:
+    ) -> response_models.BuyBoxOffersResponse:
         if update:
             return self.parse_response(
-                response_models.GetBuyBoxOffersResponse,
+                response_models.BuyBoxOffersResponse,
                 data,
-                "get_buy_box_offers/response",
+                "buy_box_offers/response",
             )
 
-        return response_models.GetBuyBoxOffersResponse.model_validate(data)
+        return response_models.BuyBoxOffersResponse.model_validate(data)
 
-    def get_get_buy_box_offers(  # noqa: PLR0913
+    def get_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -52,7 +52,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> response_models.GetBuyBoxOffersResponse:
+    ) -> response_models.BuyBoxOffersResponse:
         """Get all of the different websites that a specific episode can be watched.
 
         This API request normally occurs when clicking on an episode.
@@ -65,7 +65,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        response = self.download_get_buy_box_offers(
+        response = self.download_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -74,4 +74,4 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_get_buy_box_offers(response)
+        return self.parse_buy_box_offers(response)

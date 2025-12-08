@@ -7,7 +7,7 @@ from just_scrape.title_detail_article.response import models as response_models
 
 
 class TitleDetailArticleMixin(JustWatchProtocol):
-    def download_get_title_detail_article(
+    def download_title_detail_article(
         self,
         *,
         full_path: str,
@@ -25,7 +25,7 @@ class TitleDetailArticleMixin(JustWatchProtocol):
             variables,
         )
 
-    def parse_get_title_detail_article(
+    def parse_title_detail_article(
         self,
         data: dict[str, Any],
         *,
@@ -48,10 +48,10 @@ class TitleDetailArticleMixin(JustWatchProtocol):
         country: str = "US",
     ) -> response_models.TitleDetailArticleResponse:
         """This may be deprecated and no longer used."""
-        response = self.download_get_title_detail_article(
+        response = self.download_title_detail_article(
             full_path=full_path,
             language=language,
             country=country,
         )
 
-        return self.parse_get_title_detail_article(response)
+        return self.parse_title_detail_article(response)

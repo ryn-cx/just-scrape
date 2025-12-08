@@ -6,10 +6,10 @@ import requests
 from gapi import AbstractGapiClient
 from pydantic import BaseModel
 
+from just_scrape.buy_box_offers import BuyBoxOffersMixin
 from just_scrape.constants import JUST_SCRAPE_PATH
-from just_scrape.custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
+from just_scrape.custom_buy_box_offers import CustomBuyBoxOffersMixin
 from just_scrape.exceptions import GraphQLError, HTTPError
-from just_scrape.get_buy_box_offers import BuyBoxOffersMixin
 from just_scrape.new_title_buckets import NewTitleBucketsMixin
 from just_scrape.new_titles import NewTitlesMixin
 from just_scrape.season_episodes import SeasonEpisodesMixin
@@ -27,7 +27,7 @@ class JustScrape(
     SeasonEpisodesMixin,
     TitleDetailArticleMixin,
     UrlTitleDetailsMixin,
-    CustomGetBuyBoxOffersMixin,
+    CustomBuyBoxOffersMixin,
 ):
     def client_path(self) -> Path:
         return JUST_SCRAPE_PATH

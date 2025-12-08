@@ -380,7 +380,7 @@ class Data(BaseModel):
     node: Node
 
 
-class GetBuyBoxOffersResponse(BaseModel):
+class BuyBoxOffersResponse(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

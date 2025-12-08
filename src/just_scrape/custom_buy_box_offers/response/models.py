@@ -437,7 +437,7 @@ class Data(BaseModel):
     node: Node
 
 
-class CustomGetBuyBoxOffersResponse(BaseModel):
+class CustomBuyBoxOffersResponse(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

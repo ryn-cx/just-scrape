@@ -2,13 +2,13 @@ from typing import Any
 
 from gapi import CustomSerializer, GapiCustomizations
 
+from just_scrape.buy_box_offers.request import models as request_models
 from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
-from just_scrape.custom_get_buy_box_offers import query
-from just_scrape.custom_get_buy_box_offers.response import models as response_models
-from just_scrape.get_buy_box_offers.request import models as request_models
+from just_scrape.custom_buy_box_offers import query
+from just_scrape.custom_buy_box_offers.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 
-CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
+CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
     custom_serializers=[
         CustomSerializer(
             class_name="Node",
@@ -21,12 +21,12 @@ CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
 )
 
 
-class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
+class CustomBuyBoxOffersMixin(JustWatchProtocol):
     """BuyBoxOffers with the addition of the dateCreated field."""
 
     # PLR0913 - The query has more than 5 queries so this function needs more than 5
     # arguments.
-    def download_custom_get_buy_box_offers(  # noqa: PLR0913
+    def download_custom_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -46,23 +46,23 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         )
         return self._download_graphql_request("GetBuyBoxOffers", query.QUERY, variables)
 
-    def parse_custom_get_buy_box_offers(
+    def parse_custom_buy_box_offers(
         self,
         data: dict[str, Any],
         *,
         update: bool = True,
-    ) -> response_models.CustomGetBuyBoxOffersResponse:
+    ) -> response_models.CustomBuyBoxOffersResponse:
         if update:
             return self.parse_response(
-                response_models.CustomGetBuyBoxOffersResponse,
+                response_models.CustomBuyBoxOffersResponse,
                 data,
-                "custom_get_buy_box_offers/response",
-                CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
+                "custom_buy_box_offers/response",
+                CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS,
             )
 
-        return response_models.CustomGetBuyBoxOffersResponse.model_validate(data)
+        return response_models.CustomBuyBoxOffersResponse.model_validate(data)
 
-    def get_custom_get_buy_box_offers(  # noqa: PLR0913
+    def get_custom_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -71,7 +71,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> response_models.CustomGetBuyBoxOffersResponse:
+    ) -> response_models.CustomBuyBoxOffersResponse:
         """Get all of the different websites that a specific episode can be watched.
 
         This API request normally occurs when clicking on an episode.
@@ -84,7 +84,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        response = self.download_custom_get_buy_box_offers(
+        response = self.download_custom_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -93,4 +93,4 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_custom_get_buy_box_offers(response)
+        return self.parse_custom_buy_box_offers(response)

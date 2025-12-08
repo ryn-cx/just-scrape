@@ -8,7 +8,7 @@ from just_scrape.protocol import JustWatchProtocol
 
 
 class NewTitlesMixin(JustWatchProtocol):
-    def download_get_new_titles(  # noqa: PLR0913
+    def download_new_titles(  # noqa: PLR0913
         self,
         *,
         first: int = 10,
@@ -149,7 +149,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
 
         """
-        response = self.download_get_new_titles(
+        response = self.download_new_titles(
             first=first,
             page_type=page_type,
             date=date,
@@ -349,7 +349,7 @@ class NewTitlesMixin(JustWatchProtocol):
 
         return output
 
-    def extract_get_new_titles_edges(
+    def extract_new_titles_edges(
         self,
         data: response_models.NewTitlesResponse
         | list[response_models.NewTitlesResponse],
@@ -361,5 +361,5 @@ class NewTitlesMixin(JustWatchProtocol):
         return [
             edge
             for response in data
-            for edge in self.extract_get_new_titles_edges(response)
+            for edge in self.extract_new_titles_edges(response)
         ]
