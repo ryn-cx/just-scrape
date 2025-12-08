@@ -4,7 +4,7 @@ JUST_SCRAPE_PATH = Path(__file__).parent
 FILES_PATH = JUST_SCRAPE_PATH / "_files"
 # By default there is a bunch of packages that are excluded, I have no idea why they are
 # excluded, but this will match the API request that is sent when visiting the website.
-DEFAULT_EXCLUDE_PACKAGES = (
+DEFAULT_EXCLUDE_PACKAGES = [
     "3ca",
     "als",
     "amo",
@@ -31,7 +31,7 @@ DEFAULT_EXCLUDE_PACKAGES = (
     "wdt",
     "yot",
     "yrk",
-)
+]
 
 DATETIME_SERIALIZER = '''if value is None:
     return None

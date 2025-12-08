@@ -1,69 +1,47 @@
-from collections.abc import Sequence
 from typing import Any
 
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
-from just_scrape.get_buy_box_offers import query, request, response
+from just_scrape.get_buy_box_offers import query
+from just_scrape.get_buy_box_offers.request import models as request_models
+from just_scrape.get_buy_box_offers.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 
 
 class BuyBoxOffersMixin(JustWatchProtocol):
-    def _get_buy_box_offers_variables(  # noqa: PLR0913
+    def download_get_buy_box_offers(  # noqa: PLR0913
         self,
         node_id: str,
         *,
         platform: str = "WEB",
         fallback_to_foreign_offers: bool = False,
-        exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
+        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> request.Variables:
-        return request.Variables(
+    ) -> dict[str, Any]:
+        variables = request_models.Variables(
             platform=platform,
             fallbackToForeignOffers=fallback_to_foreign_offers,
-            excludePackages=list(exclude_packages),
+            excludePackages=exclude_packages,
             nodeId=node_id,
             country=country,
             language=language,
         )
-
-    def _download_get_buy_box_offers(  # noqa: PLR0913
-        self,
-        *,
-        platform: str = "WEB",
-        fallback_to_foreign_offers: bool = False,
-        exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
-        node_id: str,
-        country: str = "US",
-        language: str = "en",
-    ) -> dict[str, Any]:
-        variables = self._get_buy_box_offers_variables(
-            platform=platform,
-            fallback_to_foreign_offers=fallback_to_foreign_offers,
-            exclude_packages=exclude_packages,
-            node_id=node_id,
-            country=country,
-            language=language,
-        )
-        return self._graphql_request(
-            operation_name="GetBuyBoxOffers",
-            query=query.QUERY,
-            variables=variables,
-        )
+        return self._download_graphql_request("GetBuyBoxOffers", query.QUERY, variables)
 
     def parse_get_buy_box_offers(
         self,
         data: dict[str, Any],
         *,
-        update: bool = False,
-    ) -> response.GetBuyBoxOffers:
+        update: bool = True,
+    ) -> response_models.GetBuyBoxOffersResponse:
         if update:
             return self.parse_response(
-                response.GetBuyBoxOffers,
+                response_models.GetBuyBoxOffersResponse,
                 data,
                 "get_buy_box_offers",
             )
 
-        return response.GetBuyBoxOffers.model_validate(data)
+        return response_models.GetBuyBoxOffersResponse.model_validate(data)
 
     def get_get_buy_box_offers(  # noqa: PLR0913
         self,
@@ -71,10 +49,10 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         *,
         platform: str = "WEB",
         fallback_to_foreign_offers: bool = False,
-        exclude_packages: Sequence[str] = DEFAULT_EXCLUDE_PACKAGES,
+        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> response.GetBuyBoxOffers:
+    ) -> response_models.GetBuyBoxOffersResponse:
         """Get all of the different websites that a specific episode can be watched.
 
         This API request normally occurs when clicking on an episode.
@@ -87,7 +65,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             country: ???
             language: ???
         """
-        resp = self._download_get_buy_box_offers(
+        response = self.download_get_buy_box_offers(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -96,4 +74,4 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             language=language,
         )
 
-        return self.parse_get_buy_box_offers(resp, update=True)
+        return self.parse_get_buy_box_offers(response)

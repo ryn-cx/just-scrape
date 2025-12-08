@@ -24,43 +24,50 @@ class TestParsing:
 
     def get_test_files(self, endpoint: str) -> Iterator[Path]:
         """Get all JSON test files for a given endpoint."""
-        dir_path = FILES_PATH / endpoint / "response"
+        dir_path = FILES_PATH / endpoint
         if not dir_path.exists():
             pytest.fail(f"{dir_path} not found")
-        return dir_path.glob("*.json")
+
+        files = dir_path.glob("*.json")
+
+        # Make sure at least 1 file is found
+        if not files:
+            pytest.fail(f"No test files found in {dir_path}")
+
+        return files
 
     def test_get_buy_box_offers(self) -> None:
-        for json_file in self.get_test_files("get_buy_box_offers"):
+        for json_file in self.get_test_files("get_buy_box_offers/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_get_buy_box_offers(file_content)
             assert file_content == client.dump_response(parsed)
 
     def test_get_new_titles(self) -> None:
-        for json_file in self.get_test_files("new_titles"):
+        for json_file in self.get_test_files("new_titles/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_new_titles(file_content)
             assert file_content == client.dump_response(parsed)
 
     def test_get_new_title_buckets(self) -> None:
-        for json_file in self.get_test_files("new_title_buckets"):
+        for json_file in self.get_test_files("new_title_buckets/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_new_title_buckets(file_content)
             assert file_content == client.dump_response(parsed)
 
     def test_get_url_title_details(self) -> None:
-        for json_file in self.get_test_files("url_title_details"):
+        for json_file in self.get_test_files("url_title_details/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_url_title_details(file_content)
             assert file_content == client.dump_response(parsed)
 
     def test_get_title_detail_article(self) -> None:
-        for json_file in self.get_test_files("title_detail_article"):
+        for json_file in self.get_test_files("title_detail_article/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_get_title_detail_article(file_content)
             assert file_content == client.dump_response(parsed)
 
     def test_get_season_episodes(self) -> None:
-        for json_file in self.get_test_files("season_episodes"):
+        for json_file in self.get_test_files("season_episodes/response"):
             file_content = json.loads(json_file.read_text())
             parsed = client.parse_season_episodes(file_content)
             assert file_content == client.dump_response(parsed)
@@ -115,7 +122,7 @@ class TestCustomGet:
             # Amazon seems to usually have at least 10 new episode every day so this
             # will USUALLY test true on the first iteration but sometimes extra loops
             # are required.
-            all_edges = client.new_titles_entries(all_new_titles_for_date)
+            all_edges = client.extract_get_new_titles_edges(all_new_titles_for_date)
             assert len(all_edges) == expected_episodes
 
             if expected_episodes > 10:  # noqa: PLR2004
@@ -140,11 +147,11 @@ class TestCustomGet:
         for responses in responseses:
             expected_edges += responses[0].data.new_titles.total_count
 
-        assert len(client.new_titles_entries(responseses)) == expected_edges
+        assert len(client.extract_get_new_titles_edges(responseses)) == expected_edges
 
     def test_get_all_season_episodes(self) -> None:
         season_id = "tss23744"
         number_of_episodes = 23
         season_episodes = client.get_all_season_episodes(node_id=season_id)
-        episodes = client.parse_all_season_episodes(season_episodes)
+        episodes = client.extract_season_episodes_episodes(season_episodes)
         assert len(episodes) == number_of_episodes

@@ -1,11 +1,13 @@
 from typing import Any
 
-from just_scrape.new_title_buckets import query, request, response
+from just_scrape.new_title_buckets import query
+from just_scrape.new_title_buckets.request import models as request_models
+from just_scrape.new_title_buckets.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 
 
 class NewTitleBucketsMixin(JustWatchProtocol):
-    def _new_title_buckets_variables(  # noqa: PLR0913
+    def download_new_title_buckets(  # noqa: PLR0913
         self,
         *,
         first: int = 8,
@@ -22,11 +24,11 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_production_countries: list[Any] | None = None,
         filter_subgenres: list[Any] | None = None,
         filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
+        filter_packages: list[None] | None = None,
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> request.Variables:
+    ) -> dict[str, Any]:
         filter_age_certifications = filter_age_certifications or []
         filter_exclude_genres = filter_exclude_genres or []
         filter_exclude_production_countries = filter_exclude_production_countries or []
@@ -38,7 +40,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_presentation_types = filter_presentation_types or []
         filter_monetization_types = filter_monetization_types or []
 
-        new_titles_filter = request.NewTitlesFilter(
+        new_titles_filter = request_models.NewTitlesFilter(
             ageCertifications=filter_age_certifications,
             excludeGenres=filter_exclude_genres,
             excludeProductionCountries=filter_exclude_production_countries,
@@ -52,7 +54,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             monetizationTypes=filter_monetization_types,
         )
 
-        return request.Variables(
+        variables = request_models.Variables(
             first=first,
             bucketSize=bucket_size,
             groupBy=group_by,
@@ -63,69 +65,26 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             priceDrops=price_drops,
         )
 
-    def _download_new_title_buckets(  # noqa: PLR0913
-        self,
-        *,
-        first: int = 8,
-        bucket_size: int = 0,
-        group_by: str = "DATE_PACKAGE",
-        page_type: str = "NEW",
-        country: str = "US",
-        new_after_cursor: str = "",
-        price_drops: bool = False,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-    ) -> dict[str, Any]:
-        variables = self._new_title_buckets_variables(
-            first=first,
-            bucket_size=bucket_size,
-            group_by=group_by,
-            page_type=page_type,
-            country=country,
-            new_after_cursor=new_after_cursor,
-            price_drops=price_drops,
-            filter_age_certifications=filter_age_certifications,
-            filter_exclude_genres=filter_exclude_genres,
-            filter_exclude_production_countries=filter_exclude_production_countries,
-            filter_object_types=filter_object_types,
-            filter_production_countries=filter_production_countries,
-            filter_subgenres=filter_subgenres,
-            filter_genres=filter_genres,
-            filter_packages=filter_packages,
-            filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-            filter_presentation_types=filter_presentation_types,
-            filter_monetization_types=filter_monetization_types,
-        )
-
-        return self._graphql_request(
-            operation_name="GetNewTitleBuckets",
-            query=query.QUERY,
-            variables=variables,
+        return self._download_graphql_request(
+            "GetNewTitleBuckets",
+            query.QUERY,
+            variables,
         )
 
     def parse_new_title_buckets(
         self,
         data: dict[str, Any],
         *,
-        update: bool = False,
-    ) -> response.NewTitleBuckets:
+        update: bool = True,
+    ) -> response_models.NewTitleBucketsResponse:
         if update:
             return self.parse_response(
-                response.NewTitleBuckets,
+                response_models.NewTitleBucketsResponse,
                 data,
                 "new_title_buckets",
             )
 
-        return response.NewTitleBuckets.model_validate(data)
+        return response_models.NewTitleBucketsResponse.model_validate(data)
 
     def get_new_title_buckets(  # noqa: PLR0913
         self,
@@ -144,11 +103,11 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_production_countries: list[Any] | None = None,
         filter_subgenres: list[Any] | None = None,
         filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
+        filter_packages: list[None] | None = None,
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> response.NewTitleBuckets:
+    ) -> response_models.NewTitleBucketsResponse:
         """Get websites with new episodes.
 
         This API request normally occurs when visiting the new episodes page
@@ -174,7 +133,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             filter_presentation_types: ???
             filter_monetization_types: ???
         """
-        resp = self._download_new_title_buckets(
+        response = self.download_new_title_buckets(
             first=first,
             bucket_size=bucket_size,
             group_by=group_by,
@@ -195,4 +154,4 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             filter_monetization_types=filter_monetization_types,
         )
 
-        return self.parse_new_title_buckets(resp, update=True)
+        return self.parse_new_title_buckets(response)

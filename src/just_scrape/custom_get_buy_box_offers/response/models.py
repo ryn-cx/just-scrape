@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class Child(BaseModel):
@@ -28,7 +28,7 @@ class PlanOffer(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -56,7 +56,7 @@ class Plan(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -66,6 +66,7 @@ class FlatrateItem(BaseModel):
         extra="forbid",
     )
     id: str
+    date_created: date = Field(..., alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -116,6 +117,7 @@ class BuyItem(BaseModel):
         extra="forbid",
     )
     id: str
+    date_created: date = Field(..., alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -206,6 +208,7 @@ class FreeItem(BaseModel):
         extra="forbid",
     )
     id: str
+    date_created: date = Field(..., alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -240,6 +243,59 @@ class Package3(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
+    id: str
+    package_id: int = Field(..., alias="packageId")
+    clear_name: str = Field(..., alias="clearName")
+    short_name: str = Field(..., alias="shortName")
+    technical_name: str = Field(..., alias="technicalName")
+    icon: str
+    icon_wide: str = Field(..., alias="iconWide")
+    plan_offers: list[None] = Field(..., alias="planOffers")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FastItem(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    id: str
+    date_created: date = Field(..., alias="dateCreated")
+    presentation_type: str = Field(..., alias="presentationType")
+    monetization_type: str = Field(..., alias="monetizationType")
+    new_element_count: int = Field(..., alias="newElementCount")
+    retail_price: None = Field(..., alias="retailPrice")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    currency: str
+    last_change_retail_price_value: None = Field(
+        ...,
+        alias="lastChangeRetailPriceValue",
+    )
+    type: str
+    country: str
+    package: Package3
+    plans: list[None]
+    standard_web_url: str = Field(..., alias="standardWebURL")
+    pre_affiliated_standard_web_url: None = Field(
+        ...,
+        alias="preAffiliatedStandardWebURL",
+    )
+    stream_url: None = Field(..., alias="streamUrl")
+    stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
+    element_count: int = Field(..., alias="elementCount")
+    available_to: date = Field(..., alias="availableTo")
+    subtitle_languages: list[None] = Field(..., alias="subtitleLanguages")
+    video_technology: list[None] = Field(..., alias="videoTechnology")
+    audio_technology: list[None] = Field(..., alias="audioTechnology")
+    audio_languages: list[None] = Field(..., alias="audioLanguages")
+    field__typename: str = Field(..., alias="__typename")
+    available_from_time: AwareDatetime = Field(..., alias="availableFromTime")
+    available_to_time: AwareDatetime = Field(..., alias="availableToTime")
+
+
+class Package4(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     icon: str
     id: str
     icon_wide: str = Field(..., alias="iconWide")
@@ -257,7 +313,7 @@ class Node1(BaseModel):
     icon: str
     technical_name: str = Field(..., alias="technicalName")
     bundle_id: int = Field(..., alias="bundleId")
-    packages: list[Package3]
+    packages: list[Package4]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -274,7 +330,7 @@ class PlanOffer2(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package4(BaseModel):
+class Package5(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -307,6 +363,7 @@ class Offer(BaseModel):
         extra="forbid",
     )
     id: str
+    date_created: date = Field(..., alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -319,7 +376,7 @@ class Offer(BaseModel):
     )
     type: str
     country: str
-    package: Package4
+    package: Package5
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
@@ -329,7 +386,7 @@ class Offer(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: date | None = Field(..., alias="availableTo")
+    available_to: None = Field(..., alias="availableTo")
     subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
@@ -348,19 +405,28 @@ class Bundle(BaseModel):
 
 
 class Node(BaseModel):
+    @field_serializer("max_offer_updated_at")
+    def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
+        if value is None:
+            return None
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(
+        ...,
+        alias="maxOfferUpdatedAt",
+    )
     offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
     rent: list[None]
     free: list[FreeItem]
-    fast: list[None]
+    fast: list[FastItem]
     bundles: list[Bundle]
 
 
@@ -371,7 +437,7 @@ class Data(BaseModel):
     node: Node
 
 
-class GetBuyBoxOffers(BaseModel):
+class CustomGetBuyBoxOffersResponse(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

@@ -10,12 +10,15 @@ class Variables(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    full_path: str = Field(..., alias="fullPath")
-    language: str
+    platform: str
+    fallback_to_foreign_offers: bool = Field(..., alias="fallbackToForeignOffers")
+    exclude_packages: list[str] = Field(..., alias="excludePackages")
+    node_id: str = Field(..., alias="nodeId")
     country: str
+    language: str
 
 
-class TitleDetailArticle(BaseModel):
+class GetBuyBoxOffersRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

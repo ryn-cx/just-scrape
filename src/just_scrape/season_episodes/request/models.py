@@ -11,14 +11,14 @@ class Variables(BaseModel):
         extra="forbid",
     )
     platform: str
-    fallback_to_foreign_offers: bool = Field(..., alias="fallbackToForeignOffers")
-    exclude_packages: list[str] = Field(..., alias="excludePackages")
-    node_id: str = Field(..., alias="nodeId")
     country: str
     language: str
+    limit: int
+    node_id: str = Field(..., alias="nodeId")
+    offset: int
 
 
-class BuyBoxOffers(BaseModel):
+class SeasonEpisodesRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

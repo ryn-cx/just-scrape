@@ -10,21 +10,12 @@ class Variables(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    platform: str
-    exclude_text_recommendation_title: bool = Field(
-        ...,
-        alias="excludeTextRecommendationTitle",
-    )
-    first: int
-    fallback_to_foreign_offers: bool = Field(..., alias="fallbackToForeignOffers")
-    exclude_packages: list[str] = Field(..., alias="excludePackages")
     full_path: str = Field(..., alias="fullPath")
     language: str
     country: str
-    episode_max_limit: int = Field(..., alias="episodeMaxLimit")
 
 
-class UrlTitleDetails(BaseModel):
+class TitleDetailArticleRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

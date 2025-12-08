@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from datetime import date
-from typing import Any
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
@@ -29,7 +28,10 @@ class PlanOffer(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -57,7 +59,10 @@ class Plan(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -249,7 +254,10 @@ class PlanOffer1(BaseModel):
     duration_days: int = Field(..., alias="durationDays")
     presentation_type: str = Field(..., alias="presentationType")
     is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     currency: str
     field__typename: str = Field(..., alias="__typename")
 
@@ -461,7 +469,7 @@ class PopularityRank(BaseModel):
 
 class StreamingChartInfo(BaseModel):
     @field_serializer("updated_at")
-    def serialize_updated_at(self, value: Any, _info: Any) -> Any:
+    def serialize_updated_at(self, value: AwareDatetime) -> str:
         if value is None:
             return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
@@ -549,7 +557,10 @@ class Offer1(BaseModel):
     package: Package5
     monetization_type: str = Field(..., alias="monetizationType")
     retail_price: str | None = Field(..., alias="retailPrice")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -727,7 +738,10 @@ class PlanOffer3(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -755,7 +769,10 @@ class Plan1(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
+    retail_price_value: int | float | None = Field(
+        ...,
+        alias="retailPriceValue",
+    )
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -989,13 +1006,13 @@ class Package14(BaseModel):
 
 class FastItem(BaseModel):
     @field_serializer("available_to_time")
-    def serialize_available_to_time(self, value: Any, _info: Any) -> Any:
+    def serialize_available_to_time(self, value: AwareDatetime) -> str:
         if value is None:
             return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
     @field_serializer("available_from_time")
-    def serialize_available_from_time(self, value: Any, _info: Any) -> Any:
+    def serialize_available_from_time(self, value: AwareDatetime) -> str:
         if value is None:
             return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
@@ -1238,7 +1255,7 @@ class PromotedOffer(BaseModel):
 
 class RankInfo(BaseModel):
     @field_serializer("updated_at")
-    def serialize_updated_at(self, value: Any, _info: Any) -> Any:
+    def serialize_updated_at(self, value: AwareDatetime) -> str:
         if value is None:
             return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
@@ -1390,7 +1407,7 @@ class TitleModules(BaseModel):
 
 class Node(BaseModel):
     @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: Any, _info: Any) -> Any:
+    def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
         if value is None:
             return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
@@ -1427,7 +1444,10 @@ class Node(BaseModel):
     seasons: list[Season] | None = None
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(
+        ...,
+        alias="maxOfferUpdatedAt",
+    )
     offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem1]
     buy: list[BuyItem1]
@@ -1464,7 +1484,7 @@ class Data(BaseModel):
     url_v2: UrlV2 = Field(..., alias="urlV2")
 
 
-class UrlTitleDetails(BaseModel):
+class UrlTitleDetailsResponse(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

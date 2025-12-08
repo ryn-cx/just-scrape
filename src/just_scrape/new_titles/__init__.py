@@ -1,78 +1,14 @@
 import datetime
 from typing import Any
 
-from just_scrape.new_titles import query, request, response
+from just_scrape.new_titles import query
+from just_scrape.new_titles.request import models as request_models
+from just_scrape.new_titles.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 
 
 class NewTitlesMixin(JustWatchProtocol):
-    def _variables_get_new_titles(  # noqa: PLR0913
-        self,
-        *,
-        first: int = 10,
-        page_type: str = "NEW",
-        date: datetime.date | None = None,
-        language: str = "en",
-        country: str = "US",
-        price_drops: bool = False,
-        platform: str = "WEB",
-        after: str | None = None,
-        show_date_badge: bool = False,
-        available_to_packages: list[str] | None = None,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-    ) -> request.Variables:
-        date = date or datetime.datetime.now(tz=datetime.UTC).date()
-        available_to_packages = available_to_packages or []
-        filter_age_certifications = filter_age_certifications or []
-        filter_exclude_genres = filter_exclude_genres or []
-        filter_exclude_production_countries = filter_exclude_production_countries or []
-        filter_object_types = filter_object_types or []
-        filter_production_countries = filter_production_countries or []
-        filter_subgenres = filter_subgenres or []
-        filter_genres = filter_genres or []
-        filter_packages = filter_packages or []
-        filter_presentation_types = filter_presentation_types or []
-        filter_monetization_types = filter_monetization_types or []
-
-        filter_obj = request.Filter(
-            ageCertifications=filter_age_certifications,
-            excludeGenres=filter_exclude_genres,
-            excludeProductionCountries=filter_exclude_production_countries,
-            objectTypes=filter_object_types,
-            productionCountries=filter_production_countries,
-            subgenres=filter_subgenres,
-            genres=filter_genres,
-            packages=filter_packages,
-            excludeIrrelevantTitles=filter_exclude_irrelevant_titles,
-            presentationTypes=filter_presentation_types,
-            monetizationTypes=filter_monetization_types,
-        )
-
-        return request.Variables(
-            after=after,
-            first=first,
-            pageType=page_type,
-            date=date,
-            filter=filter_obj,
-            language=language,
-            country=country,
-            priceDrops=price_drops,
-            platform=platform,
-            showDateBadge=show_date_badge,
-            availableToPackages=available_to_packages,
-        )
-
-    def _download_get_new_titles(  # noqa: PLR0913
+    def download_get_new_titles(  # noqa: PLR0913
         self,
         *,
         first: int = 10,
@@ -97,46 +33,63 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
-        variables = self._variables_get_new_titles(
-            first=first,
-            page_type=page_type,
-            date=date,
-            language=language,
-            country=country,
-            price_drops=price_drops,
-            platform=platform,
-            after=after,
-            show_date_badge=show_date_badge,
-            available_to_packages=available_to_packages,
-            filter_age_certifications=filter_age_certifications,
-            filter_exclude_genres=filter_exclude_genres,
-            filter_exclude_production_countries=filter_exclude_production_countries,
-            filter_object_types=filter_object_types,
-            filter_production_countries=filter_production_countries,
-            filter_subgenres=filter_subgenres,
-            filter_genres=filter_genres,
-            filter_packages=filter_packages,
-            filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-            filter_presentation_types=filter_presentation_types,
-            filter_monetization_types=filter_monetization_types,
+        date = date or datetime.datetime.now(tz=datetime.UTC).date()
+        available_to_packages = available_to_packages or []
+        filter_age_certifications = filter_age_certifications or []
+        filter_exclude_genres = filter_exclude_genres or []
+        filter_exclude_production_countries = filter_exclude_production_countries or []
+        filter_object_types = filter_object_types or []
+        filter_production_countries = filter_production_countries or []
+        filter_subgenres = filter_subgenres or []
+        filter_genres = filter_genres or []
+        filter_packages = filter_packages or []
+        filter_presentation_types = filter_presentation_types or []
+        filter_monetization_types = filter_monetization_types or []
+
+        filter_obj = request_models.Filter(
+            ageCertifications=filter_age_certifications,
+            excludeGenres=filter_exclude_genres,
+            excludeProductionCountries=filter_exclude_production_countries,
+            objectTypes=filter_object_types,
+            productionCountries=filter_production_countries,
+            subgenres=filter_subgenres,
+            genres=filter_genres,
+            packages=filter_packages,
+            excludeIrrelevantTitles=filter_exclude_irrelevant_titles,
+            presentationTypes=filter_presentation_types,
+            monetizationTypes=filter_monetization_types,
         )
 
-        return self._graphql_request(
-            operation_name="GetNewTitles",
-            query=query.QUERY,
-            variables=variables,
+        variables = request_models.Variables(
+            after=after,
+            first=first,
+            pageType=page_type,
+            date=date,
+            filter=filter_obj,
+            language=language,
+            country=country,
+            priceDrops=price_drops,
+            platform=platform,
+            showDateBadge=show_date_badge,
+            availableToPackages=available_to_packages,
         )
+
+        return self._download_graphql_request("GetNewTitles", query.QUERY, variables)
 
     def parse_new_titles(
         self,
         data: dict[str, Any],
         *,
-        update: bool = False,
-    ) -> response.NewTitles:
+        update: bool = True,
+    ) -> response_models.NewTitlesResponse:
         if update:
-            return self.parse_response(response.NewTitles, data, "new_titles")
+            return self.parse_response(
+                response_models.NewTitlesResponse,
+                data,
+                "new_titles",
+            )
 
-        return response.NewTitles.model_validate(data)
+        return response_models.NewTitlesResponse.model_validate(data)
 
     def get_new_titles(  # noqa: PLR0913
         self,
@@ -162,7 +115,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         after: str | None = None,
-    ) -> response.NewTitles:
+    ) -> response_models.NewTitlesResponse:
         """Get new episodes for a specific website and date.
 
         This API request normally occurs when visiting the new episodes page
@@ -196,7 +149,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
 
         """
-        resp = self._download_get_new_titles(
+        response = self.download_get_new_titles(
             first=first,
             page_type=page_type,
             date=date,
@@ -219,7 +172,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
-        return self.parse_new_titles(resp, update=True)
+        return self.parse_new_titles(response)
 
     def get_all_new_titles_for_date(  # noqa: PLR0913
         self,
@@ -244,7 +197,7 @@ class NewTitlesMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         date: datetime.date | None = None,
-    ) -> list[response.NewTitles]:
+    ) -> list[response_models.NewTitlesResponse]:
         """Get all of the new titles for a specific date.
 
         Args:
@@ -274,7 +227,7 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
         """
         after = None
-        output: list[response.NewTitles] = []
+        output: list[response_models.NewTitlesResponse] = []
 
         while True:
             parsed = self.get_new_titles(
@@ -332,7 +285,7 @@ class NewTitlesMixin(JustWatchProtocol):
         # Specialized parameters for this function.
         start_date: datetime.date | None = None,
         end_date: datetime.date,
-    ) -> list[list[response.NewTitles]]:
+    ) -> list[list[response_models.NewTitlesResponse]]:
         """Get all of the new titles for a specific date range.
 
         Args:
@@ -364,10 +317,10 @@ class NewTitlesMixin(JustWatchProtocol):
             filter_monetization_types: ???
         """
         current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
-        output: list[list[response.NewTitles]] = []
+        output: list[list[response_models.NewTitlesResponse]] = []
 
         while current_date >= end_date:
-            resp = self.get_all_new_titles_for_date(
+            response = self.get_all_new_titles_for_date(
                 first=first,
                 page_type=page_type,
                 date=current_date,
@@ -390,28 +343,23 @@ class NewTitlesMixin(JustWatchProtocol):
                 filter_monetization_types=filter_monetization_types,
             )
 
-            output.append(resp)
+            output.append(response)
 
             current_date -= datetime.timedelta(days=1)
 
         return output
 
-    def new_titles_entries(
+    def extract_get_new_titles_edges(
         self,
-        responses: response.NewTitles
-        | list[response.NewTitles]
-        | list[list[response.NewTitles]]
-        | dict[str, Any]
-        | list[dict[str, Any]],
-    ) -> list[response.Edge]:
+        data: response_models.NewTitlesResponse
+        | list[response_models.NewTitlesResponse],
+    ) -> list[response_models.Edge]:
         """Get all of the edges for a new titles input."""
-        if isinstance(responses, list):
-            result: list[response.Edge] = []
-            for resp in responses:
-                result.extend(self.new_titles_entries(resp))
-            return result
+        if isinstance(data, response_models.NewTitlesResponse):
+            return data.data.new_titles.edges
 
-        if isinstance(responses, dict):
-            responses = self.parse_new_titles(responses)
-
-        return responses.data.new_titles.edges
+        return [
+            edge
+            for response in data
+            for edge in self.extract_get_new_titles_edges(response)
+        ]

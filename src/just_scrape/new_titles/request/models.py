@@ -45,7 +45,7 @@ class Variables(BaseModel):
     after: str | None = None
 
 
-class NewTitles(BaseModel):
+class NewTitlesRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )

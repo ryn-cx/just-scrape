@@ -1,46 +1,20 @@
-import json
 import logging
-import uuid
 from pathlib import Path
-from typing import Any, override
+from typing import Any
 
 import requests
-from gapi import (
-    AbstractGapiClient,
-    GapiCustomizations,
-    apply_customizations,
-    update_json_schema_and_pydantic_model,
-)
+from gapi import AbstractGapiClient
 from pydantic import BaseModel
 
-from .constants import FILES_PATH, JUST_SCRAPE_PATH
-from .custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
-from .custom_get_buy_box_offers.response import CustomGetBuyBoxOffers
-from .exceptions import GraphQLError, HTTPError
-from .get_buy_box_offers import BuyBoxOffersMixin
-from .get_buy_box_offers.response import GetBuyBoxOffers
-from .new_title_buckets import NewTitleBucketsMixin
-from .new_title_buckets.response import NewTitleBuckets
-from .new_titles import NewTitlesMixin
-from .new_titles.response import NewTitles
-from .season_episodes import SeasonEpisodesMixin
-from .season_episodes.response import SeasonEpisodes
-from .title_detail_article import TitleDetailArticleMixin
-from .title_detail_article.response import TitleDetailArticle
-from .url_title_details import UrlTitleDetailsMixin
-from .url_title_details.response import UrlTitleDetails
-
-RESPONSE_MODELS = (
-    GetBuyBoxOffers
-    | NewTitles
-    | NewTitleBuckets
-    | SeasonEpisodes
-    | TitleDetailArticle
-    | UrlTitleDetails
-    | CustomGetBuyBoxOffers
-)
-RESPONSE_MODELS_LIST = list[NewTitles] | list[SeasonEpisodes]
-RESPONSE_MODELS_LIST_LIST = list[list[NewTitles]]
+from just_scrape.constants import JUST_SCRAPE_PATH
+from just_scrape.custom_get_buy_box_offers import CustomGetBuyBoxOffersMixin
+from just_scrape.exceptions import GraphQLError, HTTPError
+from just_scrape.get_buy_box_offers import BuyBoxOffersMixin
+from just_scrape.new_title_buckets import NewTitleBucketsMixin
+from just_scrape.new_titles import NewTitlesMixin
+from just_scrape.season_episodes import SeasonEpisodesMixin
+from just_scrape.title_detail_article import TitleDetailArticleMixin
+from just_scrape.url_title_details import UrlTitleDetailsMixin
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +29,9 @@ class JustScrape(
     UrlTitleDetailsMixin,
     CustomGetBuyBoxOffersMixin,
 ):
+    def client_path(self) -> Path:
+        return JUST_SCRAPE_PATH
+
     def __init__(
         self,
         user_agent: str = "Mozilla/5.0 (Windows NT 11.0; Win64; x64) "
@@ -66,6 +43,7 @@ class JustScrape(
         self.user_agent = user_agent
         self.referer = referer
         self.origin = origin
+        super().__init__()
 
     def _headers(self) -> dict[str, str]:
         return {
@@ -74,7 +52,7 @@ class JustScrape(
             "Origin": self.origin,
         }
 
-    def _graphql_request(
+    def _download_graphql_request(
         self,
         operation_name: str,
         query: str,
@@ -90,7 +68,7 @@ class JustScrape(
                 "variables": variables.model_dump(mode="json", by_alias=True),
             },
             headers=self._headers(),
-            timeout=60,
+            timeout=30,
         )
 
         if response.status_code != 200:  # noqa: PLR2004
@@ -104,31 +82,3 @@ class JustScrape(
             raise GraphQLError(msg)
 
         return response.json()
-
-    @override
-    def save_file(
-        self,
-        name: str,
-        data: dict[str, Any],
-        model_type: str,
-    ) -> None:
-        input_folder = FILES_PATH / name / model_type
-        new_json_path = input_folder / f"{uuid.uuid4()}.json"
-        new_json_path.parent.mkdir(parents=True, exist_ok=True)
-        new_json_path.write_text(json.dumps(data, indent=2))
-
-    @override
-    def update_model(
-        self,
-        name: str,
-        model_type: str,
-        customizations: GapiCustomizations | None = None,
-    ) -> None:
-        schema_path = JUST_SCRAPE_PATH / f"{name}/{model_type}.schema.json"
-        model_path = JUST_SCRAPE_PATH / f"{name}/{model_type}.py"
-        files_path = FILES_PATH / name / model_type
-        update_json_schema_and_pydantic_model(files_path, schema_path, model_path, name)
-        apply_customizations(model_path, customizations)
-
-    def files_path(self) -> Path:
-        return FILES_PATH
