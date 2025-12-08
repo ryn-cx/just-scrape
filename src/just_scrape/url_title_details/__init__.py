@@ -93,7 +93,7 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.UrlTitleDetailsResponse,
                 data,
-                "url_title_details",
+                "url_title_details/response",
                 URL_TITLE_DETAILS_CUSTOMIZATIONS,
             )
 

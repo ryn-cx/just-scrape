@@ -43,7 +43,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.SeasonEpisodesResponse,
                 data,
-                "season_episodes",
+                "season_episodes/response",
             )
 
         return response_models.SeasonEpisodesResponse.model_validate(data)

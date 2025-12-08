@@ -35,7 +35,7 @@ class TitleDetailArticleMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.TitleDetailArticleResponse,
                 data,
-                "title_detail_article",
+                "title_detail_article/response",
             )
 
         return response_models.TitleDetailArticleResponse.model_validate(data)

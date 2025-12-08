@@ -86,7 +86,7 @@ class NewTitlesMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.NewTitlesResponse,
                 data,
-                "new_titles",
+                "new_titles/response",
             )
 
         return response_models.NewTitlesResponse.model_validate(data)

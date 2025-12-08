@@ -56,7 +56,7 @@ class CustomGetBuyBoxOffersMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.CustomGetBuyBoxOffersResponse,
                 data,
-                "custom_get_buy_box_offers",
+                "custom_get_buy_box_offers/response",
                 CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
             )
 

@@ -38,7 +38,7 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             return self.parse_response(
                 response_models.GetBuyBoxOffersResponse,
                 data,
-                "get_buy_box_offers",
+                "get_buy_box_offers/response",
             )
 
         return response_models.GetBuyBoxOffersResponse.model_validate(data)
