@@ -6,7 +6,7 @@ from just_scrape.url_title_details import URL_TITLE_DETAILS_CUSTOMIZATIONS
 
 if __name__ == "__main__":
     client = JustScrape()
-    # TODO: Why are there no request files for this?
+    # No requests file because it uses get_buy_box_offers/request
     client.rebuild_models(
         "custom_get_buy_box_offers/response",
         CUSTOM_GET_BUY_BOX_OFFERS_CUSTOMIZATIONS,
