@@ -355,11 +355,13 @@ class NewTitlesMixin(JustWatchProtocol):
         | list[response_models.NewTitlesResponse],
     ) -> list[response_models.Edge]:
         """Get all of the edges for a new titles input."""
-        if isinstance(data, response_models.NewTitlesResponse):
-            return data.data.new_titles.edges
+        if isinstance(data, list):
+            result: list[response_models.Edge] = []
+            for resp in data:
+                result.extend(self.extract_new_titles_edges(resp))
+            return result
 
-        return [
-            edge
-            for response in data
-            for edge in self.extract_new_titles_edges(response)
-        ]
+        if isinstance(data, dict):
+            data = self.parse_new_titles(data)
+
+        return data.data.new_titles.edges
