@@ -28,10 +28,7 @@ class PlanOffer(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -59,10 +56,7 @@ class Plan(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -227,7 +221,7 @@ class ExternalIds(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    imdb_id: str = Field(..., alias="imdbId")
+    imdb_id: str | None = Field(..., alias="imdbId")
     wikidata_id: str | None = Field(..., alias="wikidataId")
     field__typename: str = Field(..., alias="__typename")
 
@@ -236,10 +230,10 @@ class Scoring(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    imdb_score: float = Field(..., alias="imdbScore")
-    imdb_votes: int | float = Field(..., alias="imdbVotes")
+    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_votes: int | float | None = Field(..., alias="imdbVotes")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
-    tmdb_score: float | None = Field(..., alias="tmdbScore")
+    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     jw_rating: float | None = Field(..., alias="jwRating")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
@@ -254,10 +248,7 @@ class PlanOffer1(BaseModel):
     duration_days: int = Field(..., alias="durationDays")
     presentation_type: str = Field(..., alias="presentationType")
     is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     currency: str
     field__typename: str = Field(..., alias="__typename")
 
@@ -286,7 +277,7 @@ class UpcomingRelease(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package3 | None = None
+    package: Package3 | None
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -314,7 +305,7 @@ class Content1(BaseModel):
     short_name: str | None = Field(..., alias="shortName")
     name: str
     field__typename: str = Field(..., alias="__typename")
-    url: Url | None = None
+    url: Url | None
 
 
 class Subgenre(BaseModel):
@@ -501,7 +492,7 @@ class StreamingCharts(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    edges: list[Edge] | None = None
+    edges: list[Edge] | None
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -557,10 +548,7 @@ class Offer1(BaseModel):
     package: Package5
     monetization_type: str = Field(..., alias="monetizationType")
     retail_price: str | None = Field(..., alias="retailPrice")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -694,7 +682,7 @@ class UpcomingRelease2(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package9 | None = None
+    package: Package9 | None
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -738,10 +726,7 @@ class PlanOffer3(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -769,10 +754,7 @@ class Plan1(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -1444,10 +1426,7 @@ class Node(BaseModel):
     seasons: list[Season] | None = None
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(
-        ...,
-        alias="maxOfferUpdatedAt",
-    )
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem1]
     buy: list[BuyItem1]
