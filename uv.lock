@@ -256,9 +256,7 @@ name = "just-scrape"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "datamodel-code-generator" },
     { name = "gapi" },
-    { name = "pydantic" },
     { name = "requests" },
     { name = "ruff" },
 ]
@@ -272,9 +270,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "datamodel-code-generator", specifier = ">=0.51.0" },
     { name = "gapi", git = "https://github.com/ryn-cx/gapi" },
-    { name = "pydantic", specifier = ">=2.11.7" },
     { name = "requests", specifier = ">=2.32.5" },
     { name = "ruff", specifier = ">=0.12.11" },
 ]
