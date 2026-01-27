@@ -72,13 +72,16 @@ class TestParsing:
             parsed = client.parse_season_episodes(file_content)
             assert file_content == client.dump_response(parsed)
 
+    def test_parse_custom_season_episodes(self) -> None:
+        for json_file in self.get_test_files("custom_season_episodes/response"):
+            file_content = json.loads(json_file.read_text())
+            parsed = client.parse_custom_season_episodes(file_content)
+            assert file_content == client.dump_response(parsed)
+
 
 class TestGet:
     def test_get_buy_box_offers(self) -> None:
         client.get_buy_box_offers(node_id="tse9298997")
-
-    def test_get_custom_get_buy_box_offers(self) -> None:
-        client.get_custom_buy_box_offers(node_id="tse9298997")
 
     def test_get_new_title_buckets(self) -> None:
         client.get_new_title_buckets()
@@ -101,6 +104,9 @@ class TestGet:
     def test_get_url_title_details_invalid_url(self) -> None:
         with pytest.raises(GraphQLError, match="URL not found"):
             client.get_url_title_details("/us/tv-show/invalid-url")
+
+    def test_custom_season_episodes(self) -> None:
+        client.get_custom_season_episodes(node_id="tss466559")
 
 
 class TestCustomGet:
@@ -150,6 +156,13 @@ class TestCustomGet:
         assert len(client.extract_new_titles_edges(responseses)) == expected_edges
 
     def test_get_all_season_episodes(self) -> None:
+        season_id = "tss23744"
+        number_of_episodes = 23
+        season_episodes = client.get_all_season_episodes(node_id=season_id)
+        episodes = client.extract_season_episodes_episodes(season_episodes)
+        assert len(episodes) == number_of_episodes
+
+    def test_get_custom_all_season_episodes(self) -> None:
         season_id = "tss23744"
         number_of_episodes = 23
         season_episodes = client.get_all_season_episodes(node_id=season_id)

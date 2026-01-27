@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from just_scrape.buy_box_offers import BuyBoxOffersMixin
 from just_scrape.constants import JUST_SCRAPE_PATH
-from just_scrape.custom_buy_box_offers import CustomBuyBoxOffersMixin
+from just_scrape.custom_season_episodes import CustomSeasonEpisodesMixin
 from just_scrape.exceptions import GraphQLError, HTTPError
 from just_scrape.new_title_buckets import NewTitleBucketsMixin
 from just_scrape.new_titles import NewTitlesMixin
@@ -27,7 +27,7 @@ class JustScrape(
     SeasonEpisodesMixin,
     TitleDetailArticleMixin,
     UrlTitleDetailsMixin,
-    CustomBuyBoxOffersMixin,
+    CustomSeasonEpisodesMixin,
 ):
     def client_path(self) -> Path:
         return JUST_SCRAPE_PATH
