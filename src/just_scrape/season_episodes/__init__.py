@@ -16,7 +16,7 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
-        limit: int = 20,
+        limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> dict[str, Any]:
         variables = request_models.Variables(
