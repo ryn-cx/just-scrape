@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
-from pydantic import BaseModel
 
 from just_scrape import JustScrape
 from just_scrape.constants import FILES_PATH
@@ -14,14 +13,6 @@ client = JustScrape()
 
 
 class TestParsing:
-    def dump_test_file(
-        self,
-        original_content: dict[str, object],
-        parsed: BaseModel,
-    ) -> None:
-        Path("original.json").write_text(json.dumps(original_content))
-        Path("dump.json").write_text(json.dumps(client.dump_response(parsed)))
-
     def get_test_files(self, endpoint: str) -> Iterator[Path]:
         """Get all JSON test files for a given endpoint."""
         dir_path = FILES_PATH / endpoint
