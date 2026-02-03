@@ -817,8 +817,8 @@ class BuyItem1(BaseModel):
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
-    retail_price: str = Field(..., alias="retailPrice")
-    retail_price_value: float = Field(..., alias="retailPriceValue")
+    retail_price: str | None = Field(..., alias="retailPrice")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     currency: str
     last_change_retail_price_value: int | float | None = Field(
         ...,

@@ -28,10 +28,7 @@ class PlanOffer(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -59,10 +56,7 @@ class Plan(BaseModel):
     retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: int | float | None = Field(
-        ...,
-        alias="retailPriceValue",
-    )
+    retail_price_value: int | float | None = Field(..., alias="retailPriceValue")
     children: list[Child]
     field__typename: str = Field(..., alias="__typename")
 
@@ -360,10 +354,7 @@ class Node(BaseModel):
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(
-        ...,
-        alias="maxOfferUpdatedAt",
-    )
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]

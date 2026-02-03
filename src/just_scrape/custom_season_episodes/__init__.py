@@ -1,11 +1,26 @@
 from typing import Any
 
+from gapi import CustomSerializer, GapiCustomizations
+
+from just_scrape.constants import DATETIME_SERIALIZER
 from just_scrape.custom_season_episodes import query
 from just_scrape.custom_season_episodes.response import models as response_models
 from just_scrape.protocol import JustWatchProtocol
 from just_scrape.season_episodes.request import models as request_models
 
 DEFAULT_LIMIT = 20
+
+CUSTOM_SEASON_EPISODES_CUSTOMIZATIONS = GapiCustomizations(
+    custom_serializers=[
+        CustomSerializer(
+            class_name="Episode",
+            field_name="max_offer_updated_at",
+            serializer_code=DATETIME_SERIALIZER,
+            input_type="AwareDatetime",
+            output_type="str",
+        ),
+    ],
+)
 
 
 class CustomSeasonEpisodesMixin(JustWatchProtocol):

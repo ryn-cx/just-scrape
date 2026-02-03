@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class Package(BaseModel):
@@ -45,29 +45,7 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class FastItem(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias="__typename")
-
-
-class PlanOffer(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    retail_price: str | None = Field(..., alias="retailPrice")
-    duration_days: int = Field(..., alias="durationDays")
-    presentation_type: str = Field(..., alias="presentationType")
-    is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    currency: str
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Package4(BaseModel):
+class Package3(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -79,7 +57,7 @@ class Package4(BaseModel):
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
     has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[PlanOffer] = Field(..., alias="planOffers")
+    plan_offers: list[None] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -91,7 +69,7 @@ class UpcomingRelease(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package4 | None
+    package: Package3
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -106,11 +84,17 @@ class Content(BaseModel):
     season_number: int = Field(..., alias="seasonNumber")
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
+    original_release_date: date = Field(..., alias="originalReleaseDate")
     upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
-    original_release_date: date | None = Field(None, alias="originalReleaseDate")
 
 
 class Episode(BaseModel):
+    @field_serializer("max_offer_updated_at")
+    def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
+        if value is None:
+            return None
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -123,11 +107,11 @@ class Episode(BaseModel):
     buy: list[BuyItem]
     rent: list[None]
     free: list[FreeItem]
-    fast: list[FastItem]
+    fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
-    offer_count: int | None = Field(None, alias="offerCount")
-    max_offer_updated_at: AwareDatetime | None = Field(None, alias="maxOfferUpdatedAt")
+    offer_count: int = Field(..., alias="offerCount")
+    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
 
 
 class Node(BaseModel):
