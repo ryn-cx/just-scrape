@@ -33,6 +33,12 @@ class TestParsing:
             parsed = client.parse_buy_box_offers(file_content)
             assert file_content == client.dump_response(parsed)
 
+    def test_parse_custom_buy_box_offers(self) -> None:
+        for json_file in self.get_test_files("buy_box_offers/response"):
+            file_content = json.loads(json_file.read_text())
+            parsed = client.parse_custom_buy_box_offers(file_content)
+            assert file_content == client.dump_response(parsed)
+
     def test_parse_new_titles(self) -> None:
         for json_file in self.get_test_files("new_titles/response"):
             file_content = json.loads(json_file.read_text())
@@ -73,6 +79,9 @@ class TestParsing:
 class TestGet:
     def test_get_buy_box_offers(self) -> None:
         client.get_buy_box_offers(node_id="tse9298997")
+
+    def test_get_custom_buy_box_offers(self) -> None:
+        client.get_custom_buy_box_offers(node_id="tse9298997")
 
     def test_get_new_title_buckets(self) -> None:
         client.get_new_title_buckets()

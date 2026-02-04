@@ -29,7 +29,7 @@ class NewOffer(BaseModel):
     )
     field__typename: str = Field(..., alias="__typename")
     id: str
-    standard_web_url: str = Field(..., alias="standardWebURL")
+    standard_web_url: str | None = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
         alias="preAffiliatedStandardWebURL",
@@ -95,9 +95,9 @@ class Scoring1(BaseModel):
         extra="forbid",
     )
     imdb_votes: int | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
-    tmdb_score: float | None = Field(..., alias="tmdbScore")
+    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     field__typename: str = Field(..., alias="__typename")
 
 

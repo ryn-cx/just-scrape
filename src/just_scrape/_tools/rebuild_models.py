@@ -1,5 +1,6 @@
 from just_scrape import JustScrape
 from just_scrape.buy_box_offers import BUY_BOX_OFFERS_CUSTOMIZATIONS
+from just_scrape.custom_buy_box_offers import CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS
 from just_scrape.custom_season_episodes import (
     CUSTOM_SEASON_EPISODES_CUSTOMIZATIONS,
 )
@@ -35,4 +36,9 @@ if __name__ == "__main__":
     client.rebuild_models(
         "buy_box_offers/response",
         BUY_BOX_OFFERS_CUSTOMIZATIONS,
+    )
+
+    client.rebuild_models(
+        "custom_buy_box_offers/response",
+        CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS,
     )
