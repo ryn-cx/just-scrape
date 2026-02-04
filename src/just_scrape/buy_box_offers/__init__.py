@@ -1,10 +1,24 @@
 from typing import Any
 
+from gapi import CustomSerializer, GapiCustomizations
+
 from just_scrape.buy_box_offers import query
 from just_scrape.buy_box_offers.request import models as request_models
 from just_scrape.buy_box_offers.response import models as response_models
-from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.protocol import JustWatchProtocol
+
+BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
+    custom_serializers=[
+        CustomSerializer(
+            class_name="Node",
+            field_name="max_offer_updated_at",
+            serializer_code=DATETIME_SERIALIZER,
+            input_type="AwareDatetime",
+            output_type="str",
+        ),
+    ],
+)
 
 
 class BuyBoxOffersMixin(JustWatchProtocol):
