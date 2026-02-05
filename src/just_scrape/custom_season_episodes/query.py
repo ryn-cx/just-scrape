@@ -1,6 +1,4 @@
 # ruff: noqa: E501
-# originalReleaseDate was added to episode content.
-# BuyBoxOffers fragment added to get offerCount and maxOfferUpdatedAt.
 QUERY = """query GetSeasonEpisodes($nodeId: ID!, $country: Country!, $language: Language!, $platform: Platform! = WEB, $limit: Int, $offset: Int) {
   node(id: $nodeId) {
     id
@@ -18,7 +16,6 @@ QUERY = """query GetSeasonEpisodes($nodeId: ID!, $country: Country!, $language: 
 
 fragment BuyBoxOffers on Episode {
   __typename
-  offerCount(country: $country, platform: $platform)
   maxOfferUpdatedAt(country: $country, platform: $platform)
 }
 

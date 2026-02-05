@@ -26,9 +26,12 @@ CUSTOM_SEASON_EPISODES_CUSTOMIZATIONS = GapiCustomizations(
 class CustomSeasonEpisodesMixin(JustWatchProtocol):
     """Season episodes with some additional value.
 
-    Includes originalReleaseDate and BuyBoxOffers on each episode.
+    originalReleaseDate was added because there was no source for release dates of
+    specific episodes.
 
-    BuyBoxOffers includes __typename, offerCount, and maxOfferUpdatedAt.
+    "fragment BuyBoxOffers on Episode" was added to get maxOfferUpdatedAt which makes it
+    possible to know which episode require updates instead of having to update all
+    episodes every time a show is updated.
     """
 
     def download_custom_season_episodes(  # noqa: PLR0913
