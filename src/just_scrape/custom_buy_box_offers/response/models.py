@@ -13,10 +13,10 @@ class Child(BaseModel):
         extra="forbid",
     )
     title: str
-    retail_price: None = Field(..., alias="retailPrice")
+    retail_price: str | None = Field(..., alias="retailPrice")
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
-    retail_price_value: None = Field(..., alias="retailPriceValue")
+    retail_price_value: float | None = Field(..., alias="retailPriceValue")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -66,7 +66,7 @@ class FlatrateItem(BaseModel):
         extra="forbid",
     )
     id: str
-    date_created: date = Field(..., alias="dateCreated")
+    date_created: date | None = Field(None, alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -89,11 +89,11 @@ class FlatrateItem(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     element_count: int = Field(..., alias="elementCount")
-    available_to: None = Field(..., alias="availableTo")
-    subtitle_languages: list[None] = Field(..., alias="subtitleLanguages")
+    available_to: date | None = Field(..., alias="availableTo")
+    subtitle_languages: list[str] = Field(..., alias="subtitleLanguages")
     video_technology: list[str] = Field(..., alias="videoTechnology")
     audio_technology: list[str] = Field(..., alias="audioTechnology")
-    audio_languages: list[None] = Field(..., alias="audioLanguages")
+    audio_languages: list[str] = Field(..., alias="audioLanguages")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -122,6 +122,18 @@ class Node1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class Child2(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    title: str
+    retail_price: None = Field(..., alias="retailPrice")
+    is_trial: bool = Field(..., alias="isTrial")
+    duration_days: int = Field(..., alias="durationDays")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
+    field__typename: str = Field(..., alias="__typename")
+
+
 class PlanOffer1(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -131,7 +143,7 @@ class PlanOffer1(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child]
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -159,7 +171,7 @@ class Plan1(BaseModel):
     is_trial: bool = Field(..., alias="isTrial")
     duration_days: int = Field(..., alias="durationDays")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    children: list[Child]
+    children: list[Child2]
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -168,7 +180,7 @@ class Offer(BaseModel):
         extra="forbid",
     )
     id: str
-    date_created: date = Field(..., alias="dateCreated")
+    date_created: date | None = Field(None, alias="dateCreated")
     presentation_type: str = Field(..., alias="presentationType")
     monetization_type: str = Field(..., alias="monetizationType")
     new_element_count: int = Field(..., alias="newElementCount")
@@ -222,7 +234,7 @@ class Node(BaseModel):
     id: str
     field__typename: str = Field(..., alias="__typename")
     offer_count: int = Field(..., alias="offerCount")
-    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
     offers_history: list[None] = Field(..., alias="offersHistory")
     flatrate: list[FlatrateItem]
     buy: list[None]
