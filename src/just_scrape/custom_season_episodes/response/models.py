@@ -84,7 +84,7 @@ class Content(BaseModel):
     season_number: int = Field(..., alias="seasonNumber")
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
-    original_release_date: date = Field(..., alias="originalReleaseDate")
+    original_release_date: date | None = Field(..., alias="originalReleaseDate")
     upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
 
 
@@ -110,7 +110,8 @@ class Episode(BaseModel):
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
-    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
+    offer_count: int | None = Field(None, alias="offerCount")
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
 
 
 class Node(BaseModel):

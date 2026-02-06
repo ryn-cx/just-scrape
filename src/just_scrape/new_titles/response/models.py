@@ -29,7 +29,7 @@ class NewOffer(BaseModel):
     )
     field__typename: str = Field(..., alias="__typename")
     id: str
-    standard_web_url: str = Field(..., alias="standardWebURL")
+    standard_web_url: str | None = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
         ...,
         alias="preAffiliatedStandardWebURL",
@@ -39,7 +39,7 @@ class NewOffer(BaseModel):
     package: Package
     retail_price: str | None = Field(..., alias="retailPrice")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    last_change_retail_price_value: None = Field(
+    last_change_retail_price_value: float | None = Field(
         ...,
         alias="lastChangeRetailPriceValue",
     )
@@ -49,8 +49,8 @@ class NewOffer(BaseModel):
     available_to: date | None = Field(..., alias="availableTo")
     date_created: date = Field(..., alias="dateCreated")
     new_element_count: int = Field(..., alias="newElementCount")
-    last_change_retail_price: None = Field(..., alias="lastChangeRetailPrice")
-    last_change_percent: int = Field(..., alias="lastChangePercent")
+    last_change_retail_price: str | None = Field(..., alias="lastChangeRetailPrice")
+    last_change_percent: int | float = Field(..., alias="lastChangePercent")
 
 
 class Scoring(BaseModel):
@@ -58,7 +58,7 @@ class Scoring(BaseModel):
         extra="forbid",
     )
     imdb_votes: int | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
     tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
@@ -82,12 +82,12 @@ class Content(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
-    season_number: int | None = Field(None, alias="seasonNumber")
-    field__typename: str = Field(..., alias="__typename")
     is_released: bool = Field(..., alias="isReleased")
+    field__typename: str = Field(..., alias="__typename")
+    season_number: int | None = Field(None, alias="seasonNumber")
 
 
 class Scoring1(BaseModel):
@@ -95,7 +95,7 @@ class Scoring1(BaseModel):
         extra="forbid",
     )
     imdb_votes: int | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
     tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     field__typename: str = Field(..., alias="__typename")
@@ -109,7 +109,7 @@ class Content1(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring1
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
     field__typename: str = Field(..., alias="__typename")
@@ -149,9 +149,9 @@ class Node(BaseModel):
     content: Content
     likelist_entry: None = Field(..., alias="likelistEntry")
     dislikelist_entry: None = Field(..., alias="dislikelistEntry")
-    show: Show | None = None
     seenlist_entry: None = Field(None, alias="seenlistEntry")
     watchlist_entry_v2: None = Field(None, alias="watchlistEntryV2")
+    show: Show | None = None
 
 
 class Edge(BaseModel):
