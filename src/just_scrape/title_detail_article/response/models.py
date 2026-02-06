@@ -6,30 +6,11 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Content1(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    field__typename: str = Field(..., alias="__typename")
-    synopsis: str
-    what_to_know: None = Field(..., alias="whatToKnow")
-    production_news: None = Field(..., alias="productionNews")
-
-
-class Article(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    content: Content1
-    field__typename: str = Field(..., alias="__typename")
-
-
 class Content(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    articles: list[Article]
+    articles: list[None]
     field__typename: str = Field(..., alias="__typename")
 
 

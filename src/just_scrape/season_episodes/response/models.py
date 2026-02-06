@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-from datetime import date
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -27,74 +25,6 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class BuyItem(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias="__typename")
-
-
-class FreeItem(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias="__typename")
-
-
-class FastItem(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias="__typename")
-
-
-class PlanOffer(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    retail_price: str | None = Field(..., alias="retailPrice")
-    duration_days: int = Field(..., alias="durationDays")
-    presentation_type: str = Field(..., alias="presentationType")
-    is_trial: bool = Field(..., alias="isTrial")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
-    currency: str
-    field__typename: str = Field(..., alias="__typename")
-
-
-class Package4(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    id: str
-    package_id: int = Field(..., alias="packageId")
-    short_name: str = Field(..., alias="shortName")
-    clear_name: str = Field(..., alias="clearName")
-    monetization_types: list[str] = Field(..., alias="monetizationTypes")
-    icon: str
-    icon_wide: str = Field(..., alias="iconWide")
-    has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[PlanOffer] = Field(..., alias="planOffers")
-    field__typename: str = Field(..., alias="__typename")
-
-
-class UpcomingRelease(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    release_count_down: int = Field(..., alias="releaseCountDown")
-    release_date: date = Field(..., alias="releaseDate")
-    release_type: str = Field(..., alias="releaseType")
-    label: str
-    package: Package4 | None
-    field__typename: str = Field(..., alias="__typename")
-
-
 class Content(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -106,7 +36,7 @@ class Content(BaseModel):
     season_number: int = Field(..., alias="seasonNumber")
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
-    upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
+    upcoming_releases: list[None] = Field(..., alias="upcomingReleases")
 
 
 class Episode(BaseModel):
@@ -119,10 +49,10 @@ class Episode(BaseModel):
     seenlist_entry: None = Field(..., alias="seenlistEntry")
     unique_offer_count: int = Field(..., alias="uniqueOfferCount")
     flatrate: list[FlatrateItem]
-    buy: list[BuyItem]
+    buy: list[None]
     rent: list[None]
-    free: list[FreeItem]
-    fast: list[FastItem]
+    free: list[None]
+    fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
 

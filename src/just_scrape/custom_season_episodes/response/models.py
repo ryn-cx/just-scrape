@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
 
 
 class Package(BaseModel):
@@ -89,6 +89,12 @@ class Content(BaseModel):
 
 
 class Episode(BaseModel):
+    @field_serializer("max_offer_updated_at")
+    def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
+        if value is None:
+            return None
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
+
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -104,7 +110,6 @@ class Episode(BaseModel):
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
-    offer_count: int | None = Field(None, alias="offerCount")
     max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
 
 
