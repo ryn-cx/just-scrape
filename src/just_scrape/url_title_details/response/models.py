@@ -150,6 +150,17 @@ class Clip(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class VideobusterClip(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    source_url: str = Field(..., alias="sourceUrl")
+    external_id: str = Field(..., alias="externalId")
+    provider: str
+    name: str
+    field__typename: str = Field(..., alias="__typename")
+
+
 class DailymotionClip(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -166,7 +177,7 @@ class FallBackClips(BaseModel):
         extra="forbid",
     )
     clips: list[Clip]
-    videobuster_clips: list[None] = Field(..., alias="videobusterClips")
+    videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
     dailymotion_clips: list[DailymotionClip] = Field(..., alias="dailymotionClips")
     field__typename: str = Field(..., alias="__typename")
 
@@ -384,7 +395,7 @@ class Content(BaseModel):
     backdrops: list[Backdrop]
     full_backdrops: list[FullBackdrop] = Field(..., alias="fullBackdrops")
     clips: list[Clip]
-    videobuster_clips: list[None] = Field(..., alias="videobusterClips")
+    videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
     dailymotion_clips: list[DailymotionClip] = Field(..., alias="dailymotionClips")
     external_ids: ExternalIds = Field(..., alias="externalIds")
     full_path: str = Field(..., alias="fullPath")
@@ -1123,6 +1134,25 @@ class Package11(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
+    id: str
+    short_name: str = Field(..., alias="shortName")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class AvailableToItem(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    available_to_date: date = Field(..., alias="availableToDate")
+    available_count_down: int = Field(..., alias="availableCountDown")
+    package: Package11
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Package12(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
     clear_name: str = Field(..., alias="clearName")
     short_name: str = Field(..., alias="shortName")
     field__typename: str = Field(..., alias="__typename")
@@ -1132,7 +1162,7 @@ class Offer2(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    package: Package11
+    package: Package12
     monetization_type: str = Field(..., alias="monetizationType")
     retail_price: str | None = Field(..., alias="retailPrice")
     retail_price_value: float | None = Field(..., alias="retailPriceValue")
@@ -1178,7 +1208,7 @@ class FallBackClips1(BaseModel):
         extra="forbid",
     )
     clips: list[Clip]
-    videobuster_clips: list[None] = Field(..., alias="videobusterClips")
+    videobuster_clips: list[VideobusterClip] = Field(..., alias="videobusterClips")
     dailymotion_clips: list[DailymotionClip] = Field(..., alias="dailymotionClips")
     field__typename: str = Field(..., alias="__typename")
 
@@ -1191,7 +1221,7 @@ class Season(BaseModel):
     object_id: int = Field(..., alias="objectId")
     object_type: str = Field(..., alias="objectType")
     total_episode_count: int = Field(..., alias="totalEpisodeCount")
-    available_to: list[None] = Field(..., alias="availableTo")
+    available_to: list[AvailableToItem] = Field(..., alias="availableTo")
     offers: list[Offer2]
     content: Content5
     show: Show1
@@ -1199,7 +1229,7 @@ class Season(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package12(BaseModel):
+class Package13(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
@@ -1214,7 +1244,7 @@ class FlatrateItem1(BaseModel):
         extra="forbid",
     )
     id: str
-    package: Package12
+    package: Package13
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1223,7 +1253,7 @@ class BuyItem1(BaseModel):
         extra="forbid",
     )
     id: str
-    package: Package12
+    package: Package13
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -1232,7 +1262,7 @@ class FreeItem1(BaseModel):
         extra="forbid",
     )
     id: str
-    package: Package12
+    package: Package13
     field__typename: str = Field(..., alias="__typename")
 
 

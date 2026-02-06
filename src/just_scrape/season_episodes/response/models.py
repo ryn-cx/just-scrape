@@ -25,6 +25,15 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class FreeItem(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    id: str
+    package: Package
+    field__typename: str = Field(..., alias="__typename")
+
+
 class Content(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -51,7 +60,7 @@ class Episode(BaseModel):
     flatrate: list[FlatrateItem]
     buy: list[None]
     rent: list[None]
-    free: list[None]
+    free: list[FreeItem]
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
