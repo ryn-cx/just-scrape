@@ -45,6 +45,19 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class PlanOffer(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+    retail_price: str = Field(..., alias="retailPrice")
+    duration_days: int = Field(..., alias="durationDays")
+    presentation_type: str = Field(..., alias="presentationType")
+    is_trial: bool = Field(..., alias="isTrial")
+    retail_price_value: int = Field(..., alias="retailPriceValue")
+    currency: str
+    field__typename: str = Field(..., alias="__typename")
+
+
 class Package3(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
@@ -57,7 +70,7 @@ class Package3(BaseModel):
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
     has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[None] = Field(..., alias="planOffers")
+    plan_offers: list[PlanOffer] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
