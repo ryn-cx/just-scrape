@@ -1,28 +1,46 @@
-from typing import Any
+"""Buy Box Offers API endpoint."""
 
-from gapi import CustomSerializer, GapiCustomizations
+from __future__ import annotations
 
+from functools import cached_property
+from typing import Any, override
+
+from gapi import CustomSerializer
+
+from just_scrape.base_client import BaseEndpoint
 from just_scrape.buy_box_offers import query
-from just_scrape.buy_box_offers.request import models as request_models
-from just_scrape.buy_box_offers.response import models as response_models
+from just_scrape.buy_box_offers.request.models import Variables
+from just_scrape.buy_box_offers.response.models import BuyBoxOffersResponse
 from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
-from just_scrape.protocol import JustWatchProtocol
-
-BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
-    custom_serializers=[
-        CustomSerializer(
-            class_name="Node",
-            field_name="max_offer_updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-    ],
-)
 
 
-class BuyBoxOffersMixin(JustWatchProtocol):
-    def download_buy_box_offers(  # noqa: PLR0913
+class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
+    """Provides methods to download, parse, and retrieve buy box offers data."""
+
+    @cached_property
+    @override
+    def _response_model(self) -> type[BuyBoxOffersResponse]:
+        return BuyBoxOffersResponse
+
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "buy_box_offers/response"
+
+    @cached_property
+    @override
+    def _custom_serializers(self) -> list[CustomSerializer]:
+        return [
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+        ]
+
+    def download(
         self,
         node_id: str,
         *,
@@ -32,7 +50,15 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        variables = request_models.Variables(
+        """Downloads buy box offers data for a given node ID.
+
+        Args:
+            node_id: The ID of the episode.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        variables = Variables(
             platform=platform,
             fallbackToForeignOffers=fallback_to_foreign_offers,
             excludePackages=exclude_packages,
@@ -40,24 +66,13 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             country=country,
             language=language,
         )
-        return self._download_graphql_request("GetBuyBoxOffers", query.QUERY, variables)
+        return self._client.download_graphql_request(
+            "GetBuyBoxOffers",
+            query.QUERY,
+            variables,
+        )
 
-    def parse_buy_box_offers(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.BuyBoxOffersResponse:
-        if update:
-            return self.parse_response(
-                response_models.BuyBoxOffersResponse,
-                data,
-                "buy_box_offers/response",
-            )
-
-        return response_models.BuyBoxOffersResponse.model_validate(data)
-
-    def get_buy_box_offers(  # noqa: PLR0913
+    def get(
         self,
         node_id: str,
         *,
@@ -66,20 +81,15 @@ class BuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> response_models.BuyBoxOffersResponse:
-        """Get all of the different websites that a specific episode can be watched.
+    ) -> BuyBoxOffersResponse:
+        """Downloads and parses buy box offers data for a given node ID.
 
-        This API request normally occurs when clicking on an episode.
+        Convenience method that calls ``download()`` then ``parse()``.
 
         Args:
             node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
         """
-        response = self.download_buy_box_offers(
+        data = self.download(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -87,5 +97,4 @@ class BuyBoxOffersMixin(JustWatchProtocol):
             country=country,
             language=language,
         )
-
-        return self.parse_buy_box_offers(response)
+        return self.parse(data)

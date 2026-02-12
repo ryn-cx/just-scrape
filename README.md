@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎬 Just Scrape
+# Just Scrape
 
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/ryn-cx/just-scrape/refs/heads/master/pyproject.toml)
 ![GitHub License](https://img.shields.io/github/license/ryn-cx/just-scrape)
@@ -10,49 +10,71 @@
 
 </div>
 
-## ✨ Features
+## Features
 
-- 🛡️ **Type Safety**: Full Pydantic models for every endpoint
-- 🔄 **Dynamically Updating Models**: Models are dynamically updated based on the response from the API
+- **Type Safety** - Full Pydantic models for every endpoint with robust data validation
+- **Self-Updating Models** - Models are automatically updated when the API response structure changes
 
-## 📦 Installation
+## Installation
 
-### Requirements
-
-- 🐍 Python 3.13 or higher
-
-### Install from source
+Requires Python 3.13+
 
 ```bash
 uv add git+https://github.com/ryn-cx/just-scrape
 ```
 
-## 🚀 Quick Start
-
-### Create Client
+## Quick Start
 
 ```python
 from just_scrape import JustScrape
 
-# 🌐 Create client
 client = JustScrape()
 ```
 
-### Access API
+### URL Title Details
 
 ```python
-# 🆕 Get new titles
-new_titles = client.get_new_titles()
+title_details = client.url_title_details.get(full_path="/us/movie/the-thursday-murder-club")
+```
 
-# 📺 Get title details by URL
-title_details = client.get_url_title_details(full_path="/us/movie/the-thursday-murder-club")
+### Buy Box Offers
 
-# 📋 Get season episodes
-episodes = client.get_season_episodes(node_id="tss337460")
+```python
+offers = client.buy_box_offers.get(node_id="tse9298997")
+```
 
-# 🎬 Get buy box offers
-offers = client.get_buy_box_offers(node_id="tse9298997")
+### New Titles
 
-# 🗂️ Get new title buckets
-buckets = client.get_new_title_buckets()
+```python
+new_titles = client.new_titles.get(filter_packages=["net"], available_to_packages=["net"])
+```
+
+### New Title Buckets
+
+```python
+buckets = client.new_title_buckets.get()
+```
+
+### Season Episodes
+
+```python
+episodes = client.season_episodes.get(node_id="tss337460")
+```
+
+### Title Detail Article
+
+```python
+article = client.title_detail_article.get(full_path="/us/movie/the-thursday-murder-club")
+```
+
+## Two-Step API
+
+Every endpoint supports a two-step `download()` / `parse()` workflow for cases where you want to inspect or cache the raw JSON before parsing:
+
+```python
+raw = client.url_title_details.download(full_path="/us/movie/the-thursday-murder-club")
+parsed = client.url_title_details.parse(raw)
+
+raw = client.buy_box_offers.download(node_id="tse9298997")
+parsed = client.buy_box_offers.parse(raw)
 ```

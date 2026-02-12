@@ -1,15 +1,35 @@
-from typing import Any
+"""Season Episodes API endpoint."""
 
-from just_scrape.protocol import JustWatchProtocol
+from __future__ import annotations
+
+from functools import cached_property
+from typing import Any, override
+
+from just_scrape.base_client import BaseEndpoint
 from just_scrape.season_episodes import query
-from just_scrape.season_episodes.request import models as request_models
-from just_scrape.season_episodes.response import models as response_models
+from just_scrape.season_episodes.request.models import Variables
+from just_scrape.season_episodes.response.models import (
+    Episode,
+    SeasonEpisodesResponse,
+)
 
 DEFAULT_LIMIT = 20
 
 
-class SeasonEpisodesMixin(JustWatchProtocol):
-    def download_season_episodes(  # noqa: PLR0913
+class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
+    """Provides methods to download, parse, and retrieve season episodes data."""
+
+    @cached_property
+    @override
+    def _response_model(self) -> type[SeasonEpisodesResponse]:
+        return SeasonEpisodesResponse
+
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "season_episodes/response"
+
+    def download(
         self,
         *,
         node_id: str,
@@ -19,7 +39,15 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> dict[str, Any]:
-        variables = request_models.Variables(
+        """Downloads season episodes data for a given node ID.
+
+        Args:
+            node_id: The ID of the season.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        variables = Variables(
             nodeId=node_id,
             country=country,
             language=language,
@@ -27,28 +55,13 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             limit=limit,
             offset=offset,
         )
-        return self._download_graphql_request(
+        return self._client.download_graphql_request(
             operation_name="GetSeasonEpisodes",
             query=query.QUERY,
             variables=variables,
         )
 
-    def parse_season_episodes(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.SeasonEpisodesResponse:
-        if update:
-            return self.parse_response(
-                response_models.SeasonEpisodesResponse,
-                data,
-                "season_episodes/response",
-            )
-
-        return response_models.SeasonEpisodesResponse.model_validate(data)
-
-    def get_season_episodes(  # noqa: PLR0913
+    def get(
         self,
         *,
         node_id: str,
@@ -57,20 +70,15 @@ class SeasonEpisodesMixin(JustWatchProtocol):
         platform: str = "WEB",
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
-    ) -> response_models.SeasonEpisodesResponse:
-        """Get episodes for a specific season.
+    ) -> SeasonEpisodesResponse:
+        """Downloads and parses season episodes data for a given node ID.
 
-        This API request occurs when visiting a specific season page for a TV show.
+        Convenience method that calls ``download()`` then ``parse()``.
 
         Args:
             node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-            limit: Number of episodes to return.
-            offset: Offset to start getting episodes from.
         """
-        response = self.download_season_episodes(
+        data = self.download(
             node_id=node_id,
             country=country,
             language=language,
@@ -78,32 +86,22 @@ class SeasonEpisodesMixin(JustWatchProtocol):
             limit=limit,
             offset=offset,
         )
+        return self.parse(data)
 
-        return self.parse_season_episodes(response)
-
-    def get_all_season_episodes(
+    def get_all(
         self,
         *,
         node_id: str,
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
-    ) -> list[response_models.SeasonEpisodesResponse]:
-        """Get all of the episodes for a specific season.
-
-        This API request occurs when visiting a specific season page for a TV show.
-
-        Args:
-            node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-        """
+    ) -> list[SeasonEpisodesResponse]:
+        """Downloads and parses all season episodes for a given node ID."""
         offset = 0
-        all_episodes: list[response_models.SeasonEpisodesResponse] = []
+        all_episodes: list[SeasonEpisodesResponse] = []
 
         while True:
-            response = self.get_season_episodes(
+            response = self.get(
                 node_id=node_id,
                 country=country,
                 language=language,
@@ -120,20 +118,19 @@ class SeasonEpisodesMixin(JustWatchProtocol):
 
             offset += DEFAULT_LIMIT
 
-    def extract_season_episodes_episodes(
+    def extract_episodes(
         self,
-        all_episodes: response_models.SeasonEpisodesResponse
-        | list[response_models.SeasonEpisodesResponse],
-    ) -> list[response_models.Episode]:
+        all_episodes: SeasonEpisodesResponse | list[SeasonEpisodesResponse],
+    ) -> list[Episode]:
         """Combine SeasonEpisodesResponse responses into a single list of Episodes."""
         if isinstance(all_episodes, dict):
-            all_episodes = self.parse_season_episodes(all_episodes)
+            all_episodes = self.parse(all_episodes)
 
-        if isinstance(all_episodes, response_models.SeasonEpisodesResponse):
+        if isinstance(all_episodes, SeasonEpisodesResponse):
             return all_episodes.data.node.episodes
 
         return [
             episode
             for episode_page in all_episodes
-            for episode in self.extract_season_episodes_episodes(episode_page)
+            for episode in self.extract_episodes(episode_page)
         ]

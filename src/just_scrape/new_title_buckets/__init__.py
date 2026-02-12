@@ -1,13 +1,30 @@
-from typing import Any
+"""New Title Buckets API endpoint."""
 
+from __future__ import annotations
+
+from functools import cached_property
+from typing import Any, override
+
+from just_scrape.base_client import BaseEndpoint
 from just_scrape.new_title_buckets import query
-from just_scrape.new_title_buckets.request import models as request_models
-from just_scrape.new_title_buckets.response import models as response_models
-from just_scrape.protocol import JustWatchProtocol
+from just_scrape.new_title_buckets.request.models import NewTitlesFilter, Variables
+from just_scrape.new_title_buckets.response.models import NewTitleBucketsResponse
 
 
-class NewTitleBucketsMixin(JustWatchProtocol):
-    def download_new_title_buckets(  # noqa: PLR0913
+class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
+    """Provides methods to download, parse, and retrieve new title buckets data."""
+
+    @cached_property
+    @override
+    def _response_model(self) -> type[NewTitleBucketsResponse]:
+        return NewTitleBucketsResponse
+
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "new_title_buckets/response"
+
+    def download(
         self,
         *,
         first: int = 8,
@@ -29,6 +46,11 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
+        """Downloads new title buckets data.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
         filter_age_certifications = filter_age_certifications or []
         filter_exclude_genres = filter_exclude_genres or []
         filter_exclude_production_countries = filter_exclude_production_countries or []
@@ -40,7 +62,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_presentation_types = filter_presentation_types or []
         filter_monetization_types = filter_monetization_types or []
 
-        new_titles_filter = request_models.NewTitlesFilter(
+        new_titles_filter = NewTitlesFilter(
             ageCertifications=filter_age_certifications,
             excludeGenres=filter_exclude_genres,
             excludeProductionCountries=filter_exclude_production_countries,
@@ -54,7 +76,7 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             monetizationTypes=filter_monetization_types,
         )
 
-        variables = request_models.Variables(
+        variables = Variables(
             first=first,
             bucketSize=bucket_size,
             groupBy=group_by,
@@ -65,28 +87,13 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             priceDrops=price_drops,
         )
 
-        return self._download_graphql_request(
+        return self._client.download_graphql_request(
             "GetNewTitleBuckets",
             query.QUERY,
             variables,
         )
 
-    def parse_new_title_buckets(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.NewTitleBucketsResponse:
-        if update:
-            return self.parse_response(
-                response_models.NewTitleBucketsResponse,
-                data,
-                "new_title_buckets/response",
-            )
-
-        return response_models.NewTitleBucketsResponse.model_validate(data)
-
-    def get_new_title_buckets(  # noqa: PLR0913
+    def get(
         self,
         *,
         first: int = 8,
@@ -107,33 +114,12 @@ class NewTitleBucketsMixin(JustWatchProtocol):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> response_models.NewTitleBucketsResponse:
-        """Get websites with new episodes.
+    ) -> NewTitleBucketsResponse:
+        """Downloads and parses new title buckets data.
 
-        This API request normally occurs when visiting the new episodes page
-        (https://www.justwatch.com/us/new). It has a list of websites with new episodes.
-
-        Args:
-            first: ???
-            bucket_size: ???
-            group_by: ???
-            page_type: ???
-            country: ???
-            new_after_cursor: ???
-            price_drops: ???
-            filter_age_certifications: ???
-            filter_exclude_genres: ???
-            filter_exclude_production_countries: ???
-            filter_object_types: ???
-            filter_production_countries: ???
-            filter_subgenres: ???
-            filter_genres: ???
-            filter_packages: ???
-            filter_exclude_irrelevant_titles: ???
-            filter_presentation_types: ???
-            filter_monetization_types: ???
+        Convenience method that calls ``download()`` then ``parse()``.
         """
-        response = self.download_new_title_buckets(
+        data = self.download(
             first=first,
             bucket_size=bucket_size,
             group_by=group_by,
@@ -153,5 +139,4 @@ class NewTitleBucketsMixin(JustWatchProtocol):
             filter_presentation_types=filter_presentation_types,
             filter_monetization_types=filter_monetization_types,
         )
-
-        return self.parse_new_title_buckets(response)
+        return self.parse(data)

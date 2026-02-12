@@ -1,40 +1,66 @@
-from typing import Any
+"""Custom Season Episodes API endpoint."""
 
-from gapi import CustomSerializer, GapiCustomizations
+from __future__ import annotations
 
+from functools import cached_property
+from typing import Any, override
+
+from gapi import CustomSerializer
+from gapi.customizer import ReplacementField
+
+from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DATETIME_SERIALIZER
 from just_scrape.custom_season_episodes import query
-from just_scrape.custom_season_episodes.response import models as response_models
-from just_scrape.protocol import JustWatchProtocol
-from just_scrape.season_episodes.request import models as request_models
+from just_scrape.custom_season_episodes.response.models import (
+    CustomSeasonEpisodesResponse,
+    Episode,
+)
+from just_scrape.season_episodes.request.models import Variables
 
 DEFAULT_LIMIT = 20
 
-CUSTOM_SEASON_EPISODES_CUSTOMIZATIONS = GapiCustomizations(
-    custom_serializers=[
-        CustomSerializer(
-            class_name="Episode",
-            field_name="max_offer_updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-    ],
-)
 
+class CustomSeasonEpisodes(
+    BaseEndpoint[CustomSeasonEpisodesResponse],
+):
+    """Provides methods to download, parse, and retrieve custom season episodes data."""
 
-class CustomSeasonEpisodesMixin(JustWatchProtocol):
-    """Season episodes with some additional value.
+    @cached_property
+    @override
+    def _response_model(self) -> type[CustomSeasonEpisodesResponse]:
+        return CustomSeasonEpisodesResponse
 
-    originalReleaseDate was added because there was no source for release dates of
-    specific episodes.
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "custom_season_episodes/response"
 
-    "fragment BuyBoxOffers on Episode" was added to get maxOfferUpdatedAt which makes it
-    possible to know which episode require updates instead of having to update all
-    episodes every time a show is updated.
-    """
+    @cached_property
+    @override
+    def _custom_serializers(self) -> list[CustomSerializer]:
+        return [
+            CustomSerializer(
+                class_name="Episode",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+        ]
 
-    def download_custom_season_episodes(  # noqa: PLR0913
+    @cached_property
+    @override
+    def _replacement_fields(self) -> list[ReplacementField]:
+        return [
+            ReplacementField(
+                class_name="Episode",
+                field_name="max_offer_updated_at",
+                new_field="max_offer_updated_at: AwareDatetime = "
+                'Field(..., alias="maxOfferUpdatedAt")',
+            ),
+        ]
+
+    def download(
         self,
         *,
         node_id: str,
@@ -44,7 +70,15 @@ class CustomSeasonEpisodesMixin(JustWatchProtocol):
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> dict[str, Any]:
-        variables = request_models.Variables(
+        """Downloads custom season episodes data for a given node ID.
+
+        Args:
+            node_id: The ID of the season.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        variables = Variables(
             nodeId=node_id,
             country=country,
             language=language,
@@ -52,28 +86,13 @@ class CustomSeasonEpisodesMixin(JustWatchProtocol):
             limit=limit,
             offset=offset,
         )
-        return self._download_graphql_request(
+        return self._client.download_graphql_request(
             operation_name="GetSeasonEpisodes",
             query=query.QUERY,
             variables=variables,
         )
 
-    def parse_custom_season_episodes(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.CustomSeasonEpisodesResponse:
-        if update:
-            return self.parse_response(
-                response_models.CustomSeasonEpisodesResponse,
-                data,
-                "custom_season_episodes/response",
-            )
-
-        return response_models.CustomSeasonEpisodesResponse.model_validate(data)
-
-    def get_custom_season_episodes(  # noqa: PLR0913
+    def get(
         self,
         *,
         node_id: str,
@@ -82,20 +101,15 @@ class CustomSeasonEpisodesMixin(JustWatchProtocol):
         platform: str = "WEB",
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
-    ) -> response_models.CustomSeasonEpisodesResponse:
-        """Get episodes for a specific season with originalReleaseDate.
+    ) -> CustomSeasonEpisodesResponse:
+        """Downloads and parses custom season episodes data for a given node ID.
 
-        This API request occurs when visiting a specific season page for a TV show.
+        Convenience method that calls ``download()`` then ``parse()``.
 
         Args:
             node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-            limit: Number of episodes to return.
-            offset: Offset to start getting episodes from.
         """
-        response = self.download_custom_season_episodes(
+        data = self.download(
             node_id=node_id,
             country=country,
             language=language,
@@ -103,32 +117,22 @@ class CustomSeasonEpisodesMixin(JustWatchProtocol):
             limit=limit,
             offset=offset,
         )
+        return self.parse(data)
 
-        return self.parse_custom_season_episodes(response)
-
-    def get_all_custom_season_episodes(
+    def get_all(
         self,
         *,
         node_id: str,
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
-    ) -> list[response_models.CustomSeasonEpisodesResponse]:
-        """Get all of the episodes for a specific season with originalReleaseDate.
-
-        This API request occurs when visiting a specific season page for a TV show.
-
-        Args:
-            node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-        """
+    ) -> list[CustomSeasonEpisodesResponse]:
+        """Downloads and parses all custom season episodes for a given node ID."""
         offset = 0
-        all_episodes: list[response_models.CustomSeasonEpisodesResponse] = []
+        all_episodes: list[CustomSeasonEpisodesResponse] = []
 
         while True:
-            response = self.get_custom_season_episodes(
+            response = self.get(
                 node_id=node_id,
                 country=country,
                 language=language,
@@ -145,20 +149,19 @@ class CustomSeasonEpisodesMixin(JustWatchProtocol):
 
             offset += DEFAULT_LIMIT
 
-    def extract_custom_season_episodes_episodes(
+    def extract_episodes(
         self,
-        all_episodes: response_models.CustomSeasonEpisodesResponse
-        | list[response_models.CustomSeasonEpisodesResponse],
-    ) -> list[response_models.Episode]:
+        all_episodes: CustomSeasonEpisodesResponse | list[CustomSeasonEpisodesResponse],
+    ) -> list[Episode]:
         """Combine CustomSeasonEpisodesResponse responses into a single list."""
         if isinstance(all_episodes, dict):
-            all_episodes = self.parse_custom_season_episodes(all_episodes)
+            all_episodes = self.parse(all_episodes)
 
-        if isinstance(all_episodes, response_models.CustomSeasonEpisodesResponse):
+        if isinstance(all_episodes, CustomSeasonEpisodesResponse):
             return all_episodes.data.node.episodes
 
         return [
             episode
             for episode_page in all_episodes
-            for episode in self.extract_custom_season_episodes_episodes(episode_page)
+            for episode in self.extract_episodes(episode_page)
         ]

@@ -1,59 +1,114 @@
-from typing import Any
+"""URL Title Details API endpoint."""
 
-from gapi import (
-    CustomSerializer,
-    GapiCustomizations,
-)
+from __future__ import annotations
 
+from functools import cached_property
+from typing import Any, override
+
+from gapi import CustomSerializer, ReplacementField
+
+from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
-from just_scrape.protocol import JustWatchProtocol
 from just_scrape.url_title_details import query
-from just_scrape.url_title_details.request import models as request_models
-from just_scrape.url_title_details.response import models as response_models
-
-URL_TITLE_DETAILS_CUSTOMIZATIONS = GapiCustomizations(
-    custom_serializers=[
-        # There is a date field called updated_at so the class name needs to be
-        # specified.
-        CustomSerializer(
-            class_name="RankInfo",
-            field_name="updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-        CustomSerializer(
-            class_name="StreamingChartInfo",
-            field_name="updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-        CustomSerializer(
-            field_name="available_from_time",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-        CustomSerializer(
-            field_name="available_to_time",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-        CustomSerializer(
-            class_name="Node",
-            field_name="max_offer_updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-    ],
-)
+from just_scrape.url_title_details.request.models import Variables
+from just_scrape.url_title_details.response.models import UrlTitleDetailsResponse
 
 
-class UrlTitleDetailsMixin(JustWatchProtocol):
-    def download_url_title_details(  # noqa: PLR0913
+class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
+    """Provides methods to download, parse, and retrieve URL title details data."""
+
+    @cached_property
+    @override
+    def _response_model(self) -> type[UrlTitleDetailsResponse]:
+        return UrlTitleDetailsResponse
+
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "url_title_details/response"
+
+    @cached_property
+    @override
+    def _custom_serializers(self) -> list[CustomSerializer]:
+        return [
+            # There is a date field called updated_at so the class name needs to be
+            # specified.
+            CustomSerializer(
+                class_name="RankInfo",
+                field_name="updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+            CustomSerializer(
+                class_name="StreamingChartInfo",
+                field_name="updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+            CustomSerializer(
+                field_name="available_from_time",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+            CustomSerializer(
+                field_name="available_to_time",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+        ]
+
+    @cached_property
+    @override
+    def _replacement_fields(self) -> list[ReplacementField]:
+        return [
+            ReplacementField(
+                class_name="RankInfo",
+                field_name="updated_at",
+                new_field='updated_at: AwareDatetime = Field(..., alias="updatedAt")',
+            ),
+            ReplacementField(
+                class_name="StreamingChartInfo",
+                field_name="updated_at",
+                new_field='updated_at: AwareDatetime = Field(..., alias="updatedAt")',
+            ),
+            ReplacementField(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                new_field="max_offer_updated_at: AwareDatetime = "
+                'Field(..., alias="maxOfferUpdatedAt")',
+            ),
+            ReplacementField(
+                class_name="Node",
+                field_name="available_from_time",
+                new_field="available_from_time: AwareDatetime = "
+                'Field(..., alias="availableFromTime")',
+            ),
+            ReplacementField(
+                class_name="Node",
+                field_name="available_to_time",
+                new_field="available_to_time: AwareDatetime = "
+                'Field(..., alias="availableToTime")',
+            ),
+            ReplacementField(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                new_field="max_offer_updated_at: AwareDatetime = "
+                'Field(..., alias="maxOfferUpdatedAt")',
+            ),
+        ]
+
+    def download(
         self,
         full_path: str,
         *,
@@ -66,7 +121,15 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> dict[str, Any]:
-        variables = request_models.Variables(
+        """Downloads URL title details data for a given path.
+
+        Args:
+            full_path: The full URL path excluding the domain.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        variables = Variables(
             platform=platform,
             excludeTextRecommendationTitle=exclude_text_recommendation_title,
             first=first,
@@ -77,29 +140,13 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
             country=country,
             episodeMaxLimit=episode_max_limit,
         )
-        return self._download_graphql_request(
+        return self._client.download_graphql_request(
             "GetUrlTitleDetails",
             query.QUERY,
             variables,
         )
 
-    def parse_url_title_details(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.UrlTitleDetailsResponse:
-        if update:
-            return self.parse_response(
-                response_models.UrlTitleDetailsResponse,
-                data,
-                "url_title_details/response",
-                URL_TITLE_DETAILS_CUSTOMIZATIONS,
-            )
-
-        return response_models.UrlTitleDetailsResponse.model_validate(data)
-
-    def get_url_title_details(  # noqa: PLR0913
+    def get(
         self,
         full_path: str,
         *,
@@ -111,25 +158,15 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
         language: str = "en",
         country: str = "US",
         episode_max_limit: int = 20,
-    ) -> response_models.UrlTitleDetailsResponse:
-        """Get information about a specific TV show.
+    ) -> UrlTitleDetailsResponse:
+        """Downloads and parses URL title details data for a given path.
 
-        This API request normally occurs when visiting a the page for a specific season
-        of a TV show, on the TV show's main page, the information is embedded in the
-        HTML.
+        Convenience method that calls ``download()`` then ``parse()``.
 
         Args:
-            full_path: The full URL of the TV show excluding the domain.
-            platform: ???
-            exclude_text_recommendation_title: ???
-            first: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            language: ???
-            country: ???
-            episode_max_limit: ???
+            full_path: The full URL path excluding the domain.
         """
-        response = self.download_url_title_details(
+        data = self.download(
             platform=platform,
             exclude_text_recommendation_title=exclude_text_recommendation_title,
             first=first,
@@ -140,5 +177,4 @@ class UrlTitleDetailsMixin(JustWatchProtocol):
             country=country,
             episode_max_limit=episode_max_limit,
         )
-
-        return self.parse_url_title_details(response)
+        return self.parse(data)

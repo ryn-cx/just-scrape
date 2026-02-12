@@ -1,112 +1,95 @@
 import json
-from collections.abc import Iterator
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import pytest
 
 from just_scrape import JustScrape
-from just_scrape.constants import FILES_PATH
 from just_scrape.exceptions import GraphQLError
 
 client = JustScrape()
 
 
 class TestParsing:
-    def get_test_files(self, endpoint: str) -> Iterator[Path]:
-        """Get all JSON test files for a given endpoint."""
-        dir_path = FILES_PATH / endpoint
-        if not dir_path.exists():
-            pytest.fail(f"{dir_path} not found")
-
-        files = dir_path.glob("*.json")
-
-        # Make sure at least 1 file is found
-        if not files:
-            pytest.fail(f"No test files found in {dir_path}")
-
-        return files
-
     def test_parse_buy_box_offers(self) -> None:
-        for json_file in self.get_test_files("buy_box_offers/response"):
+        """Parse all saved buy box offers JSON files."""
+        for json_file in client.buy_box_offers.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_buy_box_offers(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.buy_box_offers.parse(file_content)
 
     def test_parse_custom_buy_box_offers(self) -> None:
-        for json_file in self.get_test_files("buy_box_offers/response"):
+        """Parse all saved custom buy box offers JSON files."""
+        for json_file in client.custom_buy_box_offers.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_custom_buy_box_offers(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.custom_buy_box_offers.parse(file_content)
 
     def test_parse_new_titles(self) -> None:
-        for json_file in self.get_test_files("new_titles/response"):
+        """Parse all saved new titles JSON files."""
+        for json_file in client.new_titles.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_new_titles(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.new_titles.parse(file_content)
 
     def test_parse_new_title_buckets(self) -> None:
-        for json_file in self.get_test_files("new_title_buckets/response"):
+        """Parse all saved new title buckets JSON files."""
+        for json_file in client.new_title_buckets.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_new_title_buckets(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.new_title_buckets.parse(file_content)
 
     def test_parse_url_title_details(self) -> None:
-        for json_file in self.get_test_files("url_title_details/response"):
+        """Parse all saved URL title details JSON files."""
+        for json_file in client.url_title_details.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_url_title_details(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.url_title_details.parse(file_content)
 
     def test_parse_title_detail_article(self) -> None:
-        for json_file in self.get_test_files("title_detail_article/response"):
+        """Parse all saved title detail article JSON files."""
+        for json_file in client.title_detail_article.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_title_detail_article(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.title_detail_article.parse(file_content)
 
     def test_parse_season_episodes(self) -> None:
-        for json_file in self.get_test_files("season_episodes/response"):
+        """Parse all saved season episodes JSON files."""
+        for json_file in client.season_episodes.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_season_episodes(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.season_episodes.parse(file_content)
 
     def test_parse_custom_season_episodes(self) -> None:
-        for json_file in self.get_test_files("custom_season_episodes/response"):
+        """Parse all saved custom season episodes JSON files."""
+        for json_file in client.custom_season_episodes.json_files_folder.glob("*.json"):
             file_content = json.loads(json_file.read_text())
-            parsed = client.parse_custom_season_episodes(file_content)
-            assert file_content == client.dump_response(parsed)
+            client.custom_season_episodes.parse(file_content)
 
 
 class TestGet:
     def test_get_buy_box_offers(self) -> None:
-        client.get_buy_box_offers(node_id="tse9298997")
+        client.buy_box_offers.get(node_id="tse9298997")
 
     def test_get_custom_buy_box_offers(self) -> None:
-        client.get_custom_buy_box_offers(node_id="tse9298997")
+        client.custom_buy_box_offers.get(node_id="tse9298997")
 
     def test_get_new_title_buckets(self) -> None:
-        client.get_new_title_buckets()
+        client.new_title_buckets.get()
 
     def test_get_new_titles(self) -> None:
-        client.get_new_titles(filter_packages=["net"], available_to_packages=["net"])
+        client.new_titles.get(filter_packages=["net"], available_to_packages=["net"])
 
     def test_get_season_episodes(self) -> None:
-        client.get_season_episodes(node_id="tss337460")
+        client.season_episodes.get(node_id="tss337460")
 
     def test_get_title_detail_article(self) -> None:
-        client.get_title_detail_article(full_path="/us/movie/the-thursday-murder-club")
+        client.title_detail_article.get(full_path="/us/movie/the-thursday-murder-club")
 
     def test_get_url_title_details_movie(self) -> None:
-        client.get_url_title_details(full_path="/us/movie/the-thursday-murder-club")
+        client.url_title_details.get(full_path="/us/movie/the-thursday-murder-club")
 
     def test_get_url_title_details_tv_show(self) -> None:
-        client.get_url_title_details("/us/tv-show/south-park")
+        client.url_title_details.get("/us/tv-show/south-park")
 
     def test_get_url_title_details_invalid_url(self) -> None:
         with pytest.raises(GraphQLError, match="URL not found"):
-            client.get_url_title_details("/us/tv-show/invalid-url")
+            client.url_title_details.get("/us/tv-show/invalid-url")
 
     def test_custom_season_episodes(self) -> None:
-        client.get_custom_season_episodes(node_id="tss466559")
+        client.custom_season_episodes.get(node_id="tss466559")
 
 
 class TestCustomGet:
@@ -119,7 +102,7 @@ class TestCustomGet:
         # Always start 1 day behind current day because current day may have incomplete
         # data and is less likely to have at least 10 entries.
         for i in range(1, 10):
-            all_new_titles_for_date = client.get_all_new_titles_for_date(
+            all_new_titles_for_date = client.new_titles.get_all_for_date(
                 filter_packages=["amp"],
                 available_to_packages=["amp"],
                 date=datetime.now().astimezone().date() - timedelta(days=i),
@@ -128,14 +111,14 @@ class TestCustomGet:
             # Amazon seems to usually have at least 10 new episode every day so this
             # will USUALLY test true on the first iteration but sometimes extra loops
             # are required.
-            all_edges = client.extract_new_titles_edges(all_new_titles_for_date)
+            all_edges = client.new_titles.extract_edges(all_new_titles_for_date)
             assert len(all_edges) == expected_episodes
 
             if expected_episodes > 10:  # noqa: PLR2004
                 break
 
     def test_get_all_new_titles_since_date(self) -> None:
-        responseses = client.get_all_new_titles_since_date(
+        responseses = client.new_titles.get_all_since_date(
             filter_packages=["amp"],
             available_to_packages=["amp"],
             start_date=datetime.now().astimezone().date() - timedelta(days=1),
@@ -153,18 +136,18 @@ class TestCustomGet:
         for responses in responseses:
             expected_edges += responses[0].data.new_titles.total_count
 
-        assert len(client.extract_new_titles_edges(responseses)) == expected_edges
+        assert len(client.new_titles.extract_edges(responseses)) == expected_edges
 
     def test_get_all_season_episodes(self) -> None:
         season_id = "tss23744"
         number_of_episodes = 23
-        season_episodes = client.get_all_season_episodes(node_id=season_id)
-        episodes = client.extract_season_episodes_episodes(season_episodes)
+        season_episodes = client.season_episodes.get_all(node_id=season_id)
+        episodes = client.season_episodes.extract_episodes(season_episodes)
         assert len(episodes) == number_of_episodes
 
     def test_get_custom_all_season_episodes(self) -> None:
         season_id = "tss23744"
         number_of_episodes = 23
-        season_episodes = client.get_all_season_episodes(node_id=season_id)
-        episodes = client.extract_season_episodes_episodes(season_episodes)
+        season_episodes = client.season_episodes.get_all(node_id=season_id)
+        episodes = client.season_episodes.extract_episodes(season_episodes)
         assert len(episodes) == number_of_episodes

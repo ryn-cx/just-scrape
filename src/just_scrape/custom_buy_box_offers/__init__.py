@@ -1,32 +1,59 @@
-from typing import Any
+"""Custom Buy Box Offers API endpoint."""
 
-from gapi import CustomSerializer, GapiCustomizations
+from __future__ import annotations
 
-from just_scrape.buy_box_offers.request import models as request_models
+from functools import cached_property
+from typing import Any, override
+
+from gapi import CustomSerializer
+from gapi.customizer import ReplacementField
+
+from just_scrape.base_client import BaseEndpoint
+from just_scrape.buy_box_offers.request.models import Variables
 from just_scrape.constants import DATETIME_SERIALIZER, DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.custom_buy_box_offers import query
-from just_scrape.custom_buy_box_offers.response import models as response_models
-from just_scrape.protocol import JustWatchProtocol
-
-CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS = GapiCustomizations(
-    custom_serializers=[
-        CustomSerializer(
-            class_name="Node",
-            field_name="max_offer_updated_at",
-            serializer_code=DATETIME_SERIALIZER,
-            input_type="AwareDatetime",
-            output_type="str",
-        ),
-    ],
-)
+from just_scrape.custom_buy_box_offers.response.models import CustomBuyBoxOffersResponse
 
 
-class CustomBuyBoxOffersMixin(JustWatchProtocol):
+class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
     """BuyBoxOffers with the addition of the dateCreated field."""
 
-    # PLR0913 - The query has more than 5 queries so this function needs more than 5
-    # arguments.
-    def download_custom_buy_box_offers(  # noqa: PLR0913
+    @cached_property
+    @override
+    def _response_model(self) -> type[CustomBuyBoxOffersResponse]:
+        return CustomBuyBoxOffersResponse
+
+    @cached_property
+    @override
+    def _response_model_folder_name(self) -> str:
+        return "custom_buy_box_offers/response"
+
+    @cached_property
+    @override
+    def _custom_serializers(self) -> list[CustomSerializer]:
+        return [
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=DATETIME_SERIALIZER,
+                input_type="AwareDatetime",
+                output_type="str",
+            ),
+        ]
+
+    @cached_property
+    @override
+    def _replacement_fields(self) -> list[ReplacementField]:
+        return [
+            ReplacementField(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                new_field="max_offer_updated_at: AwareDatetime = "
+                'Field(..., alias="maxOfferUpdatedAt")',
+            ),
+        ]
+
+    def download(
         self,
         node_id: str,
         *,
@@ -36,7 +63,15 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        variables = request_models.Variables(
+        """Downloads custom buy box offers data for a given node ID.
+
+        Args:
+            node_id: The ID of the episode.
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        variables = Variables(
             platform=platform,
             fallbackToForeignOffers=fallback_to_foreign_offers,
             excludePackages=exclude_packages,
@@ -44,25 +79,13 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             country=country,
             language=language,
         )
-        return self._download_graphql_request("GetBuyBoxOffers", query.QUERY, variables)
+        return self._client.download_graphql_request(
+            "GetBuyBoxOffers",
+            query.QUERY,
+            variables,
+        )
 
-    def parse_custom_buy_box_offers(
-        self,
-        data: dict[str, Any],
-        *,
-        update: bool = True,
-    ) -> response_models.CustomBuyBoxOffersResponse:
-        if update:
-            return self.parse_response(
-                response_models.CustomBuyBoxOffersResponse,
-                data,
-                "custom_buy_box_offers/response",
-                CUSTOM_BUY_BOX_OFFERS_CUSTOMIZATIONS,
-            )
-
-        return response_models.CustomBuyBoxOffersResponse.model_validate(data)
-
-    def get_custom_buy_box_offers(  # noqa: PLR0913
+    def get(
         self,
         node_id: str,
         *,
@@ -71,20 +94,15 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
         exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
         country: str = "US",
         language: str = "en",
-    ) -> response_models.CustomBuyBoxOffersResponse:
-        """Get all of the different websites that a specific episode can be watched.
+    ) -> CustomBuyBoxOffersResponse:
+        """Downloads and parses custom buy box offers data for a given node ID.
 
-        This API request normally occurs when clicking on an episode.
+        Convenience method that calls ``download()`` then ``parse()``.
 
         Args:
             node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
         """
-        response = self.download_custom_buy_box_offers(
+        data = self.download(
             node_id=node_id,
             platform=platform,
             fallback_to_foreign_offers=fallback_to_foreign_offers,
@@ -92,5 +110,4 @@ class CustomBuyBoxOffersMixin(JustWatchProtocol):
             country=country,
             language=language,
         )
-
-        return self.parse_custom_buy_box_offers(response)
+        return self.parse(data)
