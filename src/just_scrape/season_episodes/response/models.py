@@ -1,7 +1,7 @@
 # ruff: noqa: D100, D101
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class Package(BaseModel):
@@ -13,6 +13,13 @@ class Package(BaseModel):
 
 
 class FlatrateItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str
+    package: Package
+    field__typename: str = Field(..., alias="__typename")
+
+
+class FreeItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package: Package
@@ -41,7 +48,7 @@ class Episode(BaseModel):
     flatrate: list[FlatrateItem]
     buy: list[None]
     rent: list[None]
-    free: list[None]
+    free: list[FreeItem]
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
@@ -82,6 +89,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class SeasonEpisodesResponse(BaseModel):

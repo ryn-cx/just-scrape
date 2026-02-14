@@ -33,6 +33,6 @@ DEFAULT_EXCLUDE_PACKAGES = [
     "yrk",
 ]
 
-DATETIME_SERIALIZER = (
-    '''return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"'''
-)
+DATETIME_SERIALIZER = '''if not value:
+    return None
+return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"'''

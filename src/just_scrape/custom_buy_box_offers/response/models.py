@@ -195,6 +195,8 @@ class Node(BaseModel):
 
     @field_serializer("max_offer_updated_at")
     def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
+        if not value:
+            return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
@@ -226,6 +228,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class CustomBuyBoxOffersResponse(BaseModel):

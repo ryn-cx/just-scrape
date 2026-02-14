@@ -1,7 +1,7 @@
 # ruff: noqa: D100, D101
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class Content(BaseModel):
@@ -49,6 +49,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class TitleDetailArticleResponse(BaseModel):

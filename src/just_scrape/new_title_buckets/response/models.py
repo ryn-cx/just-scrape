@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import date as date_aliased
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class PageInfo(BaseModel):
@@ -108,6 +108,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class NewTitleBucketsResponse(BaseModel):

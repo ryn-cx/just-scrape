@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import date as date_aliased
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class Package(BaseModel):
@@ -30,8 +30,8 @@ class NewOffer(BaseModel):
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
     package: Package
-    retail_price: str | None = Field(..., alias="retailPrice")
-    retail_price_value: float | None = Field(..., alias="retailPriceValue")
+    retail_price: None = Field(..., alias="retailPrice")
+    retail_price_value: None = Field(..., alias="retailPriceValue")
     last_change_retail_price_value: None = Field(
         ..., alias="lastChangeRetailPriceValue"
     )
@@ -48,9 +48,9 @@ class NewOffer(BaseModel):
 class Scoring(BaseModel):
     model_config = ConfigDict(extra="forbid")
     imdb_votes: int | float | None = Field(..., alias="imdbVotes")
-    imdb_score: float | None = Field(..., alias="imdbScore")
-    tmdb_popularity: float = Field(..., alias="tmdbPopularity")
-    tmdb_score: int | float = Field(..., alias="tmdbScore")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
+    tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
+    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
     field__typename: str = Field(..., alias="__typename")
@@ -68,7 +68,7 @@ class Content(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
     is_released: bool = Field(..., alias="isReleased")
@@ -78,10 +78,10 @@ class Content(BaseModel):
 
 class Scoring1(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    imdb_votes: int = Field(..., alias="imdbVotes")
-    imdb_score: float = Field(..., alias="imdbScore")
+    imdb_votes: int | None = Field(..., alias="imdbVotes")
+    imdb_score: int | float | None = Field(..., alias="imdbScore")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
-    tmdb_score: int | float = Field(..., alias="tmdbScore")
+    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -91,7 +91,7 @@ class Content1(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring1
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
     field__typename: str = Field(..., alias="__typename")
@@ -188,7 +188,7 @@ class Variables(BaseModel):
     platform: str
     show_date_badge: bool = Field(..., alias="showDateBadge")
     available_to_packages: list[str] = Field(..., alias="availableToPackages")
-    after: None
+    after: str | None
 
 
 class Headers(BaseModel):
@@ -204,6 +204,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class NewTitlesResponse(BaseModel):

@@ -1,6 +1,7 @@
 """JustScrape is a client for downloading and parsing data from JustWatch."""
 
 import logging
+from datetime import datetime
 from logging import Logger
 from typing import Any
 
@@ -112,5 +113,8 @@ class JustScrape:
         output["just_scrape"]["query"] = query
         output["just_scrape"]["operationName"] = operation_name
         output["just_scrape"]["headers"] = self._headers()
+        output["just_scrape"]["timestamp"] = (
+            datetime.now().astimezone().isoformat().replace("+00:00", "Z")
+        )
 
         return output

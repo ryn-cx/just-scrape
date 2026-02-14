@@ -35,6 +35,17 @@ class FreeItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
+class PlanOffer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    retail_price: str = Field(..., alias="retailPrice")
+    duration_days: int = Field(..., alias="durationDays")
+    presentation_type: str = Field(..., alias="presentationType")
+    is_trial: bool = Field(..., alias="isTrial")
+    retail_price_value: float = Field(..., alias="retailPriceValue")
+    currency: str
+    field__typename: str = Field(..., alias="__typename")
+
+
 class Package3(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
@@ -45,7 +56,7 @@ class Package3(BaseModel):
     icon: str
     icon_wide: str = Field(..., alias="iconWide")
     has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[None] = Field(..., alias="planOffers")
+    plan_offers: list[PlanOffer] = Field(..., alias="planOffers")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -55,7 +66,7 @@ class UpcomingRelease(BaseModel):
     release_date: date = Field(..., alias="releaseDate")
     release_type: str = Field(..., alias="releaseType")
     label: str
-    package: Package3
+    package: Package3 | None
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -68,7 +79,7 @@ class Content(BaseModel):
     season_number: int = Field(..., alias="seasonNumber")
     is_released: bool = Field(..., alias="isReleased")
     runtime: int
-    original_release_date: date = Field(..., alias="originalReleaseDate")
+    original_release_date: date | None = Field(..., alias="originalReleaseDate")
     upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
 
 
@@ -86,10 +97,12 @@ class Episode(BaseModel):
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
-    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
+    max_offer_updated_at: AwareDatetime | None = Field(..., alias="maxOfferUpdatedAt")
 
     @field_serializer("max_offer_updated_at")
     def serialize_max_offer_updated_at(self, value: AwareDatetime) -> str:
+        if not value:
+            return None
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
@@ -128,6 +141,7 @@ class JustScrape(BaseModel):
     query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
+    timestamp: AwareDatetime
 
 
 class CustomSeasonEpisodesResponse(BaseModel):
