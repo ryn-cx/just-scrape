@@ -48,7 +48,7 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
             ReplacementField(
                 class_name="Node",
                 field_name="max_offer_updated_at",
-                new_field="max_offer_updated_at: AwareDatetime = "
+                new_field="max_offer_updated_at: AwareDatetime | None = "
                 'Field(..., alias="maxOfferUpdatedAt")',
             ),
         ]

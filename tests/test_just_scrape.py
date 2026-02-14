@@ -94,6 +94,9 @@ class TestGet:
     def test_custom_season_episodes2(self) -> None:
         client.custom_season_episodes.get(node_id="tss426357")
 
+    def test_custom_season_episodes3(self) -> None:
+        client.custom_season_episodes.get(node_id="tss426357")
+
 
 class TestCustomGet:
     def test_get_all_new_titles_for_date(self) -> None:
