@@ -84,18 +84,20 @@ class TestGet:
     def test_get_url_title_details_tv_show(self) -> None:
         client.url_title_details.get("/us/tv-show/south-park")
 
+    def test_get_url_title_details_unavailable_movie(self) -> None:
+        client.url_title_details.get(
+            full_path="/us/movie/code-geass-akito-the-exiled-5-to-beloved-ones",
+        )
+
+    def test_get_url_title_details_tv_unavailable_show(self) -> None:
+        client.url_title_details.get("/us/tv-show/darker-than-black")
+
     def test_get_url_title_details_invalid_url(self) -> None:
         with pytest.raises(GraphQLError, match="URL not found"):
             client.url_title_details.get("/us/tv-show/invalid-url")
 
     def test_custom_season_episodes(self) -> None:
         client.custom_season_episodes.get(node_id="tss466559")
-
-    def test_custom_season_episodes2(self) -> None:
-        client.custom_season_episodes.get(node_id="tss426357")
-
-    def test_custom_season_episodes3(self) -> None:
-        client.custom_season_episodes.get(node_id="tss426357")
 
 
 class TestCustomGet:

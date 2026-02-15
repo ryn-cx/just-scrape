@@ -221,7 +221,6 @@ class Headers(BaseModel):
 class JustScrape(BaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
-    query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
     timestamp: AwareDatetime

@@ -110,7 +110,6 @@ class JustScrape:
             mode="json",
             by_alias=True,
         )
-        output["just_scrape"]["query"] = query
         output["just_scrape"]["operationName"] = operation_name
         output["just_scrape"]["headers"] = self._headers()
         output["just_scrape"]["timestamp"] = (

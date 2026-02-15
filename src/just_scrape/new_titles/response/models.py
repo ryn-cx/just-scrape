@@ -47,10 +47,10 @@ class NewOffer(BaseModel):
 
 class Scoring(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    imdb_votes: int | float | None = Field(..., alias="imdbVotes")
-    imdb_score: int | float | None = Field(..., alias="imdbScore")
-    tmdb_popularity: float | None = Field(..., alias="tmdbPopularity")
-    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
+    imdb_votes: int = Field(..., alias="imdbVotes")
+    imdb_score: int | float = Field(..., alias="imdbScore")
+    tmdb_popularity: float = Field(..., alias="tmdbPopularity")
+    tmdb_score: float = Field(..., alias="tmdbScore")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
     field__typename: str = Field(..., alias="__typename")
@@ -68,20 +68,20 @@ class Content(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring
-    poster_url: str | None = Field(..., alias="posterUrl")
+    poster_url: str = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
-    is_released: bool = Field(..., alias="isReleased")
-    field__typename: str = Field(..., alias="__typename")
     season_number: int | None = Field(None, alias="seasonNumber")
+    field__typename: str = Field(..., alias="__typename")
+    is_released: bool = Field(..., alias="isReleased")
 
 
 class Scoring1(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    imdb_votes: int | None = Field(..., alias="imdbVotes")
-    imdb_score: int | float | None = Field(..., alias="imdbScore")
+    imdb_votes: int = Field(..., alias="imdbVotes")
+    imdb_score: float = Field(..., alias="imdbScore")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
-    tmdb_score: int | float | None = Field(..., alias="tmdbScore")
+    tmdb_score: float = Field(..., alias="tmdbScore")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -91,7 +91,7 @@ class Content1(BaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring1
-    poster_url: str | None = Field(..., alias="posterUrl")
+    poster_url: str = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
     field__typename: str = Field(..., alias="__typename")
@@ -125,9 +125,9 @@ class Node(BaseModel):
     content: Content
     likelist_entry: None = Field(..., alias="likelistEntry")
     dislikelist_entry: None = Field(..., alias="dislikelistEntry")
+    show: Show | None = None
     seenlist_entry: None = Field(None, alias="seenlistEntry")
     watchlist_entry_v2: None = Field(None, alias="watchlistEntryV2")
-    show: Show | None = None
 
 
 class Edge(BaseModel):
@@ -188,7 +188,7 @@ class Variables(BaseModel):
     platform: str
     show_date_badge: bool = Field(..., alias="showDateBadge")
     available_to_packages: list[str] = Field(..., alias="availableToPackages")
-    after: str | None
+    after: None
 
 
 class Headers(BaseModel):
@@ -201,7 +201,6 @@ class Headers(BaseModel):
 class JustScrape(BaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
-    query: str
     operation_name: str = Field(..., alias="operationName")
     headers: Headers
     timestamp: AwareDatetime

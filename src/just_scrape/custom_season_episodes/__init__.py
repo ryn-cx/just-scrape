@@ -48,18 +48,6 @@ class CustomSeasonEpisodes(
             ),
         ]
 
-    @cached_property
-    @override
-    def _replacement_fields(self) -> list[ReplacementField]:
-        return [
-            ReplacementField(
-                class_name="Episode",
-                field_name="max_offer_updated_at",
-                new_field="max_offer_updated_at: AwareDatetime | None = "
-                'Field(..., alias="maxOfferUpdatedAt")',
-            ),
-        ]
-
     def download(
         self,
         *,

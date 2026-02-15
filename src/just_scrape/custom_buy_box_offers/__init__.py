@@ -41,18 +41,6 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
             ),
         ]
 
-    @cached_property
-    @override
-    def _replacement_fields(self) -> list[ReplacementField]:
-        return [
-            ReplacementField(
-                class_name="Node",
-                field_name="max_offer_updated_at",
-                new_field="max_offer_updated_at: AwareDatetime | None = "
-                'Field(..., alias="maxOfferUpdatedAt")',
-            ),
-        ]
-
     def download(
         self,
         node_id: str,

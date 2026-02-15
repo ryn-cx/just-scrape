@@ -68,46 +68,6 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
             ),
         ]
 
-    @cached_property
-    @override
-    def _replacement_fields(self) -> list[ReplacementField]:
-        return [
-            ReplacementField(
-                class_name="RankInfo",
-                field_name="updated_at",
-                new_field='updated_at: AwareDatetime = Field(..., alias="updatedAt")',
-            ),
-            ReplacementField(
-                class_name="StreamingChartInfo",
-                field_name="updated_at",
-                new_field='updated_at: AwareDatetime = Field(..., alias="updatedAt")',
-            ),
-            ReplacementField(
-                class_name="Node",
-                field_name="max_offer_updated_at",
-                new_field="max_offer_updated_at: AwareDatetime = "
-                'Field(..., alias="maxOfferUpdatedAt")',
-            ),
-            ReplacementField(
-                class_name="Node",
-                field_name="available_from_time",
-                new_field="available_from_time: AwareDatetime = "
-                'Field(..., alias="availableFromTime")',
-            ),
-            ReplacementField(
-                class_name="Node",
-                field_name="available_to_time",
-                new_field="available_to_time: AwareDatetime = "
-                'Field(..., alias="availableToTime")',
-            ),
-            ReplacementField(
-                class_name="Node",
-                field_name="max_offer_updated_at",
-                new_field="max_offer_updated_at: AwareDatetime = "
-                'Field(..., alias="maxOfferUpdatedAt")',
-            ),
-        ]
-
     def download(
         self,
         full_path: str,
