@@ -142,11 +142,11 @@ class CustomSeasonEpisodes(
         all_episodes: CustomSeasonEpisodesResponse | list[CustomSeasonEpisodesResponse],
     ) -> list[Episode]:
         """Combine CustomSeasonEpisodesResponse responses into a single list."""
-        if isinstance(all_episodes, CustomSeasonEpisodesResponse):
-            return all_episodes.data.node.episodes
+        if isinstance(all_episodes, list):
+            return [
+                episode
+                for episode_page in all_episodes
+                for episode in self.extract_episodes(episode_page)
+            ]
 
-        return [
-            episode
-            for episode_page in all_episodes
-            for episode in self.extract_episodes(episode_page)
-        ]
+        return all_episodes.data.node.episodes
