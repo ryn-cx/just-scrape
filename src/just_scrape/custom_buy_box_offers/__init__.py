@@ -1,0 +1,94 @@
+"""Custom Buy Box Offers API endpoint."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, override
+
+from just_scrape.base_client import BaseEndpoint
+
+if TYPE_CHECKING:
+    from good_ass_pydantic_integrator import CustomSerializer
+from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from just_scrape.custom_buy_box_offers import query
+from just_scrape.custom_buy_box_offers.response_models import CustomBuyBoxOffersResponse
+
+
+class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
+    """BuyBoxOffers with the addition of the dateCreated field."""
+
+    _response_model = CustomBuyBoxOffersResponse
+
+    @classmethod
+    @override
+    def _custom_serializers(cls) -> list[CustomSerializer]:
+        return [cls._datetime_serializer("max_offer_updated_at", class_name="Node")]
+
+    # PLR0913 - Each parameter maps to an API parameter.
+    def download(  # noqa: PLR0913
+        self,
+        node_id: str,
+        *,
+        platform: str = "WEB",
+        fallback_to_foreign_offers: bool = False,
+        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
+        country: str = "US",
+        language: str = "en",
+    ) -> dict[str, Any]:
+        """Downloads custom buy box offers data for a given node ID.
+
+        Args:
+            node_id: The ID of the episode.
+            platform: ???
+            fallback_to_foreign_offers: ???
+            exclude_packages: ???
+            country: ???
+            language: ???
+
+        Returns:
+            The raw JSON response as a dict, suitable for passing to ``parse()``.
+        """
+        return self._client.download(
+            "GetBuyBoxOffers",
+            query.QUERY,
+            {
+                "platform": platform,
+                "fallbackToForeignOffers": fallback_to_foreign_offers,
+                "excludePackages": exclude_packages,
+                "nodeId": node_id,
+                "country": country,
+                "language": language,
+            },
+        )
+
+    # PLR0913 - Each parameter maps to an API parameter.
+    def get(  # noqa: PLR0913
+        self,
+        node_id: str,
+        *,
+        platform: str = "WEB",
+        fallback_to_foreign_offers: bool = False,
+        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
+        country: str = "US",
+        language: str = "en",
+    ) -> CustomBuyBoxOffersResponse:
+        """Downloads and parses custom buy box offers data for a given node ID.
+
+        Convenience method that calls ``download()`` then ``parse()``.
+
+        Args:
+            node_id: The ID of the episode.
+            platform: ???
+            fallback_to_foreign_offers: ???
+            exclude_packages: ???
+            country: ???
+            language: ???
+        """
+        data = self.download(
+            node_id=node_id,
+            platform=platform,
+            fallback_to_foreign_offers=fallback_to_foreign_offers,
+            exclude_packages=exclude_packages,
+            country=country,
+            language=language,
+        )
+        return self.parse(data)
