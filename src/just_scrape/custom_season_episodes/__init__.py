@@ -33,12 +33,14 @@ class CustomSeasonEpisodes(
                 class_name="Episode",
                 field_name="max_offer_updated_at",
                 serializer_code=(
+                    "if value is None:\n"
+                    "    return None\n"
                     "if isinstance(value, str):\n"
                     "    return value\n"
                     'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
                     '.rstrip("0").rstrip(".") + "Z"'
                 ),
-                output_type="str",
+                output_type="str | None",
             ),
         ]
 
