@@ -181,10 +181,10 @@ class ExternalIds(BaseModel):
 
 class Scoring(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    imdb_score: float = Field(..., alias="imdbScore")
+    imdb_score: int | float = Field(..., alias="imdbScore")
     imdb_votes: int = Field(..., alias="imdbVotes")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
-    tmdb_score: float = Field(..., alias="tmdbScore")
+    tmdb_score: float | None = Field(..., alias="tmdbScore")
     jw_rating: float | None = Field(..., alias="jwRating")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
     certified_fresh: bool | None = Field(..., alias="certifiedFresh")
@@ -283,7 +283,7 @@ class Credit(BaseModel):
     character_name: str = Field(..., alias="characterName")
     person_id: int = Field(..., alias="personId")
     portrait_url: str | None = Field(..., alias="portraitUrl")
-    profile_path: None = Field(..., alias="profilePath")
+    profile_path: str | None = Field(..., alias="profilePath")
     field__typename: str = Field(..., alias="__typename")
 
 
@@ -348,13 +348,17 @@ class StreamingChartInfo(BaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: str = Field(..., alias="updatedAt")
+    updated_at: AwareDatetime = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
     days_in_top3: int = Field(..., alias="daysInTop3")
     top_rank: int = Field(..., alias="topRank")
     field__typename: str = Field(..., alias="__typename")
+
+    @field_serializer("updated_at")
+    def serialize_updated_at(self, value: AwareDatetime) -> str:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
 class Edge(BaseModel):
@@ -564,13 +568,17 @@ class RankInfo(BaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: str = Field(..., alias="updatedAt")
+    updated_at: AwareDatetime = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
     days_in_top3: int = Field(..., alias="daysInTop3")
     top_rank: int = Field(..., alias="topRank")
     field__typename: str = Field(..., alias="__typename")
+
+    @field_serializer("updated_at")
+    def serialize_updated_at(self, value: AwareDatetime) -> str:
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
 class Title(BaseModel):
@@ -862,11 +870,9 @@ class Node(BaseModel):
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
 
     @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: AwareDatetime | str) -> str:
-        if not value:
+    def serialize_max_offer_updated_at(self, value: AwareDatetime | None) -> str | None:
+        if value is None:
             return None
-        if isinstance(value, str):
-            return value
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 

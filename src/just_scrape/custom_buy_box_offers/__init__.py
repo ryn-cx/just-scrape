@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from typing import Any, override
+
+from good_ass_pydantic_integrator import CustomSerializer
 
 from just_scrape.base_client import BaseEndpoint
-
-if TYPE_CHECKING:
-    from good_ass_pydantic_integrator import CustomSerializer
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.custom_buy_box_offers import query
 from just_scrape.custom_buy_box_offers.response_models import CustomBuyBoxOffersResponse
@@ -21,7 +20,19 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
     @classmethod
     @override
     def _custom_serializers(cls) -> list[CustomSerializer]:
-        return [cls._datetime_serializer("max_offer_updated_at", class_name="Node")]
+        return [
+            CustomSerializer(
+                class_name="Node",
+                field_name="max_offer_updated_at",
+                serializer_code=(
+                    "if value is None:\n"
+                    "    return None\n"
+                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
+                    '.rstrip("0").rstrip(".") + "Z"'
+                ),
+                output_type="str | None",
+            ),
+        ]
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913

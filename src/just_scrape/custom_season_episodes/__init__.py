@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, override
 
+from good_ass_pydantic_integrator import CustomSerializer
+
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.custom_season_episodes import query
 from just_scrape.custom_season_episodes.response_models import (
@@ -11,8 +13,6 @@ from just_scrape.custom_season_episodes.response_models import (
 )
 
 if TYPE_CHECKING:
-    from good_ass_pydantic_integrator import CustomSerializer
-
     from just_scrape.custom_season_episodes.response_models import Episode
 
 DEFAULT_LIMIT = 20
@@ -28,7 +28,19 @@ class CustomSeasonEpisodes(
     @classmethod
     @override
     def _custom_serializers(cls) -> list[CustomSerializer]:
-        return [cls._datetime_serializer("max_offer_updated_at", class_name="Episode")]
+        return [
+            CustomSerializer(
+                class_name="Episode",
+                field_name="max_offer_updated_at",
+                serializer_code=(
+                    "if isinstance(value, str):\n"
+                    "    return value\n"
+                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
+                    '.rstrip("0").rstrip(".") + "Z"'
+                ),
+                output_type="str",
+            ),
+        ]
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913

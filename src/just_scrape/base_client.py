@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, override
 
-from good_ass_pydantic_integrator import CustomSerializer, GAPIClient
+from good_ass_pydantic_integrator import GAPIClient
 from pydantic import BaseModel
 
 from just_scrape.constants import FILES_PATH
@@ -28,22 +28,3 @@ class BaseEndpoint[T: BaseModel](GAPIClient[T]):
         folder_name = cls._to_folder_name(cls._get_model_name())
         name = folder_name.removesuffix("_response")
         return FILES_PATH / name
-
-    @staticmethod
-    def _datetime_serializer(
-        field_name: str,
-        class_name: str | None = None,
-    ) -> CustomSerializer:
-        """Create a CustomSerializer for an AwareDatetime field."""
-        return CustomSerializer(
-            class_name=class_name,
-            field_name=field_name,
-            serializer_code=(
-                "if not value:\n"
-                "    return None\n"
-                'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                '.rstrip("0").rstrip(".") + "Z"'
-            ),
-            input_type="AwareDatetime",
-            output_type="str",
-        )

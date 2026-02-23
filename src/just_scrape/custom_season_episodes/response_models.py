@@ -89,9 +89,7 @@ class Episode(BaseModel):
     max_offer_updated_at: str | AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
 
     @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: AwareDatetime | str) -> str:
-        if not value:
-            return None
+    def serialize_max_offer_updated_at(self, value: str | AwareDatetime) -> str:
         if isinstance(value, str):
             return value
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"

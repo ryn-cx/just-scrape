@@ -106,7 +106,7 @@ class TestGet:
 
         def test_get_url_title_details_tv_show(self) -> None:
             """Test getting URL title details for a TV show."""
-            client.url_title_details.get("/us/tv-show/south-park")
+            client.url_title_details.get("/us/tv-show/strip-law")
 
         def test_get_url_title_details_unavailable_movie(self) -> None:
             """Test getting URL title details for an unavailable movie."""
