@@ -1,12 +1,21 @@
+# As of 3/13/2026 API is broken server side and returns a truncated set of results if
+# objectTypes is empty. Set to "SHOW_SEASON" or "MOVIE" to fix pagination. This is a
+# server side bug because the website itself is broken
+# https://www.justwatch.com/us/tv-shows/new
 """New Title Buckets API endpoint."""
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.new_title_buckets import query
 from just_scrape.new_title_buckets.response_models import NewTitleBucketsResponse
+
+if TYPE_CHECKING:
+    import datetime
+
+    from just_scrape.new_title_buckets.response_models import Edge
 
 
 class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
@@ -119,3 +128,78 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
             filter_monetization_types=filter_monetization_types,
         )
         return self.parse(data)
+
+    # PLR0913 - Each parameter maps to an API parameter.
+    def get_all_since_date(  # noqa: PLR0913
+        self,
+        *,
+        first: int = 8,
+        bucket_size: int = 0,
+        group_by: str = "DATE_PACKAGE",
+        page_type: str = "NEW",
+        country: str = "US",
+        price_drops: bool = False,
+        filter_age_certifications: list[Any] | None = None,
+        filter_exclude_genres: list[Any] | None = None,
+        filter_exclude_production_countries: list[Any] | None = None,
+        filter_object_types: list[Any] | None = None,
+        filter_production_countries: list[Any] | None = None,
+        filter_subgenres: list[Any] | None = None,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[None] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+        end_date: datetime.date,
+    ) -> list[NewTitleBucketsResponse]:
+        """Downloads and parses all new title buckets since a date."""
+        new_after_cursor = ""
+        output: list[NewTitleBucketsResponse] = []
+
+        while True:
+            parsed = self.get(
+                first=first,
+                bucket_size=bucket_size,
+                group_by=group_by,
+                page_type=page_type,
+                country=country,
+                new_after_cursor=new_after_cursor,
+                price_drops=price_drops,
+                filter_age_certifications=filter_age_certifications,
+                filter_exclude_genres=filter_exclude_genres,
+                filter_exclude_production_countries=filter_exclude_production_countries,
+                filter_object_types=filter_object_types,
+                filter_production_countries=filter_production_countries,
+                filter_subgenres=filter_subgenres,
+                filter_genres=filter_genres,
+                filter_packages=filter_packages,
+                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+                filter_presentation_types=filter_presentation_types,
+                filter_monetization_types=filter_monetization_types,
+            )
+            output.append(parsed)
+
+            last_edge = parsed.data.new_title_buckets.edges[-1]
+            if last_edge.key.date < end_date:
+                return output
+
+            if not parsed.data.new_title_buckets.page_info.has_next_page:
+                return output
+
+            new_after_cursor = parsed.data.new_title_buckets.page_info.end_cursor
+
+    def extract_edges(
+        self,
+        data: NewTitleBucketsResponse | list[NewTitleBucketsResponse],
+    ) -> list[Edge]:
+        """Get all of the edges for a new title buckets input."""
+        if isinstance(data, list):
+            result: list[Edge] = []
+            for resp in data:
+                result.extend(self.extract_edges(resp))
+            return result
+
+        if isinstance(data, dict):
+            data = self.parse(data)
+
+        return data.data.new_title_buckets.edges
