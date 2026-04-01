@@ -16,6 +16,7 @@ dependencies = [
 dev = [
   "prek>=0.3.2",
   "pytest>=8.4.1",
+  "python-dotenv>=1.2.2",
   "ruff>=0.13.3",
 ]
 

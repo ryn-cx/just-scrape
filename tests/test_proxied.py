@@ -1,98 +1,27 @@
-"""Tests for just_scrape."""
+"""Tests for just_scrape using the Cloudflare Worker proxy."""
 
 from __future__ import annotations
 
-import json
+import os
 from datetime import datetime, timedelta
-from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
+from dotenv import load_dotenv
 
 from just_scrape import JustScrape
-from just_scrape.base_client import BaseEndpoint
 from just_scrape.exceptions import GraphQLError
+from tests.test_just_scrape import save_responses
 
-if TYPE_CHECKING:
-    from pydantic import BaseModel
+load_dotenv()
 
-client = JustScrape()
-
-LOGGED_FILES_PATH = Path(__file__).parent / "logged_files"
-
-_run_timestamp = datetime.now().astimezone().strftime("%Y-%m-%dT%H_%M_%S")
-RUN_FOLDER = LOGGED_FILES_PATH / _run_timestamp
-
-
-def save_responses(folder_name: str, *responses: BaseModel) -> None:
-    """Save API responses to disk for manual analysis."""
-    folder = RUN_FOLDER / folder_name
-    folder.mkdir(parents=True, exist_ok=True)
-
-    timestamp = datetime.now().astimezone().strftime("%Y-%m-%dT%H_%M_%S")
-    subfolder = folder / timestamp
-    subfolder.mkdir(exist_ok=True)
-
-    for i, response in enumerate(responses):
-        dumped = BaseEndpoint.dump_response(response)
-        file_path = subfolder / f"{i}.json"
-        file_path.write_text(json.dumps(dumped, indent=2))
-
-
-class TestParse:
-    """Tests parsing files."""
-
-    def test_parse_buy_box_offers(self) -> None:
-        """Test parsing buy box offers files."""
-        for json_file in client.buy_box_offers.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.buy_box_offers.parse(file_content)
-
-    def test_parse_custom_buy_box_offers(self) -> None:
-        """Test parsing custom buy box offers files."""
-        for json_file in client.custom_buy_box_offers.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.custom_buy_box_offers.parse(file_content)
-
-    def test_parse_new_titles(self) -> None:
-        """Test parsing new titles files."""
-        for json_file in client.new_titles.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.new_titles.parse(file_content)
-
-    def test_parse_new_title_buckets(self) -> None:
-        """Test parsing new title buckets files."""
-        for json_file in client.new_title_buckets.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.new_title_buckets.parse(file_content)
-
-    def test_parse_url_title_details(self) -> None:
-        """Test parsing URL title details files."""
-        for json_file in client.url_title_details.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.url_title_details.parse(file_content)
-
-    def test_parse_title_detail_article(self) -> None:
-        """Test parsing title detail article files."""
-        for json_file in client.title_detail_article.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.title_detail_article.parse(file_content)
-
-    def test_parse_season_episodes(self) -> None:
-        """Test parsing season episodes files."""
-        for json_file in client.season_episodes.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.season_episodes.parse(file_content)
-
-    def test_parse_custom_season_episodes(self) -> None:
-        """Test parsing custom season episodes files."""
-        for json_file in client.custom_season_episodes.json_files():
-            file_content = json.loads(json_file.read_text())
-            client.custom_season_episodes.parse(file_content)
+client = JustScrape(
+    proxy_url=os.environ["PROXY_URL"],
+    proxy_auth_token=os.environ["PROXY_AUTH_TOKEN"],
+)
 
 
 class TestGet:
-    """Tests getting data."""
+    """Tests getting data through the proxy."""
 
     class TestValid:
         """Tests getting data with valid inputs."""
@@ -171,14 +100,6 @@ class TestGet:
 
         def test_get_all_new_titles_for_date(self) -> None:
             """Test getting all new titles for a date with pagination."""
-            # This test needs more than 10 entries in the response for it
-            # to show it is working correctly, Amazon usually has 10
-            # entries, but sometimes it doesn't. So this test will go
-            # through all entries in the last week until one is found with
-            # more than 10 entries.
-
-            # Always start 1 day behind current day because current day may have
-            # incomplete data and is less likely to have at least 10 entries.
             for i in range(1, 10):
                 all_new_titles_for_date = client.new_titles.get_all_for_date(
                     filter_packages=["amp"],
@@ -188,9 +109,6 @@ class TestGet:
                 expected_episodes = all_new_titles_for_date[
                     0
                 ].data.new_titles.total_count
-                # Amazon seems to usually have at least 10 new episodes
-                # every day so this will USUALLY test true on the first
-                # iteration but sometimes extra loops are required.
                 all_edges = client.new_titles.extract_edges(all_new_titles_for_date)
                 assert len(all_edges) == expected_episodes
 
@@ -208,14 +126,9 @@ class TestGet:
                 start_date=today - timedelta(days=1),
                 end_date=today - timedelta(days=2),
             )
-            # There should be 2 days worth of responses and the data from the days
-            # should be different.
             assert len(responseses) == 2  # noqa: PLR2004
             assert responseses[0] != responseses[1]
 
-            # total_count is the total number of entries for the day, not the number
-            # returned, so using just the first response will get the correct value for
-            # expected_edges.
             expected_edges = 0
             for responses in responseses:
                 expected_edges += responses[0].data.new_titles.total_count
@@ -239,8 +152,6 @@ class TestGet:
             assert len(all_buckets) >= 1
             assert len(all_edges) >= 1
 
-            # If pagination occurred, verify we got more edges than
-            # a single page would return.
             if len(all_buckets) > 1:
                 assert len(all_edges) > 3  # noqa: PLR2004
 
