@@ -98,6 +98,11 @@ class TestGet:
             )
             save_responses("custom_season_episodes", response)
 
+        def test_get_search(self) -> None:
+            """Test searching for titles."""
+            response = client.search.get(search_query="jojo")
+            save_responses("search", response)
+
         def test_get_all_new_titles_for_date(self) -> None:
             """Test getting all new titles for a date with pagination."""
             for i in range(1, 10):

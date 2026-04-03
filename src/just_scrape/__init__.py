@@ -15,6 +15,7 @@ from just_scrape.custom_season_episodes import CustomSeasonEpisodes
 from just_scrape.exceptions import GraphQLError, HTTPError
 from just_scrape.new_title_buckets import NewTitleBuckets
 from just_scrape.new_titles import NewTitles
+from just_scrape.search import Search
 from just_scrape.season_episodes import SeasonEpisodes
 from just_scrape.title_detail_article import TitleDetailArticle
 from just_scrape.url_title_details import UrlTitleDetails
@@ -36,6 +37,7 @@ def response_models() -> list[BaseEndpoint[Any]]:
         client.custom_season_episodes,
         client.new_title_buckets,
         client.new_titles,
+        client.search,
         client.season_episodes,
         client.title_detail_article,
         client.url_title_details,
@@ -61,6 +63,7 @@ class JustScrape:
         self.custom_season_episodes = CustomSeasonEpisodes(self)
         self.new_title_buckets = NewTitleBuckets(self)
         self.new_titles = NewTitles(self)
+        self.search = Search(self)
         self.season_episodes = SeasonEpisodes(self)
         self.title_detail_article = TitleDetailArticle(self)
         self.url_title_details = UrlTitleDetails(self)

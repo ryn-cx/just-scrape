@@ -90,6 +90,12 @@ class TestParse:
             file_content = json.loads(json_file.read_text())
             client.custom_season_episodes.parse(file_content)
 
+    def test_parse_search(self) -> None:
+        """Test parsing search files."""
+        for json_file in client.search.json_files():
+            file_content = json.loads(json_file.read_text())
+            client.search.parse(file_content)
+
 
 class TestGet:
     """Tests getting data."""
@@ -168,6 +174,11 @@ class TestGet:
                 node_id="tss466559",
             )
             save_responses("custom_season_episodes", response)
+
+        def test_get_search(self) -> None:
+            """Test searching for titles."""
+            response = client.search.get(search_query="jojo")
+            save_responses("search", response)
 
         def test_get_all_new_titles_for_date(self) -> None:
             """Test getting all new titles for a date with pagination."""
