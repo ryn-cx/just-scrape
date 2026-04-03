@@ -22,8 +22,8 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
-        *,
         node_id: str,
+        *,
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
@@ -59,8 +59,8 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
     # PLR0913 - Each parameter maps to an API parameter.
     def get(  # noqa: PLR0913
         self,
-        *,
         node_id: str,
+        *,
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",
@@ -91,8 +91,8 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
 
     def get_all(
         self,
-        *,
         node_id: str,
+        *,
         country: str = "US",
         language: str = "en",
         platform: str = "WEB",

@@ -8,14 +8,15 @@ authors = [
   { name = "ryn-cx", email = "262888154+ryn-cx@users.noreply.github.com" }
 ]
 dependencies = [
+  "get-around",
   "good-ass-pydantic-integrator",
-  "requests>=2.32.5",
 ]
 
 [dependency-groups]
 dev = [
   "prek>=0.3.2",
   "pytest>=8.4.1",
+  "python-dotenv>=1.2.2",
   "ruff>=0.13.3",
 ]
 
@@ -34,3 +35,4 @@ convention = "google"
 
 [tool.uv.sources]
 good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }
+get-around = { git = "https://github.com/ryn-cx/get-around" }

@@ -6,7 +6,7 @@ from datetime import datetime
 from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
-import requests
+from get_around import GetAround
 
 from just_scrape.buy_box_offers import BuyBoxOffers
 from just_scrape.custom_buy_box_offers import CustomBuyBoxOffers
@@ -51,8 +51,14 @@ class JustScrape:
         "Chrome/134.0.6998.166 Safari/537.36",
         referer: str = "https://www.justwatch.com/",
         origin: str = "https://www.justwatch.com",
+        get_around_server: str | None = None,
+        get_around_password: str | None = None,
     ) -> None:
         """Initialize the JustScrape client."""
+        self.get_around_client = GetAround(
+            server=get_around_server,
+            password=get_around_password,
+        )
         self.buy_box_offers = BuyBoxOffers(self)
         self.custom_buy_box_offers = CustomBuyBoxOffers(self)
         self.custom_season_episodes = CustomSeasonEpisodes(self)
@@ -84,7 +90,7 @@ class JustScrape:
         """Make a GraphQL request to the JustWatch API."""
         logger.info("Downloading %s: %s", operation_name, variables)
 
-        response = requests.post(
+        response = self.get_around_client.post(
             "https://apis.justwatch.com/graphql",
             json={
                 "operationName": operation_name,
