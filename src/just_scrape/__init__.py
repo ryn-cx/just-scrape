@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
-import requests
+from get_around import GetAround
 
 from just_scrape.buy_box_offers import BuyBoxOffers
 from just_scrape.custom_buy_box_offers import CustomBuyBoxOffers
@@ -54,10 +53,14 @@ class JustScrape:
         "Chrome/134.0.6998.166 Safari/537.36",
         referer: str = "https://www.justwatch.com/",
         origin: str = "https://www.justwatch.com",
-        proxy_url: str | None = None,
-        proxy_auth_token: str | None = None,
+        get_around_server: str | None = None,
+        get_around_password: str | None = None,
     ) -> None:
         """Initialize the JustScrape client."""
+        self.get_around_client = GetAround(
+            server=get_around_server,
+            password=get_around_password,
+        )
         self.buy_box_offers = BuyBoxOffers(self)
         self.custom_buy_box_offers = CustomBuyBoxOffers(self)
         self.custom_season_episodes = CustomSeasonEpisodes(self)
@@ -71,8 +74,6 @@ class JustScrape:
         self.user_agent = user_agent
         self.referer = referer
         self.origin = origin
-        self.proxy_url = proxy_url
-        self.proxy_auth_token = proxy_auth_token
 
         super().__init__()
 
@@ -90,12 +91,9 @@ class JustScrape:
         variables: dict[str, Any],
     ) -> dict[str, Any]:
         """Make a GraphQL request to the JustWatch API."""
-        if self.proxy_url and self.proxy_auth_token:
-            return self._proxied_download(operation_name, query, variables)
-
         logger.info("Downloading %s: %s", operation_name, variables)
 
-        response = requests.post(
+        response = self.get_around_client.post(
             "https://apis.justwatch.com/graphql",
             json={
                 "operationName": operation_name,
@@ -111,70 +109,6 @@ class JustScrape:
             raise HTTPError(msg)
 
         output = response.json()
-
-        if output.get("errors"):
-            msg = f"GraphQL errors occurred: {output['errors']}"
-            raise GraphQLError(msg)
-
-        output["just_scrape"] = {}
-        output["just_scrape"]["variables"] = variables
-        output["just_scrape"]["operationName"] = operation_name
-        output["just_scrape"]["headers"] = self._headers()
-        output["just_scrape"]["timestamp"] = (
-            datetime.now().astimezone().isoformat().replace("+00:00", "Z")
-        )
-
-        return output
-
-    def _proxied_download(
-        self,
-        operation_name: str,
-        query: str,
-        variables: dict[str, Any],
-    ) -> dict[str, Any]:
-        """Make a GraphQL request to the JustWatch API through a proxy."""
-        if not self.proxy_url or not self.proxy_auth_token:
-            msg = "proxy_url and proxy_auth_token must be set to use _proxied_download"
-            raise ValueError(msg)
-
-        logger.info("Proxied downloading %s: %s", operation_name, variables)
-
-        proxy_headers: dict[str, str] = {
-            "Content-Type": "application/json",
-            "X-Auth-Token": self.proxy_auth_token,
-        }
-
-        response = requests.post(
-            self.proxy_url,
-            json={
-                "url": "https://apis.justwatch.com/graphql",
-                "method": "POST",
-                "headers": {**self._headers(), "Content-Type": "application/json"},
-                "data": {
-                    "operationName": operation_name,
-                    "query": query,
-                    "variables": variables,
-                },
-                "timeout": 30,
-            },
-            headers=proxy_headers,
-            timeout=60,
-        )
-
-        if response.status_code != 200:  # noqa: PLR2004
-            msg = f"Unexpected proxy response status code: {response.status_code}"
-            raise HTTPError(msg)
-
-        proxy_result = response.json()
-
-        if proxy_result.get("statusCode") != 200:  # noqa: PLR2004
-            status = proxy_result.get("statusCode")
-            msg = f"Unexpected upstream response status code: {status}"
-            raise HTTPError(msg)
-
-        output = proxy_result["body"]
-        if isinstance(output, str):
-            output = json.loads(output)
 
         if output.get("errors"):
             msg = f"GraphQL errors occurred: {output['errors']}"

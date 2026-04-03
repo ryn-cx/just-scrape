@@ -201,6 +201,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
     # PLR0913 - Each parameter maps to an API parameter.
     def get_all_since_date(  # noqa: PLR0913
         self,
+        start_date: datetime.date | None = None,
         *,
         first: int = 10,
         page_type: str = "NEW",
@@ -222,7 +223,6 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
         # Specialized parameters for this function.
-        start_date: datetime.date | None = None,
         end_date: datetime.date,
     ) -> list[list[NewTitlesResponse]]:
         """Downloads and parses all new titles for a specific date range."""
@@ -261,7 +261,9 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
 
     def extract_edges(
         self,
-        data: NewTitlesResponse | list[NewTitlesResponse],
+        data: NewTitlesResponse
+        | list[NewTitlesResponse]
+        | list[list[NewTitlesResponse]],
     ) -> list[Edge]:
         """Get all of the edges for a new titles input."""
         if isinstance(data, list):

@@ -132,6 +132,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
     # PLR0913 - Each parameter maps to an API parameter.
     def get_all_since_date(  # noqa: PLR0913
         self,
+        end_date: datetime.date,
         *,
         first: int = 8,
         bucket_size: int = 0,
@@ -150,7 +151,6 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-        end_date: datetime.date,
     ) -> list[NewTitleBucketsResponse]:
         """Downloads and parses all new title buckets since a date."""
         new_after_cursor = ""

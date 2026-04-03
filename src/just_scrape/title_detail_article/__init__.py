@@ -16,8 +16,8 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
 
     def download(
         self,
-        *,
         full_path: str,
+        *,
         language: str = "en",
         country: str = "US",
     ) -> dict[str, Any]:
@@ -43,8 +43,8 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
 
     def get(
         self,
-        *,
         full_path: str,
+        *,
         language: str = "en",
         country: str = "US",
     ) -> TitleDetailArticleResponse:
