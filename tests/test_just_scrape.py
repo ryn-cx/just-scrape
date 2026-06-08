@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 from datetime import datetime, timedelta
 
 import pytest
@@ -15,8 +14,8 @@ from just_scrape.exceptions import GraphQLError
 load_dotenv()
 
 client = JustScrape(
-    get_around_server=os.environ["GET_AROUND_SERVER"],
-    get_around_password=os.environ["GET_AROUND_PASSWORD"],
+    # get_around_server=os.environ["GET_AROUND_SERVER"],
+    # get_around_password=os.environ["GET_AROUND_PASSWORD"],
 )
 
 

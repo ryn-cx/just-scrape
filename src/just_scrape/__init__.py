@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from logging import NullHandler, getLogger
+from time import sleep
 from typing import TYPE_CHECKING, Any
 
 from get_around import GetAround
@@ -55,6 +56,7 @@ class JustScrape:
         origin: str = "https://www.justwatch.com",
         get_around_server: str | None = None,
         get_around_password: str | None = None,
+        sleep_time: float = 0,
     ) -> None:
         """Initialize the JustScrape client."""
         self.get_around_client = GetAround(
@@ -74,6 +76,7 @@ class JustScrape:
         self.user_agent = user_agent
         self.referer = referer
         self.origin = origin
+        self.sleep_time = sleep_time
 
         super().__init__()
 
@@ -121,5 +124,7 @@ class JustScrape:
         output["just_scrape"]["timestamp"] = (
             datetime.now().astimezone().isoformat().replace("+00:00", "Z")
         )
+
+        sleep(self.sleep_time)
 
         return output
