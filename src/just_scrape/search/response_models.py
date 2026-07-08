@@ -1,19 +1,20 @@
-# ruff: noqa: COM812, D100, D101
-from __future__ import annotations
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
+from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class Genre(BaseModel):
+class Genre(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     short_name: str = Field(..., alias="shortName")
     field__typename: str = Field(..., alias="__typename")
 
 
-class Scoring(BaseModel):
+class Scoring(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     imdb_score: float | None = Field(..., alias="imdbScore")
-    imdb_votes: int | None = Field(..., alias="imdbVotes")
+    imdb_votes: int | float | None = Field(..., alias="imdbVotes")
     tmdb_score: int | float | None = Field(..., alias="tmdbScore")
     tmdb_popularity: float = Field(..., alias="tmdbPopularity")
     tomato_meter: int | None = Field(..., alias="tomatoMeter")
@@ -21,13 +22,19 @@ class Scoring(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Backdrop(BaseModel):
+class Backdrop(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     backdrop_url: str = Field(..., alias="backdropUrl")
     field__typename: str = Field(..., alias="__typename")
 
 
-class Content(BaseModel):
+class UpcomingRelease(GAPIBaseModel):
+    model_config = ConfigDict(extra="forbid")
+    release_date: date = Field(..., alias="releaseDate")
+    field__typename: str = Field(..., alias="__typename")
+
+
+class Content(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     full_path: str = Field(..., alias="fullPath")
@@ -36,21 +43,22 @@ class Content(BaseModel):
     scoring: Scoring
     poster_url: str = Field(..., alias="posterUrl")
     backdrops: list[Backdrop]
-    upcoming_releases: list[None] = Field(..., alias="upcomingReleases")
+    upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
     field__typename: str = Field(..., alias="__typename")
 
 
-class WatchNowOffer(BaseModel):
+class WatchNowOffer(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
-        ..., alias="preAffiliatedStandardWebURL"
+        ...,
+        alias="preAffiliatedStandardWebURL",
     )
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package(BaseModel):
+class Package(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -58,20 +66,21 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Offer(BaseModel):
+class Offer(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     monetization_type: str = Field(..., alias="monetizationType")
     presentation_type: str = Field(..., alias="presentationType")
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
-        ..., alias="preAffiliatedStandardWebURL"
+        ...,
+        alias="preAffiliatedStandardWebURL",
     )
     package: Package
     id: str
     field__typename: str = Field(..., alias="__typename")
 
 
-class Node(BaseModel):
+class Node(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     field__typename: str = Field(..., alias="__typename")
     id: str
@@ -82,14 +91,14 @@ class Node(BaseModel):
     offers: list[Offer]
 
 
-class Edge(BaseModel):
+class Edge(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     cursor: str
     node: Node
     field__typename: str = Field(..., alias="__typename")
 
 
-class PageInfo(BaseModel):
+class PageInfo(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
@@ -98,7 +107,7 @@ class PageInfo(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class SearchTitles(BaseModel):
+class SearchTitles(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias="pageInfo")
@@ -106,19 +115,19 @@ class SearchTitles(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Data(BaseModel):
+class Data(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     search_titles: SearchTitles = Field(..., alias="searchTitles")
 
 
-class SearchTitlesFilter(BaseModel):
+class SearchTitlesFilter(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     search_query: str = Field(..., alias="searchQuery")
     person_id: None = Field(..., alias="personId")
     include_titles_without_url: bool = Field(..., alias="includeTitlesWithoutUrl")
 
 
-class Variables(BaseModel):
+class Variables(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     first: int
     search_titles_sort_by: str = Field(..., alias="searchTitlesSortBy")
@@ -130,14 +139,14 @@ class Variables(BaseModel):
     location: str
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     user_agent: str = Field(..., alias="User-Agent")
     referer: str = Field(..., alias="Referer")
     origin: str = Field(..., alias="Origin")
 
 
-class JustScrape(BaseModel):
+class JustScrape(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
     operation_name: str = Field(..., alias="operationName")
@@ -145,7 +154,7 @@ class JustScrape(BaseModel):
     timestamp: AwareDatetime
 
 
-class SearchResponse(BaseModel):
+class SearchResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
     just_scrape: JustScrape

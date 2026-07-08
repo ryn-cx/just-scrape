@@ -1,3 +1,4 @@
+# TODO: Validate
 # As of 3/13/2026 API is broken server side and returns a truncated set of results if
 # objectTypes is empty. Set to "SHOW_SEASON" or "MOVIE" to fix pagination. This is a
 # server side bug because the website itself is broken

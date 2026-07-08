@@ -1,3 +1,4 @@
+# TODO: Validate
 """Buy Box Offers API endpoint."""
 
 from __future__ import annotations

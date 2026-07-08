@@ -1,12 +1,11 @@
-# ruff: noqa: TC003, D100, D101, D102
-from __future__ import annotations
-
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field, field_serializer
 
 
-class Package(BaseModel):
+class Package(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -14,28 +13,28 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class FlatrateItem(BaseModel):
+class FlatrateItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package: Package
     field__typename: str = Field(..., alias="__typename")
 
 
-class BuyItem(BaseModel):
+class BuyItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package: Package
     field__typename: str = Field(..., alias="__typename")
 
 
-class FreeItem(BaseModel):
+class FreeItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package: Package
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package3(BaseModel):
+class Package3(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -49,7 +48,7 @@ class Package3(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class UpcomingRelease(BaseModel):
+class UpcomingRelease(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     release_count_down: int = Field(..., alias="releaseCountDown")
     release_date: date = Field(..., alias="releaseDate")
@@ -59,7 +58,7 @@ class UpcomingRelease(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Content(BaseModel):
+class Content(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     field__typename: str = Field(..., alias="__typename")
     title: str
@@ -72,7 +71,7 @@ class Content(BaseModel):
     upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
 
 
-class Episode(BaseModel):
+class Episode(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     object_id: int = Field(..., alias="objectId")
@@ -97,19 +96,19 @@ class Episode(BaseModel):
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
-class Node(BaseModel):
+class Node(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     field__typename: str = Field(..., alias="__typename")
     episodes: list[Episode]
 
 
-class Data(BaseModel):
+class Data(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     node: Node
 
 
-class Variables(BaseModel):
+class Variables(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     platform: str
     country: str
@@ -119,14 +118,14 @@ class Variables(BaseModel):
     offset: int
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     user_agent: str = Field(..., alias="User-Agent")
     referer: str = Field(..., alias="Referer")
     origin: str = Field(..., alias="Origin")
 
 
-class JustScrape(BaseModel):
+class JustScrape(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
     operation_name: str = Field(..., alias="operationName")
@@ -134,7 +133,7 @@ class JustScrape(BaseModel):
     timestamp: AwareDatetime
 
 
-class CustomSeasonEpisodesResponse(BaseModel):
+class CustomSeasonEpisodesResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
     just_scrape: JustScrape

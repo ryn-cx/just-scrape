@@ -1,3 +1,4 @@
+# TODO: Validate
 """GraphQL query."""
 
 # ruff: noqa: E501

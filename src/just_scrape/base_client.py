@@ -1,11 +1,11 @@
+# TODO: Validate
 """Base GAPIClient for just-scrape."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, override
 
-from good_ass_pydantic_integrator import GAPIClient
-from pydantic import BaseModel
+from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
 
 from just_scrape.constants import FILES_PATH
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from just_scrape import JustScrape
 
 
-class BaseEndpoint[T: BaseModel](GAPIClient[T]):
+class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
     """Base class for API endpoints."""
 
     def __init__(self, client: JustScrape) -> None:
@@ -25,6 +25,6 @@ class BaseEndpoint[T: BaseModel](GAPIClient[T]):
     @override
     @classmethod
     def json_files_folder(cls) -> Path:
-        folder_name = cls._to_folder_name(cls._get_model_name())
+        folder_name = cls._folder_name(cls._model_name())
         name = folder_name.removesuffix("_response")
         return FILES_PATH / name

@@ -1,12 +1,11 @@
-# ruff: noqa: COM812, TC003, D100, D101
-from __future__ import annotations
-
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date as date_aliased
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
-class PageInfo(BaseModel):
+class PageInfo(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
@@ -15,7 +14,7 @@ class PageInfo(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package(BaseModel):
+class Package(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -24,14 +23,14 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Key(BaseModel):
+class Key(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     field__typename: str = Field(..., alias="__typename")
     date: date_aliased
     package: Package
 
 
-class PageInfo1(BaseModel):
+class PageInfo1(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     start_cursor: str = Field(..., alias="startCursor")
     end_cursor: str = Field(..., alias="endCursor")
@@ -40,38 +39,39 @@ class PageInfo1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Node(BaseModel):
+class Node(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     total_count: int = Field(..., alias="totalCount")
     page_info: PageInfo1 = Field(..., alias="pageInfo")
     field__typename: str = Field(..., alias="__typename")
 
 
-class Edge(BaseModel):
+class Edge(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     key: Key
     node: Node
     field__typename: str = Field(..., alias="__typename")
 
 
-class NewTitleBuckets(BaseModel):
+class NewTitleBuckets(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     page_info: PageInfo = Field(..., alias="pageInfo")
     edges: list[Edge]
     field__typename: str = Field(..., alias="__typename")
 
 
-class Data(BaseModel):
+class Data(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     new_title_buckets: NewTitleBuckets = Field(..., alias="newTitleBuckets")
 
 
-class NewTitlesFilter(BaseModel):
+class NewTitlesFilter(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     age_certifications: list[None] = Field(..., alias="ageCertifications")
     exclude_genres: list[None] = Field(..., alias="excludeGenres")
     exclude_production_countries: list[None] = Field(
-        ..., alias="excludeProductionCountries"
+        ...,
+        alias="excludeProductionCountries",
     )
     object_types: list[None] = Field(..., alias="objectTypes")
     production_countries: list[None] = Field(..., alias="productionCountries")
@@ -83,7 +83,7 @@ class NewTitlesFilter(BaseModel):
     monetization_types: list[None] = Field(..., alias="monetizationTypes")
 
 
-class Variables(BaseModel):
+class Variables(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     first: int
     bucket_size: int = Field(..., alias="bucketSize")
@@ -95,14 +95,14 @@ class Variables(BaseModel):
     price_drops: bool = Field(..., alias="priceDrops")
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     user_agent: str = Field(..., alias="User-Agent")
     referer: str = Field(..., alias="Referer")
     origin: str = Field(..., alias="Origin")
 
 
-class JustScrape(BaseModel):
+class JustScrape(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
     operation_name: str = Field(..., alias="operationName")
@@ -110,7 +110,7 @@ class JustScrape(BaseModel):
     timestamp: AwareDatetime
 
 
-class NewTitleBucketsResponse(BaseModel):
+class NewTitleBucketsResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
     just_scrape: JustScrape

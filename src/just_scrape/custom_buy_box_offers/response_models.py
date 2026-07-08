@@ -1,12 +1,11 @@
-# ruff: noqa: COM812, TC003, D100, D101, D102
-from __future__ import annotations
-
+# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_serializer
+from good_ass_pydantic_integrator import GAPIBaseModel
+from pydantic import AwareDatetime, ConfigDict, Field, field_serializer
 
 
-class Child(BaseModel):
+class Child(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     retail_price: None = Field(..., alias="retailPrice")
@@ -16,7 +15,7 @@ class Child(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class PlanOffer(BaseModel):
+class PlanOffer(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -27,7 +26,7 @@ class PlanOffer(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package(BaseModel):
+class Package(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -40,7 +39,7 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Plan(BaseModel):
+class Plan(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -51,7 +50,7 @@ class Plan(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class FlatrateItem(BaseModel):
+class FlatrateItem(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     date_created: date = Field(..., alias="dateCreated")
@@ -62,7 +61,8 @@ class FlatrateItem(BaseModel):
     retail_price_value: None = Field(..., alias="retailPriceValue")
     currency: str
     last_change_retail_price_value: None = Field(
-        ..., alias="lastChangeRetailPriceValue"
+        ...,
+        alias="lastChangeRetailPriceValue",
     )
     type: str
     country: str
@@ -70,7 +70,8 @@ class FlatrateItem(BaseModel):
     plans: list[Plan]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
-        ..., alias="preAffiliatedStandardWebURL"
+        ...,
+        alias="preAffiliatedStandardWebURL",
     )
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
@@ -83,7 +84,7 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package1(BaseModel):
+class Package1(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     icon: str
     id: str
@@ -93,7 +94,7 @@ class Package1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Node1(BaseModel):
+class Node1(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     clear_name: str = Field(..., alias="clearName")
@@ -104,7 +105,7 @@ class Node1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class PlanOffer1(BaseModel):
+class PlanOffer1(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -115,7 +116,7 @@ class PlanOffer1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Package2(BaseModel):
+class Package2(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     package_id: int = Field(..., alias="packageId")
@@ -128,7 +129,7 @@ class Package2(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Plan1(BaseModel):
+class Plan1(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     title: str
     retail_price: str | None = Field(..., alias="retailPrice")
@@ -139,7 +140,7 @@ class Plan1(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Offer(BaseModel):
+class Offer(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     date_created: date = Field(..., alias="dateCreated")
@@ -150,7 +151,8 @@ class Offer(BaseModel):
     retail_price_value: None = Field(..., alias="retailPriceValue")
     currency: str
     last_change_retail_price_value: None = Field(
-        ..., alias="lastChangeRetailPriceValue"
+        ...,
+        alias="lastChangeRetailPriceValue",
     )
     type: str
     country: str
@@ -158,7 +160,8 @@ class Offer(BaseModel):
     plans: list[Plan1]
     standard_web_url: str = Field(..., alias="standardWebURL")
     pre_affiliated_standard_web_url: None = Field(
-        ..., alias="preAffiliatedStandardWebURL"
+        ...,
+        alias="preAffiliatedStandardWebURL",
     )
     stream_url: None = Field(..., alias="streamUrl")
     stream_url_external_player: None = Field(..., alias="streamUrlExternalPlayer")
@@ -171,7 +174,7 @@ class Offer(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Bundle(BaseModel):
+class Bundle(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     node: Node1
     promotion_url: str = Field(..., alias="promotionUrl")
@@ -179,7 +182,7 @@ class Bundle(BaseModel):
     field__typename: str = Field(..., alias="__typename")
 
 
-class Node(BaseModel):
+class Node(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     field__typename: str = Field(..., alias="__typename")
@@ -200,12 +203,12 @@ class Node(BaseModel):
         return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
-class Data(BaseModel):
+class Data(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     node: Node
 
 
-class Variables(BaseModel):
+class Variables(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     platform: str
     fallback_to_foreign_offers: bool = Field(..., alias="fallbackToForeignOffers")
@@ -215,14 +218,14 @@ class Variables(BaseModel):
     language: str
 
 
-class Headers(BaseModel):
+class Headers(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     user_agent: str = Field(..., alias="User-Agent")
     referer: str = Field(..., alias="Referer")
     origin: str = Field(..., alias="Origin")
 
 
-class JustScrape(BaseModel):
+class JustScrape(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     variables: Variables
     operation_name: str = Field(..., alias="operationName")
@@ -230,7 +233,7 @@ class JustScrape(BaseModel):
     timestamp: AwareDatetime
 
 
-class CustomBuyBoxOffersResponse(BaseModel):
+class CustomBuyBoxOffersResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
     just_scrape: JustScrape
