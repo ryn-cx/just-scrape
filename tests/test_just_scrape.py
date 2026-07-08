@@ -26,20 +26,22 @@ class TestGet:
     def test_get_buy_box_offers(self) -> None:
         """Test getting buy box offers."""
         model = client.buy_box_offers.get(node_id="tse9298997")
-        client.buy_box_offers.save_new_json_file(client.buy_box_offers.dump(model))
+        client.buy_box_offers.save_new_json_file(
+            client.buy_box_offers.original_input(model)
+        )
 
     def test_get_custom_buy_box_offers(self) -> None:
         """Test getting custom buy box offers."""
         model = client.custom_buy_box_offers.get(node_id="tse9298997")
         client.custom_buy_box_offers.save_new_json_file(
-            client.custom_buy_box_offers.dump(model),
+            client.custom_buy_box_offers.original_input(model),
         )
 
     def test_get_custom_season_episodes(self) -> None:
         """Test getting custom season episodes."""
         model = client.custom_season_episodes.get("tss466559")
         client.custom_season_episodes.save_new_json_file(
-            client.custom_season_episodes.dump(model),
+            client.custom_season_episodes.original_input(model),
         )
 
     def test_get_custom_season_episodes_all(self) -> None:
@@ -47,7 +49,7 @@ class TestGet:
         season_episodes = client.custom_season_episodes.get_all("tss23744")
         for model in season_episodes:
             client.custom_season_episodes.save_new_json_file(
-                client.custom_season_episodes.dump(model),
+                client.custom_season_episodes.original_input(model),
             )
         episodes = client.custom_season_episodes.extract_episodes(season_episodes)
         assert len(episodes) == 23  # noqa: PLR2004
@@ -56,7 +58,7 @@ class TestGet:
         """Test getting new title buckets."""
         model = client.new_title_buckets.get()
         client.new_title_buckets.save_new_json_file(
-            client.new_title_buckets.dump(model),
+            client.new_title_buckets.original_input(model),
         )
 
     def test_get_new_title_buckets_all_since_date(self) -> None:
@@ -67,7 +69,7 @@ class TestGet:
         all_buckets = client.new_title_buckets.get_all_since_date(end_date)
         for model in all_buckets:
             client.new_title_buckets.save_new_json_file(
-                client.new_title_buckets.dump(model),
+                client.new_title_buckets.original_input(model),
             )
         all_edges = client.new_title_buckets.extract_edges(all_buckets)
 
@@ -83,7 +85,7 @@ class TestGet:
             filter_packages=["net"],
             available_to_packages=["net"],
         )
-        client.new_titles.save_new_json_file(client.new_titles.dump(model))
+        client.new_titles.save_new_json_file(client.new_titles.original_input(model))
 
     def test_get_new_titles_all_for_date(self) -> None:
         """Test getting all new titles for a date with pagination."""
@@ -102,7 +104,9 @@ class TestGet:
                 date=datetime.now().astimezone().date() - timedelta(days=i),
             )
             for model in new_titles:
-                client.new_titles.save_new_json_file(client.new_titles.dump(model))
+                client.new_titles.save_new_json_file(
+                    client.new_titles.original_input(model)
+                )
             expected_episodes = new_titles[0].data.new_titles.total_count
             all_edges = client.new_titles.extract_edges(new_titles)
             assert len(all_edges) == expected_episodes
@@ -121,7 +125,9 @@ class TestGet:
         )
         for page in new_titles:
             for model in page:
-                client.new_titles.save_new_json_file(client.new_titles.dump(model))
+                client.new_titles.save_new_json_file(
+                    client.new_titles.original_input(model)
+                )
         assert len(new_titles) == 2  # noqa: PLR2004
         assert new_titles[0] != new_titles[1]
 
@@ -134,19 +140,21 @@ class TestGet:
     def test_get_search(self) -> None:
         """Test searching for titles."""
         model = client.search.get(search_query="Breaking")
-        client.search.save_new_json_file(client.search.dump(model))
+        client.search.save_new_json_file(client.search.original_input(model))
 
     def test_get_season_episodes(self) -> None:
         """Test getting season episodes."""
         model = client.season_episodes.get("tss337460")
-        client.season_episodes.save_new_json_file(client.season_episodes.dump(model))
+        client.season_episodes.save_new_json_file(
+            client.season_episodes.original_input(model)
+        )
 
     def test_get_season_episodes_all(self) -> None:
         """Test getting all season episodes with pagination."""
         season_episodes = client.season_episodes.get_all("tss23744")
         for model in season_episodes:
             client.season_episodes.save_new_json_file(
-                client.season_episodes.dump(model),
+                client.season_episodes.original_input(model),
             )
         episodes = client.season_episodes.extract_episodes(season_episodes)
         assert len(episodes) == 23  # noqa: PLR2004
@@ -155,21 +163,21 @@ class TestGet:
         """Test getting a title detail article."""
         model = client.title_detail_article.get("/us/movie/the-thursday-murder-club")
         client.title_detail_article.save_new_json_file(
-            client.title_detail_article.dump(model),
+            client.title_detail_article.original_input(model),
         )
 
     def test_get_url_title_details_movie(self) -> None:
         """Test getting URL title details for a movie."""
         model = client.url_title_details.get("/us/movie/the-thursday-murder-club")
         client.url_title_details.save_new_json_file(
-            client.url_title_details.dump(model),
+            client.url_title_details.original_input(model),
         )
 
     def test_get_url_title_details_tv_show(self) -> None:
         """Test getting URL title details for a TV show."""
         model = client.url_title_details.get("/us/tv-show/strip-law")
         client.url_title_details.save_new_json_file(
-            client.url_title_details.dump(model),
+            client.url_title_details.original_input(model),
         )
 
     def test_get_url_title_details_unavailable_movie(self) -> None:
@@ -178,14 +186,14 @@ class TestGet:
             "/us/movie/code-geass-akito-the-exiled-5-to-beloved-ones",
         )
         client.url_title_details.save_new_json_file(
-            client.url_title_details.dump(model),
+            client.url_title_details.original_input(model),
         )
 
     def test_get_url_title_details_unavailable_tv_show(self) -> None:
         """Test getting URL title details for an unavailable TV show."""
         model = client.url_title_details.get("/us/tv-show/darker-than-black")
         client.url_title_details.save_new_json_file(
-            client.url_title_details.dump(model),
+            client.url_title_details.original_input(model),
         )
 
 
