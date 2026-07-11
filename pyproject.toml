@@ -1,7 +1,7 @@
 [project]
 name = "just-scrape"
 version = "0.1.0"
-description = "JustWatch API Wrapper."
+description = "JustWatch API wrapper."
 readme = "README.md"
 requires-python = ">=3.14"
 authors = [
@@ -33,5 +33,5 @@ convention = "google"
 "tests/**/*.py" = ["S101"]  # Asserts should be allowed in tests.
 
 [tool.uv.sources]
-good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }
 get-around = { git = "https://github.com/ryn-cx/get-around" }
+good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }
