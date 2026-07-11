@@ -11,7 +11,7 @@ from good_ass_pydantic_integrator.customizer import ReplacementType
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.url_title_details import query
-from just_scrape.url_title_details.response_models import UrlTitleDetailsResponse
+from just_scrape.url_title_details.models import UrlTitleDetailsResponse
 
 
 class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):

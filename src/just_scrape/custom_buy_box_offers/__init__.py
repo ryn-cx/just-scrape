@@ -10,7 +10,7 @@ from good_ass_pydantic_integrator import CustomSerializer
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 from just_scrape.custom_buy_box_offers import query
-from just_scrape.custom_buy_box_offers.response_models import CustomBuyBoxOffersResponse
+from just_scrape.custom_buy_box_offers.models import CustomBuyBoxOffersResponse
 
 
 class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):

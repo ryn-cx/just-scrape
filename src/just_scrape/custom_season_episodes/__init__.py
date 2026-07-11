@@ -9,12 +9,12 @@ from good_ass_pydantic_integrator import CustomSerializer
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.custom_season_episodes import query
-from just_scrape.custom_season_episodes.response_models import (
+from just_scrape.custom_season_episodes.models import (
     CustomSeasonEpisodesResponse,
 )
 
 if TYPE_CHECKING:
-    from just_scrape.custom_season_episodes.response_models import Episode
+    from just_scrape.custom_season_episodes.models import Episode
 
 DEFAULT_LIMIT = 20
 

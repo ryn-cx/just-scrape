@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.season_episodes import query
-from just_scrape.season_episodes.response_models import SeasonEpisodesResponse
+from just_scrape.season_episodes.models import SeasonEpisodesResponse
 
 if TYPE_CHECKING:
-    from just_scrape.season_episodes.response_models import Episode
+    from just_scrape.season_episodes.models import Episode
 
 DEFAULT_LIMIT = 20
 

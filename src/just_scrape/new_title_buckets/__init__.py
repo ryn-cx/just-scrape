@@ -11,12 +11,12 @@ from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.new_title_buckets import query
-from just_scrape.new_title_buckets.response_models import NewTitleBucketsResponse
+from just_scrape.new_title_buckets.models import NewTitleBucketsResponse
 
 if TYPE_CHECKING:
     import datetime
 
-    from just_scrape.new_title_buckets.response_models import Edge
+    from just_scrape.new_title_buckets.models import Edge
 
 
 class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):

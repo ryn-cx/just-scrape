@@ -9,7 +9,7 @@ from good_ass_pydantic_integrator import CustomSerializer
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.buy_box_offers import query
-from just_scrape.buy_box_offers.response_models import BuyBoxOffersResponse
+from just_scrape.buy_box_offers.models import BuyBoxOffersResponse
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 
 

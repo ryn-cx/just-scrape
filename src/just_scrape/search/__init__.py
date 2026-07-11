@@ -7,7 +7,7 @@ from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.search import query
-from just_scrape.search.response_models import SearchResponse
+from just_scrape.search.models import SearchResponse
 
 
 class Search(BaseEndpoint[SearchResponse]):

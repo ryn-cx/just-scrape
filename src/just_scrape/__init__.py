@@ -48,25 +48,18 @@ def response_models() -> list[BaseEndpoint[Any]]:
 class JustScrape:
     """Interface for downloading and parsing data from JustWatch."""
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         user_agent: str = "Mozilla/5.0 (Windows NT 11.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/134.0.6998.166 Safari/537.36",
         referer: str = "https://www.justwatch.com/",
         origin: str = "https://www.justwatch.com",
-        get_around_server: str | None = None,
-        get_around_password: str | None = None,
         sleep_time: float = 0,
-        proxy: str | None = None,
+        get_around_client: GetAround | None = None,
     ) -> None:
         """Initialize the JustScrape client."""
-        # A proxy bypasses get_around: requests go directly through httpx with
-        # the proxy instead of routing through the get_around server.
-        self.get_around_client = GetAround(
-            server=None if proxy else get_around_server,
-            password=None if proxy else get_around_password,
-        )
+        self.get_around_client = get_around_client or GetAround()
         self.buy_box_offers = BuyBoxOffers(self)
         self.custom_buy_box_offers = CustomBuyBoxOffers(self)
         self.custom_season_episodes = CustomSeasonEpisodes(self)
@@ -81,7 +74,6 @@ class JustScrape:
         self.referer = referer
         self.origin = origin
         self.sleep_time = sleep_time
-        self.proxy = proxy
 
         super().__init__()
 
@@ -101,10 +93,6 @@ class JustScrape:
         """Make a GraphQL request to the JustWatch API."""
         logger.info("Downloading %s: %s", operation_name, variables)
 
-        # proxy is forwarded through GetAround's **kwargs to httpx.request, but
-        # isn't in GetAround.post's copied signature, so pass it via **kwargs.
-        extra_kwargs: dict[str, Any] = {"proxy": self.proxy}
-
         response = self.get_around_client.post(
             "https://apis.justwatch.com/graphql",
             json={
@@ -114,7 +102,6 @@ class JustScrape:
             },
             headers=self._headers(),
             timeout=30,
-            **extra_kwargs,
         )
 
         if response.status_code != 200:  # noqa: PLR2004

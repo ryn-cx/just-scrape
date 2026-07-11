@@ -8,10 +8,10 @@ from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.new_titles import query
-from just_scrape.new_titles.response_models import NewTitlesResponse
+from just_scrape.new_titles.models import NewTitlesResponse
 
 if TYPE_CHECKING:
-    from just_scrape.new_titles.response_models import Edge
+    from just_scrape.new_titles.models import Edge
 
 
 class NewTitles(BaseEndpoint[NewTitlesResponse]):

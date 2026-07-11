@@ -7,7 +7,7 @@ from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.title_detail_article import query
-from just_scrape.title_detail_article.response_models import TitleDetailArticleResponse
+from just_scrape.title_detail_article.models import TitleDetailArticleResponse
 
 
 class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
