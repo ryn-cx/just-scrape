@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Buy Box Offers API endpoint."""
+"""Contains the BuyBoxOffers class."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
 
 
 class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
-    """Provides methods to download, parse, and retrieve buy box offers data."""
+    """Manage the buy box offers file."""
 
     _response_model = BuyBoxOffersResponse
 
@@ -46,19 +46,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        """Downloads buy box offers data for a given node ID.
-
-        Args:
-            node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the buy box offers file."""
         return self._client.download(
             "GetBuyBoxOffers",
             query.QUERY,
@@ -70,6 +58,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
                 "country": country,
                 "language": language,
             },
+            log_id=f"{self.__class__.__name__} {node_id}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -83,18 +72,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
         country: str = "US",
         language: str = "en",
     ) -> BuyBoxOffersResponse:
-        """Downloads and parses buy box offers data for a given node ID.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-
-        Args:
-            node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
-        """
+        """Downloads and parses the buy box offers file."""
         data = self.download(
             node_id=node_id,
             platform=platform,

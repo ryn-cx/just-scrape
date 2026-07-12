@@ -1,5 +1,5 @@
 # TODO: Validate
-"""URL Title Details API endpoint."""
+"""Contains the UrlTitleDetails class."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from just_scrape.url_title_details.models import UrlTitleDetailsResponse
 
 
 class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
-    """Provides methods to download, parse, and retrieve URL title details data."""
+    """Manage the url title details file."""
 
     _response_model = UrlTitleDetailsResponse
 
@@ -83,22 +83,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> dict[str, Any]:
-        """Downloads URL title details data for a given path.
-
-        Args:
-            full_path: The full URL path excluding the domain.
-            platform: ???
-            exclude_text_recommendation_title: ???
-            first: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            language: ???
-            country: ???
-            episode_max_limit: ???
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the url title details file."""
         return self._client.download(
             "GetUrlTitleDetails",
             query.QUERY,
@@ -113,6 +98,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
                 "country": country,
                 "episodeMaxLimit": episode_max_limit,
             },
+            log_id=f"{self.__class__.__name__} {full_path}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -129,21 +115,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> UrlTitleDetailsResponse:
-        """Downloads and parses URL title details data for a given path.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-
-        Args:
-            full_path: The full URL path excluding the domain.
-            platform: ???
-            exclude_text_recommendation_title: ???
-            first: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            language: ???
-            country: ???
-            episode_max_limit: ???
-        """
+        """Downloads and parses the url title details file."""
         data = self.download(
             platform=platform,
             exclude_text_recommendation_title=exclude_text_recommendation_title,

@@ -1,11 +1,11 @@
 # TODO: Validate
-"""JustScrape is a client for downloading and parsing data from JustWatch."""
+"""Contains the JustScrape class."""
 
 from __future__ import annotations
 
 from datetime import datetime
 from logging import NullHandler, getLogger
-from time import sleep
+from time import monotonic, sleep
 from typing import TYPE_CHECKING, Any
 
 from get_around import GetAround
@@ -46,7 +46,7 @@ def response_models() -> list[BaseEndpoint[Any]]:
 
 
 class JustScrape:
-    """Interface for downloading and parsing data from JustWatch."""
+    """JustWatch API wrapper."""
 
     def __init__(
         self,
@@ -89,9 +89,13 @@ class JustScrape:
         operation_name: str,
         query: str,
         variables: dict[str, Any],
+        *,
+        log_id: str,
     ) -> dict[str, Any]:
         """Make a GraphQL request to the JustWatch API."""
-        logger.info("Downloading %s: %s", operation_name, variables)
+        operation = f"{operation_name} ({log_id})"
+        logger.debug("Downloading: %s", operation)
+        start = monotonic()
 
         response = self.get_around_client.post(
             "https://apis.justwatch.com/graphql",
@@ -107,6 +111,8 @@ class JustScrape:
         if response.status_code != 200:  # noqa: PLR2004
             msg = f"Unexpected response status code: {response.status_code}"
             raise HTTPError(msg)
+
+        logger.debug("Downloaded %s (%.4f s)", operation, monotonic() - start)
 
         output = response.json()
 

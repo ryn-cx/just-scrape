@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Custom Buy Box Offers API endpoint."""
+"""Contains the CustomBuyBoxOffers class."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from just_scrape.custom_buy_box_offers.models import CustomBuyBoxOffersResponse
 
 
 class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
-    """BuyBoxOffers with the addition of the dateCreated field."""
+    """Manage the custom buy box offers file."""
 
     _response_model = CustomBuyBoxOffersResponse
 
@@ -46,19 +46,7 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
         country: str = "US",
         language: str = "en",
     ) -> dict[str, Any]:
-        """Downloads custom buy box offers data for a given node ID.
-
-        Args:
-            node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the custom buy box offers file."""
         return self._client.download(
             "GetBuyBoxOffers",
             query.QUERY,
@@ -70,6 +58,7 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
                 "country": country,
                 "language": language,
             },
+            log_id=f"{self.__class__.__name__} {node_id}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -83,18 +72,7 @@ class CustomBuyBoxOffers(BaseEndpoint[CustomBuyBoxOffersResponse]):
         country: str = "US",
         language: str = "en",
     ) -> CustomBuyBoxOffersResponse:
-        """Downloads and parses custom buy box offers data for a given node ID.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-
-        Args:
-            node_id: The ID of the episode.
-            platform: ???
-            fallback_to_foreign_offers: ???
-            exclude_packages: ???
-            country: ???
-            language: ???
-        """
+        """Downloads and parses the custom buy box offers file."""
         data = self.download(
             node_id=node_id,
             platform=platform,

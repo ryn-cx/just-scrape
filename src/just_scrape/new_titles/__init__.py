@@ -1,5 +1,5 @@
 # TODO: Validate
-"""New Titles API endpoint."""
+"""Contains the NewTitles class."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class NewTitles(BaseEndpoint[NewTitlesResponse]):
-    """Provides methods to download, parse, and retrieve new titles data."""
+    """Manage the new titles file."""
 
     _response_model = NewTitlesResponse
 
@@ -45,11 +45,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
-        """Downloads new titles data.
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the new titles file."""
         date = date or datetime.datetime.now(tz=datetime.UTC).date()
 
         return self._client.download(
@@ -82,6 +78,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
                 "showDateBadge": show_date_badge,
                 "availableToPackages": available_to_packages or [],
             },
+            log_id=f"{self.__class__.__name__} {date.isoformat()}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -110,10 +107,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         filter_monetization_types: list[Any] | None = None,
         after: str | None = None,
     ) -> NewTitlesResponse:
-        """Downloads and parses new titles data.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-        """
+        """Downloads and parses the new titles file."""
         data = self.download(
             first=first,
             page_type=page_type,

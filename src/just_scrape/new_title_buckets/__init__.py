@@ -3,7 +3,7 @@
 # objectTypes is empty. Set to "SHOW_SEASON" or "MOVIE" to fix pagination. This is a
 # server side bug because the website itself is broken
 # https://www.justwatch.com/us/tv-shows/new
-"""New Title Buckets API endpoint."""
+"""Contains the NewTitleBuckets class."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
-    """Provides methods to download, parse, and retrieve new title buckets data."""
+    """Manage the new title buckets file."""
 
     _response_model = NewTitleBucketsResponse
 
@@ -47,11 +47,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
-        """Downloads new title buckets data.
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the new title buckets file."""
         return self._client.download(
             "GetNewTitleBuckets",
             query.QUERY,
@@ -79,6 +75,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
                 },
                 "priceDrops": price_drops,
             },
+            log_id=f"{self.__class__.__name__} {page_type}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -104,10 +101,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> NewTitleBucketsResponse:
-        """Downloads and parses new title buckets data.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-        """
+        """Downloads and parses the new title buckets file."""
         data = self.download(
             first=first,
             bucket_size=bucket_size,

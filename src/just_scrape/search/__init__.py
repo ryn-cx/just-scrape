@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Search API endpoint."""
+"""Contains the Search class."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from just_scrape.search.models import SearchResponse
 
 
 class Search(BaseEndpoint[SearchResponse]):
-    """Provides methods to download, parse, and retrieve search results."""
+    """Manage the search file."""
 
     _response_model = SearchResponse
 
@@ -30,23 +30,7 @@ class Search(BaseEndpoint[SearchResponse]):
         country: str = "US",
         location: str = "SearchPage",
     ) -> dict[str, Any]:
-        """Downloads search results for a given query.
-
-        Args:
-            search_query: The search string.
-            first: Number of results to return.
-            search_titles_sort_by: Sort order.
-            sort_random_seed: Random seed for sorting.
-            search_after_cursor: Cursor for pagination.
-            include_titles_without_url: Include titles without a URL.
-            person_id: Filter by person ID.
-            language: Language code.
-            country: Country code.
-            location: Source location.
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the search file."""
         return self._client.download(
             "GetSearchTitles",
             query.QUERY,
@@ -64,6 +48,7 @@ class Search(BaseEndpoint[SearchResponse]):
                 "country": country,
                 "location": location,
             },
+            log_id=f"{self.__class__.__name__} {search_query}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -81,10 +66,7 @@ class Search(BaseEndpoint[SearchResponse]):
         country: str = "US",
         location: str = "SearchPage",
     ) -> SearchResponse:
-        """Downloads and parses search results for a given query.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-        """
+        """Downloads and parses the search file."""
         data = self.download(
             search_query=search_query,
             first=first,

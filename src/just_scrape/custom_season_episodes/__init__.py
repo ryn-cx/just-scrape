@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Custom Season Episodes API endpoint."""
+"""Contains the CustomSeasonEpisodes class."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ DEFAULT_LIMIT = 20
 class CustomSeasonEpisodes(
     BaseEndpoint[CustomSeasonEpisodesResponse],
 ):
-    """Provides methods to download, parse, and retrieve custom season episodes data."""
+    """Manage the custom season episodes file."""
 
     _response_model = CustomSeasonEpisodesResponse
 
@@ -56,19 +56,7 @@ class CustomSeasonEpisodes(
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> dict[str, Any]:
-        """Downloads custom season episodes data for a given node ID.
-
-        Args:
-            node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-            limit: ???
-            offset: ???
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the custom season episodes file."""
         return self._client.download(
             operation_name="GetSeasonEpisodes",
             query=query.QUERY,
@@ -80,6 +68,7 @@ class CustomSeasonEpisodes(
                 "limit": limit,
                 "offset": offset,
             },
+            log_id=f"{self.__class__.__name__} {node_id}",
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -93,18 +82,7 @@ class CustomSeasonEpisodes(
         limit: int = DEFAULT_LIMIT,
         offset: int = 0,
     ) -> CustomSeasonEpisodesResponse:
-        """Downloads and parses custom season episodes data for a given node ID.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-
-        Args:
-            node_id: The ID of the season.
-            country: ???
-            language: ???
-            platform: ???
-            limit: ???
-            offset: ???
-        """
+        """Downloads and parses the custom season episodes file."""
         data = self.download(
             node_id=node_id,
             country=country,

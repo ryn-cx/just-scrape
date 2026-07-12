@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Title Detail Article API endpoint."""
+"""Contains the TitleDetailArticle class."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from just_scrape.title_detail_article.models import TitleDetailArticleResponse
 
 
 class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
-    """Provides methods to download, parse, and retrieve title detail article data."""
+    """Manage the title detail article file."""
 
     _response_model = TitleDetailArticleResponse
 
@@ -22,16 +22,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
         language: str = "en",
         country: str = "US",
     ) -> dict[str, Any]:
-        """Downloads title detail article data for a given path.
-
-        Args:
-            full_path: The full URL path of the title.
-            language: ???
-            country: ???
-
-        Returns:
-            The raw JSON response as a dict, suitable for passing to ``parse()``.
-        """
+        """Downloads the title detail article file."""
         return self._client.download(
             "GetTitleDetailArticle",
             query.QUERY,
@@ -40,6 +31,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
                 "language": language,
                 "country": country,
             },
+            log_id=f"{self.__class__.__name__} {full_path}",
         )
 
     def get(
@@ -49,15 +41,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
         language: str = "en",
         country: str = "US",
     ) -> TitleDetailArticleResponse:
-        """Downloads and parses title detail article data for a given path.
-
-        Convenience method that calls ``download()`` then ``parse()``.
-
-        Args:
-            full_path: The full URL path of the title.
-            language: ???
-            country: ???
-        """
+        """Downloads and parses the title detail article file."""
         data = self.download(
             full_path=full_path,
             language=language,
