@@ -3,9 +3,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
-
-from good_ass_pydantic_integrator import CustomSerializer
+from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.custom_season_episodes import query
@@ -25,25 +23,6 @@ class CustomSeasonEpisodes(
     """Manage the custom season episodes file."""
 
     _response_model = CustomSeasonEpisodesResponse
-
-    @classmethod
-    @override
-    def _custom_serializers(cls) -> list[CustomSerializer]:
-        return [
-            CustomSerializer(
-                class_name="Episode",
-                field_name="max_offer_updated_at",
-                serializer_code=(
-                    "if value is None:\n"
-                    "    return None\n"
-                    "if isinstance(value, str):\n"
-                    "    return value\n"
-                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                    '.rstrip("0").rstrip(".") + "Z"'
-                ),
-                output_type="str | None",
-            ),
-        ]
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913

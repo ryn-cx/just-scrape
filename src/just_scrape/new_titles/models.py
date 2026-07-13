@@ -1,4 +1,3 @@
-# TODO: Validate
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date as date_aliased
 
@@ -212,4 +211,4 @@ class JustScrape(GAPIBaseModel):
 class NewTitlesResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    just_scrape: JustScrape
+    just_scrape: JustScrape | None = None

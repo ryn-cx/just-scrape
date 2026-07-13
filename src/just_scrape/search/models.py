@@ -1,4 +1,3 @@
-# TODO: Validate
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date
 
@@ -158,4 +157,4 @@ class JustScrape(GAPIBaseModel):
 class SearchResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    just_scrape: JustScrape
+    just_scrape: JustScrape | None = None

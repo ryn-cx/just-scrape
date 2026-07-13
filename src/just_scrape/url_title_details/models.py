@@ -1,10 +1,9 @@
-# TODO: Validate
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date
 from uuid import UUID
 
 from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field, field_serializer
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
 class Child(GAPIBaseModel):
@@ -363,17 +362,13 @@ class StreamingChartInfo(GAPIBaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: AwareDatetime = Field(..., alias="updatedAt")
+    updated_at: str = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
     days_in_top3: int = Field(..., alias="daysInTop3")
     top_rank: int = Field(..., alias="topRank")
     field__typename: str = Field(..., alias="__typename")
-
-    @field_serializer("updated_at")
-    def serialize_updated_at(self, value: AwareDatetime) -> str:
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
 class Edge(GAPIBaseModel):
@@ -611,17 +606,13 @@ class RankInfo(GAPIBaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias="trendDifference")
-    updated_at: AwareDatetime = Field(..., alias="updatedAt")
+    updated_at: str = Field(..., alias="updatedAt")
     days_in_top10: int = Field(..., alias="daysInTop10")
     days_in_top100: int = Field(..., alias="daysInTop100")
     days_in_top1000: int = Field(..., alias="daysInTop1000")
     days_in_top3: int = Field(..., alias="daysInTop3")
     top_rank: int = Field(..., alias="topRank")
     field__typename: str = Field(..., alias="__typename")
-
-    @field_serializer("updated_at")
-    def serialize_updated_at(self, value: AwareDatetime) -> str:
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
 
 
 class Title(GAPIBaseModel):
@@ -912,12 +903,6 @@ class Node(GAPIBaseModel):
     seasons: list[Season] | None = None
     recent_episodes: list[RecentEpisode] | None = Field(None, alias="recentEpisodes")
 
-    @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: AwareDatetime | None) -> str | None:
-        if value is None:
-            return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
-
 
 class UrlV2(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -972,4 +957,4 @@ class JustScrape(GAPIBaseModel):
 class UrlTitleDetailsResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    just_scrape: JustScrape
+    just_scrape: JustScrape | None = None

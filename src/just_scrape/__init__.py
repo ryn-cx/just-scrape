@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from logging import NullHandler, getLogger
 from time import monotonic, sleep
 from typing import TYPE_CHECKING, Any
@@ -21,28 +20,8 @@ from just_scrape.season_episodes import SeasonEpisodes
 from just_scrape.title_detail_article import TitleDetailArticle
 from just_scrape.url_title_details import UrlTitleDetails
 
-if TYPE_CHECKING:
-    from just_scrape.base_client import BaseEndpoint
-
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
-
-
-def response_models() -> list[BaseEndpoint[Any]]:
-    """Returns a list of all of the response models for JustScrape."""
-    client = JustScrape()
-
-    return [
-        client.buy_box_offers,
-        client.custom_buy_box_offers,
-        client.custom_season_episodes,
-        client.new_title_buckets,
-        client.new_titles,
-        client.search,
-        client.season_episodes,
-        client.title_detail_article,
-        client.url_title_details,
-    ]
 
 
 class JustScrape:
@@ -119,14 +98,6 @@ class JustScrape:
         if output.get("errors"):
             msg = f"GraphQL errors occurred: {output['errors']}"
             raise GraphQLError(msg)
-
-        output["just_scrape"] = {}
-        output["just_scrape"]["variables"] = variables
-        output["just_scrape"]["operationName"] = operation_name
-        output["just_scrape"]["headers"] = self._headers()
-        output["just_scrape"]["timestamp"] = (
-            datetime.now().astimezone().isoformat().replace("+00:00", "Z")
-        )
 
         sleep(self.sleep_time)
 

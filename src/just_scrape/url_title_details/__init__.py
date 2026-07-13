@@ -3,10 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any, override
-
-from good_ass_pydantic_integrator import CustomSerializer
-from good_ass_pydantic_integrator.customizer import ReplacementType
+from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
@@ -18,56 +15,6 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
     """Manage the url title details file."""
 
     _response_model = UrlTitleDetailsResponse
-
-    @classmethod
-    @override
-    def _custom_serializers(cls) -> list[CustomSerializer]:
-        return [
-            # There is a date field called updated_at too so the class name needs to be
-            # specified.
-            CustomSerializer(
-                class_name="RankInfo",
-                field_name="updated_at",
-                serializer_code=(
-                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                    '.rstrip("0").rstrip(".") + "Z"'
-                ),
-                output_type="str",
-            ),
-            CustomSerializer(
-                class_name="StreamingChartInfo",
-                field_name="updated_at",
-                serializer_code=(
-                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                    '.rstrip("0").rstrip(".") + "Z"'
-                ),
-                output_type="str",
-            ),
-            CustomSerializer(
-                class_name="Node",
-                field_name="max_offer_updated_at",
-                serializer_code=(
-                    "if value is None:\n"
-                    "    return None\n"
-                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                    '.rstrip("0").rstrip(".") + "Z"'
-                ),
-                output_type="str | None",
-            ),
-        ]
-
-    @classmethod
-    @override
-    def _replacement_types(cls) -> list[ReplacementType]:
-        return [
-            ReplacementType("RankInfo", "updated_at", "AwareDatetime"),
-            ReplacementType("StreamingChartInfo", "updated_at", "AwareDatetime"),
-        ]
-
-    @classmethod
-    @override
-    def _additional_imports(cls) -> list[str]:
-        return ["from pydantic import AwareDatetime"]
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913

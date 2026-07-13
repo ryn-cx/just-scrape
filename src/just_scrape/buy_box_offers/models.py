@@ -1,7 +1,6 @@
-# TODO: Validate
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field, field_serializer
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
 class Child(GAPIBaseModel):
@@ -193,12 +192,6 @@ class Node(GAPIBaseModel):
     fast: list[None]
     bundles: list[Bundle]
 
-    @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: AwareDatetime | None) -> str | None:
-        if value is None:
-            return None
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
-
 
 class Data(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -233,4 +226,4 @@ class JustScrape(GAPIBaseModel):
 class BuyBoxOffersResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    just_scrape: JustScrape
+    just_scrape: JustScrape | None = None

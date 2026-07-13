@@ -1,9 +1,17 @@
 # TODO: Validate
-import json
+from __future__ import annotations
 
+import json
+from typing import TYPE_CHECKING
+
+import pytest
 from get_around import build_client_automatically
 
 from just_scrape import JustScrape
+from tests.utils import data_path, download_if_missing
+
+if TYPE_CHECKING:
+    from just_scrape.custom_season_episodes import CustomSeasonEpisodes
 
 client = JustScrape(get_around_client=build_client_automatically())
 
@@ -16,31 +24,40 @@ EXPECTED_EPISODE_COUNT = 23
 INVALID_SEASON_ID = "tss999999"
 
 
-class TestCustomSeasonEpisodes:
-    def test_get(self) -> None:
-        endpoint = client.custom_season_episodes
-        model = endpoint.get(CUSTOM_SEASON_ID)
-        endpoint.save_new_json_file(endpoint.original_input(model))
+@pytest.fixture(scope="session")
+def endpoint() -> CustomSeasonEpisodes:
+    return client.custom_season_episodes
 
-    def test_get_all(self) -> None:
-        endpoint = client.custom_season_episodes
+
+class TestCustomSeasonEpisodes:
+    def test_download(self, endpoint: CustomSeasonEpisodes) -> None:
+        download_if_missing(
+            endpoint,
+            CUSTOM_SEASON_ID,
+            lambda: endpoint.download(CUSTOM_SEASON_ID),
+        )
+
+    def test_extract_episodes(self, endpoint: CustomSeasonEpisodes) -> None:
+        data = endpoint.parse(
+            json.loads(data_path(endpoint, CUSTOM_SEASON_ID).read_text()),
+        )
+        episodes = endpoint.extract_episodes(data)
+        assert episodes is not None
+        # TODO: assert expected value (needs live data)
+
+    def test_invalid(self, endpoint: CustomSeasonEpisodes) -> None:
+        # This endpoint does not raise for an unknown season_id.
+        path = download_if_missing(
+            endpoint,
+            INVALID_SEASON_ID,
+            lambda: endpoint.download(INVALID_SEASON_ID),
+        )
+        data = endpoint.parse(json.loads(path.read_text()))
+        assert data is not None
+
+    # Live pagination test: walks every page of the season over the network and
+    # has no clean cached-file equivalent.
+    def test_get_all(self, endpoint: CustomSeasonEpisodes) -> None:
         season_episodes = endpoint.get_all(PAGINATED_SEASON_ID)
-        for model in season_episodes:
-            endpoint.save_new_json_file(endpoint.original_input(model))
         episodes = endpoint.extract_episodes(season_episodes)
         assert len(episodes) == EXPECTED_EPISODE_COUNT
-
-    def test_invalid_get(self) -> None:
-        # This endpoint does not raise for an unknown season_id.
-        client.custom_season_episodes.get(INVALID_SEASON_ID)
-
-    def test_parse(self) -> None:
-        endpoint = client.custom_season_episodes
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
-
-    def test_extract_episodes(self) -> None:
-        endpoint = client.custom_season_episodes
-        for json_file in endpoint.json_files():
-            parsed = endpoint.parse(json.loads(json_file.read_text()))
-            endpoint.extract_episodes(parsed)

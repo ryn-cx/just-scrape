@@ -3,9 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Any, override
-
-from good_ass_pydantic_integrator import CustomSerializer
+from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.buy_box_offers import query
@@ -17,23 +15,6 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
     """Manage the buy box offers file."""
 
     _response_model = BuyBoxOffersResponse
-
-    @classmethod
-    @override
-    def _custom_serializers(cls) -> list[CustomSerializer]:
-        return [
-            CustomSerializer(
-                class_name="Node",
-                field_name="max_offer_updated_at",
-                serializer_code=(
-                    "if value is None:\n"
-                    "    return None\n"
-                    'return value.strftime("%Y-%m-%dT%H:%M:%S.%f")'
-                    '.rstrip("0").rstrip(".") + "Z"'
-                ),
-                output_type="str | None",
-            ),
-        ]
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913

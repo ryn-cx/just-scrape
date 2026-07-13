@@ -1,9 +1,8 @@
-# TODO: Validate
 # ruff: noqa: D100, D101, D102, TC001, TC002, TC003
 from datetime import date
 
 from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field, field_serializer
+from pydantic import AwareDatetime, ConfigDict, Field
 
 
 class Package(GAPIBaseModel):
@@ -86,15 +85,7 @@ class Episode(GAPIBaseModel):
     fast: list[None]
     content: Content
     field__typename: str = Field(..., alias="__typename")
-    max_offer_updated_at: str | AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
-
-    @field_serializer("max_offer_updated_at")
-    def serialize_max_offer_updated_at(self, value: str | AwareDatetime) -> str | None:
-        if value is None:
-            return None
-        if isinstance(value, str):
-            return value
-        return value.strftime("%Y-%m-%dT%H:%M:%S.%f").rstrip("0").rstrip(".") + "Z"
+    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
 
 
 class Node(GAPIBaseModel):
@@ -137,4 +128,4 @@ class JustScrape(GAPIBaseModel):
 class CustomSeasonEpisodesResponse(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    just_scrape: JustScrape
+    just_scrape: JustScrape | None = None
