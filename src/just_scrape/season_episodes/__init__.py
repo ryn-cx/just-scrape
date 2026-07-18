@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
@@ -12,6 +13,9 @@ from just_scrape.season_episodes.models import SeasonEpisodesResponse
 if TYPE_CHECKING:
     from just_scrape.season_episodes.models import Episode
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
 DEFAULT_LIMIT = 20
 
 
@@ -19,6 +23,27 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
     """Manage the season episodes file."""
 
     _response_model = SeasonEpisodesResponse
+
+    # PLR0913 - Each parameter maps to an API parameter.
+    def get_log_id(  # noqa: PLR0913
+        self,
+        node_id: str,
+        *,
+        country: str = "US",
+        language: str = "en",
+        platform: str = "WEB",
+        limit: int = DEFAULT_LIMIT,
+        offset: int = 0,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {node_id=}",
+            country=(country, "US"),
+            language=(language, "en"),
+            platform=(platform, "WEB"),
+            limit=(limit, DEFAULT_LIMIT),
+            offset=(offset, 0),
+        )
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
@@ -43,11 +68,18 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
                 "limit": limit,
                 "offset": offset,
             },
-            log_id=f"{self.__class__.__name__} {node_id}",
+            log_id=self.get_log_id(
+                node_id,
+                country=country,
+                language=language,
+                platform=platform,
+                limit=limit,
+                offset=offset,
+            ),
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913
         self,
         node_id: str,
         *,
@@ -68,7 +100,7 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
         )
         return self.parse(data)
 
-    def get_all(
+    def download_and_parse_all(
         self,
         node_id: str,
         *,
@@ -81,7 +113,7 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
         all_episodes: list[SeasonEpisodesResponse] = []
 
         while True:
-            response = self.get(
+            response = self.download_and_parse(
                 node_id=node_id,
                 country=country,
                 language=language,

@@ -92,7 +92,7 @@ class Content1(GAPIBaseModel):
     short_description: str = Field(..., alias="shortDescription")
     full_path: str = Field(..., alias="fullPath")
     scoring: Scoring1
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     runtime: int
     genres: list[Genre]
     field__typename: str = Field(..., alias="__typename")

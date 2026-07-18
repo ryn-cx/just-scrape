@@ -1,19 +1,16 @@
 # TODO: Validate
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
-from get_around import build_client_automatically
 
-from just_scrape import JustScrape
-from tests.utils import assert_graphql_error, data_path, download_if_missing
+from just_scrape.exceptions import GraphQLError
+from tests.utils import assert_error, download_and_save, parse_json
 
 if TYPE_CHECKING:
+    from just_scrape import JustScrape
     from just_scrape.url_title_details import UrlTitleDetails
-
-client = JustScrape(get_around_client=build_client_automatically())
 
 MOVIE_PATH = "/us/movie/the-thursday-murder-club"
 """URL path for a movie title."""
@@ -33,31 +30,41 @@ PATHS = [
 ]
 
 
+def _name(full_path: str) -> str:
+    return full_path.strip("/").replace("/", "_")
+
+
 @pytest.fixture(scope="session")
-def endpoint() -> UrlTitleDetails:
+def endpoint(client: JustScrape) -> UrlTitleDetails:
     return client.url_title_details
 
 
 class TestUrlTitleDetails:
     @pytest.mark.parametrize("full_path", PATHS)
     def test_download(self, endpoint: UrlTitleDetails, full_path: str) -> None:
-        name = full_path.strip("/").replace("/", "_")
-        download_if_missing(
+        download_and_save(
             endpoint,
-            name,
+            _name(full_path),
             lambda: endpoint.download(full_path),
         )
 
     @pytest.mark.parametrize("full_path", PATHS)
     def test_parse(self, endpoint: UrlTitleDetails, full_path: str) -> None:
-        name = full_path.strip("/").replace("/", "_")
-        data = endpoint.parse(json.loads(data_path(endpoint, name).read_text()))
+        data = parse_json(endpoint, _name(full_path))
         assert data is not None
 
-    def test_invalid(self, endpoint: UrlTitleDetails) -> None:
-        name = INVALID_URL_PATH.strip("/").replace("/", "_")
-        assert_graphql_error(
+    def test_invalid_download(self, endpoint: UrlTitleDetails) -> None:
+        assert_error(
             endpoint,
-            name,
+            _name(INVALID_URL_PATH),
             lambda: endpoint.download(INVALID_URL_PATH),
+            GraphQLError,
         )
+
+
+@pytest.mark.parametrize("country", [None, "CA"])
+def test_log_id(endpoint: UrlTitleDetails, country: str | None) -> None:
+    expected = f"UrlTitleDetails full_path={MOVIE_PATH!r}"
+    if country is not None:
+        expected += f" country={country!r}"
+    assert endpoint.get_log_id(MOVIE_PATH, country=country or "US") == expected

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime
+from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
@@ -13,11 +14,43 @@ from just_scrape.new_titles.models import NewTitlesResponse
 if TYPE_CHECKING:
     from just_scrape.new_titles.models import Edge
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
 
 class NewTitles(BaseEndpoint[NewTitlesResponse]):
     """Manage the new titles file."""
 
     _response_model = NewTitlesResponse
+
+    # PLR0913 - Each parameter maps to an API parameter. Only scalar options are
+    # included in the log id; the list-valued ``filter_*`` params are omitted for
+    # readability.
+    def get_log_id(  # noqa: PLR0913
+        self,
+        date: datetime.date,
+        *,
+        first: int = 10,
+        page_type: str = "NEW",
+        language: str = "en",
+        country: str = "US",
+        price_drops: bool = False,
+        platform: str = "WEB",
+        show_date_badge: bool = False,
+        after: str | None = None,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {date=}",
+            first=(first, 10),
+            page_type=(page_type, "NEW"),
+            language=(language, "en"),
+            country=(country, "US"),
+            price_drops=(price_drops, False),
+            platform=(platform, "WEB"),
+            show_date_badge=(show_date_badge, False),
+            after=(after, None),
+        )
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
@@ -78,11 +111,21 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
                 "showDateBadge": show_date_badge,
                 "availableToPackages": available_to_packages or [],
             },
-            log_id=f"{self.__class__.__name__} {date.isoformat()}",
+            log_id=self.get_log_id(
+                date,
+                first=first,
+                page_type=page_type,
+                language=language,
+                country=country,
+                price_drops=price_drops,
+                platform=platform,
+                show_date_badge=show_date_badge,
+                after=after,
+            ),
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913
         self,
         *,
         first: int = 10,
@@ -134,7 +177,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         return self.parse(data)
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_all_for_date(  # noqa: PLR0913
+    def download_and_parse_for_date(  # noqa: PLR0913
         self,
         *,
         first: int = 10,
@@ -163,7 +206,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         output: list[NewTitlesResponse] = []
 
         while True:
-            parsed = self.get(
+            parsed = self.download_and_parse(
                 first=first,
                 after=after,
                 available_to_packages=available_to_packages,
@@ -194,7 +237,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
             after = parsed.data.new_titles.page_info.end_cursor
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_all_since_date(  # noqa: PLR0913
+    def download_and_parse_since_date(  # noqa: PLR0913
         self,
         start_date: datetime.date | None = None,
         *,
@@ -225,7 +268,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         output: list[list[NewTitlesResponse]] = []
 
         while current_date >= end_date:
-            response = self.get_all_for_date(
+            response = self.download_and_parse_for_date(
                 first=first,
                 page_type=page_type,
                 date=current_date,

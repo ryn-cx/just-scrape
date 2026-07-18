@@ -41,7 +41,7 @@ class Content(GAPIBaseModel):
     original_release_year: int = Field(..., alias="originalReleaseYear")
     genres: list[Genre]
     scoring: Scoring
-    poster_url: str = Field(..., alias="posterUrl")
+    poster_url: str | None = Field(..., alias="posterUrl")
     backdrops: list[Backdrop]
     upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
     field__typename: str = Field(..., alias="__typename")

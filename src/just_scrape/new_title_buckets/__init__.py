@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
@@ -18,11 +19,39 @@ if TYPE_CHECKING:
 
     from just_scrape.new_title_buckets.models import Edge
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
 
 class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
     """Manage the new title buckets file."""
 
     _response_model = NewTitleBucketsResponse
+
+    # PLR0913 - Each parameter maps to an API parameter. Only scalar options are
+    # included in the log id; the list-valued ``filter_*`` params are omitted for
+    # readability.
+    def get_log_id(  # noqa: PLR0913
+        self,
+        *,
+        first: int = 8,
+        bucket_size: int = 0,
+        group_by: str = "DATE_PACKAGE",
+        page_type: str = "NEW",
+        country: str = "US",
+        new_after_cursor: str = "",
+        price_drops: bool = False,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {page_type=}",
+            first=(first, 8),
+            bucket_size=(bucket_size, 0),
+            group_by=(group_by, "DATE_PACKAGE"),
+            country=(country, "US"),
+            new_after_cursor=(new_after_cursor, ""),
+            price_drops=(price_drops, False),
+        )
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
@@ -75,11 +104,19 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
                 },
                 "priceDrops": price_drops,
             },
-            log_id=f"{self.__class__.__name__} {page_type}",
+            log_id=self.get_log_id(
+                first=first,
+                bucket_size=bucket_size,
+                group_by=group_by,
+                page_type=page_type,
+                country=country,
+                new_after_cursor=new_after_cursor,
+                price_drops=price_drops,
+            ),
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913
         self,
         *,
         first: int = 8,
@@ -125,7 +162,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         return self.parse(data)
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_all_since_date(  # noqa: PLR0913
+    def download_and_parse_since_date(  # noqa: PLR0913
         self,
         end_date: datetime.date,
         *,
@@ -152,7 +189,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         output: list[NewTitleBucketsResponse] = []
 
         while True:
-            parsed = self.get(
+            parsed = self.download_and_parse(
                 first=first,
                 bucket_size=bucket_size,
                 group_by=group_by,

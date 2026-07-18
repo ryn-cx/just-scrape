@@ -3,17 +3,50 @@
 
 from __future__ import annotations
 
+from logging import NullHandler, getLogger
 from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.search import query
 from just_scrape.search.models import SearchResponse
 
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
+
 
 class Search(BaseEndpoint[SearchResponse]):
     """Manage the search file."""
 
     _response_model = SearchResponse
+
+    # PLR0913 - Each parameter maps to an API parameter.
+    def get_log_id(  # noqa: PLR0913
+        self,
+        search_query: str,
+        *,
+        first: int = 5,
+        search_titles_sort_by: str = "POPULAR",
+        sort_random_seed: int = 0,
+        search_after_cursor: str = "",
+        include_titles_without_url: bool = True,
+        person_id: str | None = None,
+        language: str = "en",
+        country: str = "US",
+        location: str = "SearchPage",
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {search_query=}",
+            first=(first, 5),
+            search_titles_sort_by=(search_titles_sort_by, "POPULAR"),
+            sort_random_seed=(sort_random_seed, 0),
+            search_after_cursor=(search_after_cursor, ""),
+            include_titles_without_url=(include_titles_without_url, True),
+            person_id=(person_id, None),
+            language=(language, "en"),
+            country=(country, "US"),
+            location=(location, "SearchPage"),
+        )
 
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
@@ -48,11 +81,22 @@ class Search(BaseEndpoint[SearchResponse]):
                 "country": country,
                 "location": location,
             },
-            log_id=f"{self.__class__.__name__} {search_query}",
+            log_id=self.get_log_id(
+                search_query,
+                first=first,
+                search_titles_sort_by=search_titles_sort_by,
+                sort_random_seed=sort_random_seed,
+                search_after_cursor=search_after_cursor,
+                include_titles_without_url=include_titles_without_url,
+                person_id=person_id,
+                language=language,
+                country=country,
+                location=location,
+            ),
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913
         self,
         search_query: str,
         *,
