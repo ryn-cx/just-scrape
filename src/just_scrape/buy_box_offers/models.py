@@ -63,13 +63,53 @@ class FlatrateItem(GAPIBaseModel):
     stream_url_external_player: None = Field(..., alias='streamUrlExternalPlayer')
     element_count: int = Field(..., alias='elementCount')
     available_to: None = Field(..., alias='availableTo')
-    subtitle_languages: list[None] = Field(..., alias='subtitleLanguages')
+    subtitle_languages: list[str] = Field(..., alias='subtitleLanguages')
     video_technology: list[str] = Field(..., alias='videoTechnology')
     audio_technology: list[str] = Field(..., alias='audioTechnology')
     audio_languages: list[str] = Field(..., alias='audioLanguages')
     field__typename: str = Field(..., alias='__typename')
 
 class Package1(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    id: str
+    package_id: int = Field(..., alias='packageId')
+    clear_name: str = Field(..., alias='clearName')
+    short_name: str = Field(..., alias='shortName')
+    technical_name: str = Field(..., alias='technicalName')
+    icon: str
+    icon_wide: str = Field(..., alias='iconWide')
+    plan_offers: list[None] = Field(..., alias='planOffers')
+    field__typename: str = Field(..., alias='__typename')
+
+class BuyItem(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    id: str
+    presentation_type: str = Field(..., alias='presentationType')
+    monetization_type: str = Field(..., alias='monetizationType')
+    new_element_count: int = Field(..., alias='newElementCount')
+    retail_price: str = Field(..., alias='retailPrice')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
+    currency: str
+    last_change_retail_price_value: None = Field(..., alias='lastChangeRetailPriceValue')
+    type: str
+    country: str
+    package: Package1
+    plans: list[None]
+    standard_web_url: str = Field(..., alias='standardWebURL')
+    pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
+    stream_url: None = Field(..., alias='streamUrl')
+    stream_url_external_player: None = Field(..., alias='streamUrlExternalPlayer')
+    element_count: int = Field(..., alias='elementCount')
+    available_to: None = Field(..., alias='availableTo')
+    subtitle_languages: list[str] = Field(..., alias='subtitleLanguages')
+    video_technology: list[str] = Field(..., alias='videoTechnology')
+    audio_technology: list[None] = Field(..., alias='audioTechnology')
+    audio_languages: list[str] = Field(..., alias='audioLanguages')
+    field__typename: str = Field(..., alias='__typename')
+    offer_seasons: None = Field(..., alias='offerSeasons')
+    min_retail_price: None = Field(..., alias='minRetailPrice')
+
+class Package2(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     icon: str
     id: str
@@ -85,7 +125,7 @@ class Node1(GAPIBaseModel):
     icon: str
     technical_name: str = Field(..., alias='technicalName')
     bundle_id: int = Field(..., alias='bundleId')
-    packages: list[Package1]
+    packages: list[Package2]
     field__typename: str = Field(..., alias='__typename')
 
 class Child2(GAPIBaseModel):
@@ -107,7 +147,7 @@ class PlanOffer1(GAPIBaseModel):
     children: list[Child2]
     field__typename: str = Field(..., alias='__typename')
 
-class Package2(GAPIBaseModel):
+class Package3(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package_id: int = Field(..., alias='packageId')
@@ -141,7 +181,7 @@ class Offer(GAPIBaseModel):
     last_change_retail_price_value: None = Field(..., alias='lastChangeRetailPriceValue')
     type: str
     country: str
-    package: Package2
+    package: Package3
     plans: list[Plan1]
     standard_web_url: str = Field(..., alias='standardWebURL')
     pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
@@ -170,7 +210,7 @@ class Node(GAPIBaseModel):
     max_offer_updated_at: AwareDatetime | None = Field(..., alias='maxOfferUpdatedAt')
     offers_history: list[None] = Field(..., alias='offersHistory')
     flatrate: list[FlatrateItem]
-    buy: list[None]
+    buy: list[BuyItem]
     rent: list[None]
     free: list[None]
     fast: list[None]

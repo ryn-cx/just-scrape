@@ -15,6 +15,12 @@ class FlatrateItem(GAPIBaseModel):
     package: Package
     field__typename: str = Field(..., alias='__typename')
 
+class BuyItem(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    id: str
+    package: Package
+    field__typename: str = Field(..., alias='__typename')
+
 class FreeItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
@@ -46,7 +52,7 @@ class Episode(GAPIBaseModel):
     seenlist_entry: None = Field(..., alias='seenlistEntry')
     unique_offer_count: int = Field(..., alias='uniqueOfferCount')
     flatrate: list[FlatrateItem]
-    buy: list[None]
+    buy: list[BuyItem]
     rent: list[None]
     free: list[FreeItem]
     fast: list[FastItem]
