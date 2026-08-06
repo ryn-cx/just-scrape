@@ -1,4 +1,4 @@
-from pydantic import AwareDatetime, ConfigDict, Field
+from pydantic import ConfigDict, Field
 from good_ass_pydantic_integrator import GAPIBaseModel
 from typing import Any
 
@@ -16,12 +16,6 @@ class FlatrateItem(GAPIBaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class BuyItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias='__typename')
-
-class FreeItem(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package: Package
@@ -54,7 +48,7 @@ class Episode(GAPIBaseModel):
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
     rent: list[None]
-    free: list[FreeItem]
+    free: list[None]
     fast: list[FastItem]
     content: Content
     field__typename: str = Field(..., alias='__typename')
@@ -69,29 +63,6 @@ class Data(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     node: Node
 
-class Variables(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    platform: str
-    country: str
-    language: str
-    limit: int
-    node_id: str = Field(..., alias='nodeId')
-    offset: int
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    user_agent: str = Field(..., alias='User-Agent')
-    referer: str = Field(..., alias='Referer')
-    origin: str = Field(..., alias='Origin')
-
-class JustScrape(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    variables: Variables
-    operation_name: str = Field(..., alias='operationName')
-    headers: Headers
-    timestamp: AwareDatetime
-
 class SeasonEpisodesResponse(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     data: Data
-    just_scrape: JustScrape | None = None

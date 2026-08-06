@@ -1,8 +1,8 @@
 from pydantic import AwareDatetime, ConfigDict, Field
 from good_ass_pydantic_integrator import GAPIBaseModel
 from datetime import date
-from uuid import UUID
 from typing import Any
+from uuid import UUID
 
 class Child(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -19,7 +19,7 @@ class PlanOffer(GAPIBaseModel):
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: int | float = Field(..., alias='retailPriceValue')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
     children: list[Child]
     field__typename: str = Field(..., alias='__typename')
 
@@ -41,7 +41,7 @@ class Plan(GAPIBaseModel):
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: int | float = Field(..., alias='retailPriceValue')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
     children: list[Child]
     field__typename: str = Field(..., alias='__typename')
 
@@ -64,7 +64,7 @@ class Offer(GAPIBaseModel):
     stream_url: None = Field(..., alias='streamUrl')
     stream_url_external_player: None = Field(..., alias='streamUrlExternalPlayer')
     element_count: int = Field(..., alias='elementCount')
-    available_to: date | None = Field(..., alias='availableTo')
+    available_to: None = Field(..., alias='availableTo')
     subtitle_languages: list[str] = Field(..., alias='subtitleLanguages')
     video_technology: list[str] = Field(..., alias='videoTechnology')
     audio_technology: list[str] = Field(..., alias='audioTechnology')
@@ -102,28 +102,7 @@ class WatchNowOffer(GAPIBaseModel):
     date_created: date = Field(..., alias='dateCreated')
     new_element_count: int = Field(..., alias='newElementCount')
 
-class Package2(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    short_name: str = Field(..., alias='shortName')
-    field__typename: str = Field(..., alias='__typename')
-
-class AvailableToItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    available_count_down: int = Field(..., alias='availableCountDown')
-    available_to_date: date = Field(..., alias='availableToDate')
-    package: Package2
-    field__typename: str = Field(..., alias='__typename')
-
 class Clip(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    source_url: str = Field(..., alias='sourceUrl')
-    external_id: str = Field(..., alias='externalId')
-    provider: str
-    name: str
-    field__typename: str = Field(..., alias='__typename')
-
-class VideobusterClip(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     source_url: str = Field(..., alias='sourceUrl')
     external_id: str = Field(..., alias='externalId')
@@ -142,7 +121,7 @@ class DailymotionClip(GAPIBaseModel):
 class FallBackClips(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     clips: list[Clip]
-    videobuster_clips: list[VideobusterClip] = Field(..., alias='videobusterClips')
+    videobuster_clips: list[None] = Field(..., alias='videobusterClips')
     dailymotion_clips: list[DailymotionClip] = Field(..., alias='dailymotionClips')
     field__typename: str = Field(..., alias='__typename')
 
@@ -167,7 +146,7 @@ class Scoring(GAPIBaseModel):
     imdb_score: int | float = Field(..., alias='imdbScore')
     imdb_votes: int = Field(..., alias='imdbVotes')
     tmdb_popularity: float = Field(..., alias='tmdbPopularity')
-    tmdb_score: float | None = Field(..., alias='tmdbScore')
+    tmdb_score: int | float = Field(..., alias='tmdbScore')
     jw_rating: float | None = Field(..., alias='jwRating')
     tomato_meter: int | None = Field(..., alias='tomatoMeter')
     certified_fresh: bool | None = Field(..., alias='certifiedFresh')
@@ -279,7 +258,7 @@ class Content(GAPIBaseModel):
     backdrops: list[Backdrop]
     full_backdrops: list[FullBackdrop] = Field(..., alias='fullBackdrops')
     clips: list[Clip]
-    videobuster_clips: list[VideobusterClip] = Field(..., alias='videobusterClips')
+    videobuster_clips: list[None] = Field(..., alias='videobusterClips')
     dailymotion_clips: list[DailymotionClip] = Field(..., alias='dailymotionClips')
     external_ids: ExternalIds = Field(..., alias='externalIds')
     full_path: str = Field(..., alias='fullPath')
@@ -316,7 +295,7 @@ class StreamingChartInfo(GAPIBaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias='trendDifference')
-    updated_at: AwareDatetime | str = Field(..., alias='updatedAt', union_mode='left_to_right')
+    updated_at: AwareDatetime = Field(..., alias='updatedAt')
     days_in_top10: int = Field(..., alias='daysInTop10')
     days_in_top100: int = Field(..., alias='daysInTop100')
     days_in_top1000: int = Field(..., alias='daysInTop1000')
@@ -345,7 +324,7 @@ class DateRange(GAPIBaseModel):
     start: AwareDatetime
     field__typename: str = Field(..., alias='__typename')
 
-class Package3(GAPIBaseModel):
+class Package2(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     icon: str
     id: str
@@ -361,7 +340,7 @@ class OffersHistoryItem(GAPIBaseModel):
     id: str
     country: str
     date_ranges: list[DateRange] = Field(..., alias='dateRanges')
-    package: Package3
+    package: Package2
 
 class PlanOffer1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -369,11 +348,11 @@ class PlanOffer1(GAPIBaseModel):
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: int | float = Field(..., alias='retailPriceValue')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
     children: list[Child]
     field__typename: str = Field(..., alias='__typename')
 
-class Package4(GAPIBaseModel):
+class Package3(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package_id: int = Field(..., alias='packageId')
@@ -391,7 +370,7 @@ class Plan1(GAPIBaseModel):
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: int | float = Field(..., alias='retailPriceValue')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
     children: list[Child]
     field__typename: str = Field(..., alias='__typename')
 
@@ -407,21 +386,21 @@ class FlatrateItem(GAPIBaseModel):
     last_change_retail_price_value: None = Field(..., alias='lastChangeRetailPriceValue')
     type: str
     country: str
-    package: Package4
+    package: Package3
     plans: list[Plan1]
     standard_web_url: str = Field(..., alias='standardWebURL')
     pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
     stream_url: None = Field(..., alias='streamUrl')
     stream_url_external_player: None = Field(..., alias='streamUrlExternalPlayer')
     element_count: int = Field(..., alias='elementCount')
-    available_to: date | None = Field(..., alias='availableTo')
+    available_to: None = Field(..., alias='availableTo')
     subtitle_languages: list[str] = Field(..., alias='subtitleLanguages')
     video_technology: list[str] = Field(..., alias='videoTechnology')
     audio_technology: list[str] = Field(..., alias='audioTechnology')
     audio_languages: list[str] = Field(..., alias='audioLanguages')
     field__typename: str = Field(..., alias='__typename')
 
-class Package5(GAPIBaseModel):
+class Package4(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package_id: int = Field(..., alias='packageId')
@@ -445,7 +424,7 @@ class BuyItem(GAPIBaseModel):
     last_change_retail_price_value: float | None = Field(..., alias='lastChangeRetailPriceValue')
     type: str
     country: str
-    package: Package5
+    package: Package4
     plans: list[None]
     standard_web_url: str = Field(..., alias='standardWebURL')
     pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
@@ -459,9 +438,9 @@ class BuyItem(GAPIBaseModel):
     audio_languages: list[str] = Field(..., alias='audioLanguages')
     field__typename: str = Field(..., alias='__typename')
     offer_seasons: list[str] = Field(..., alias='offerSeasons')
-    min_retail_price: str | None = Field(..., alias='minRetailPrice')
+    min_retail_price: None = Field(..., alias='minRetailPrice')
 
-class Package6(GAPIBaseModel):
+class Package5(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     icon: str
     id: str
@@ -477,7 +456,7 @@ class Node1(GAPIBaseModel):
     icon: str
     technical_name: str = Field(..., alias='technicalName')
     bundle_id: int = Field(..., alias='bundleId')
-    packages: list[Package6]
+    packages: list[Package5]
     field__typename: str = Field(..., alias='__typename')
 
 class PlanOffer2(GAPIBaseModel):
@@ -490,7 +469,7 @@ class PlanOffer2(GAPIBaseModel):
     children: list[None]
     field__typename: str = Field(..., alias='__typename')
 
-class Package7(GAPIBaseModel):
+class Package6(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package_id: int = Field(..., alias='packageId')
@@ -524,7 +503,7 @@ class Offer1(GAPIBaseModel):
     last_change_retail_price_value: None = Field(..., alias='lastChangeRetailPriceValue')
     type: str
     country: str
-    package: Package7
+    package: Package6
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias='standardWebURL')
     pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
@@ -545,7 +524,7 @@ class Bundle(GAPIBaseModel):
     offer: Offer1
     field__typename: str = Field(..., alias='__typename')
 
-class Package8(GAPIBaseModel):
+class Package7(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     package_id: int = Field(..., alias='packageId')
@@ -569,7 +548,7 @@ class PromotedOffer(GAPIBaseModel):
     last_change_retail_price_value: float | None = Field(..., alias='lastChangeRetailPriceValue')
     type: str
     country: str
-    package: Package8
+    package: Package7
     plans: list[Plan2]
     standard_web_url: str = Field(..., alias='standardWebURL')
     pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
@@ -589,7 +568,7 @@ class RankInfo(GAPIBaseModel):
     rank: int
     trend: str
     trend_difference: int = Field(..., alias='trendDifference')
-    updated_at: AwareDatetime | str = Field(..., alias='updatedAt', union_mode='left_to_right')
+    updated_at: AwareDatetime = Field(..., alias='updatedAt')
     days_in_top10: int = Field(..., alias='daysInTop10')
     days_in_top100: int = Field(..., alias='daysInTop100')
     days_in_top1000: int = Field(..., alias='daysInTop1000')
@@ -697,20 +676,7 @@ class TitleModules(GAPIBaseModel):
     template: Template
     field__typename: str = Field(..., alias='__typename')
 
-class Package9(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    short_name: str = Field(..., alias='shortName')
-    field__typename: str = Field(..., alias='__typename')
-
-class AvailableToItem1(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    available_to_date: date = Field(..., alias='availableToDate')
-    available_count_down: int = Field(..., alias='availableCountDown')
-    package: Package9
-    field__typename: str = Field(..., alias='__typename')
-
-class Package10(GAPIBaseModel):
+class Package8(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     clear_name: str = Field(..., alias='clearName')
     short_name: str = Field(..., alias='shortName')
@@ -718,10 +684,10 @@ class Package10(GAPIBaseModel):
 
 class Offer2(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
-    package: Package10
+    package: Package8
     monetization_type: str = Field(..., alias='monetizationType')
     retail_price: str | None = Field(..., alias='retailPrice')
-    retail_price_value: int | float | None = Field(..., alias='retailPriceValue')
+    retail_price_value: float | None = Field(..., alias='retailPriceValue')
     field__typename: str = Field(..., alias='__typename')
 
 class Content5(GAPIBaseModel):
@@ -752,7 +718,7 @@ class Show1(GAPIBaseModel):
 class FallBackClips1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     clips: list[Clip]
-    videobuster_clips: list[VideobusterClip] = Field(..., alias='videobusterClips')
+    videobuster_clips: list[None] = Field(..., alias='videobusterClips')
     dailymotion_clips: list[DailymotionClip] = Field(..., alias='dailymotionClips')
     field__typename: str = Field(..., alias='__typename')
 
@@ -762,14 +728,14 @@ class Season(GAPIBaseModel):
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
     total_episode_count: int = Field(..., alias='totalEpisodeCount')
-    available_to: list[AvailableToItem1] = Field(..., alias='availableTo')
+    available_to: list[None] = Field(..., alias='availableTo')
     offers: list[Offer2]
     content: Content5
     show: Show1
     fall_back_clips: FallBackClips1 = Field(..., alias='fallBackClips')
     field__typename: str = Field(..., alias='__typename')
 
-class Package11(GAPIBaseModel):
+class Package9(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
     clear_name: str = Field(..., alias='clearName')
@@ -779,13 +745,13 @@ class Package11(GAPIBaseModel):
 class FlatrateItem1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
-    package: Package11
+    package: Package9
     field__typename: str = Field(..., alias='__typename')
 
 class BuyItem1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     id: str
-    package: Package11
+    package: Package9
     field__typename: str = Field(..., alias='__typename')
 
 class Content7(GAPIBaseModel):
@@ -826,7 +792,7 @@ class Node(GAPIBaseModel):
     unique_offer_count: int = Field(..., alias='uniqueOfferCount')
     offers: list[Offer]
     watch_now_offer: WatchNowOffer | None = Field(..., alias='watchNowOffer')
-    available_to: list[AvailableToItem] = Field(..., alias='availableTo')
+    available_to: list[None] = Field(..., alias='availableTo')
     fall_back_clips: FallBackClips = Field(..., alias='fallBackClips')
     content: Content
     recommended_by_count: int = Field(..., alias='recommendedByCount')
@@ -875,32 +841,6 @@ class Data(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     url_v2: UrlV2 = Field(..., alias='urlV2')
 
-class Variables(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    platform: str
-    exclude_text_recommendation_title: bool = Field(..., alias='excludeTextRecommendationTitle')
-    first: int
-    fallback_to_foreign_offers: bool = Field(..., alias='fallbackToForeignOffers')
-    exclude_packages: list[str] = Field(..., alias='excludePackages')
-    full_path: str = Field(..., alias='fullPath')
-    language: str
-    country: str
-    episode_max_limit: int = Field(..., alias='episodeMaxLimit')
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    user_agent: str = Field(..., alias='User-Agent')
-    referer: str = Field(..., alias='Referer')
-    origin: str = Field(..., alias='Origin')
-
-class JustScrape(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    variables: Variables
-    operation_name: str = Field(..., alias='operationName')
-    headers: Headers
-    timestamp: AwareDatetime
-
 class UrlTitleDetailsResponse(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     data: Data
-    just_scrape: JustScrape | None = None

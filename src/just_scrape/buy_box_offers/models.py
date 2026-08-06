@@ -5,10 +5,10 @@ from typing import Any
 class Child(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     title: str
-    retail_price: str | None = Field(..., alias='retailPrice')
+    retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: float | None = Field(..., alias='retailPriceValue')
+    retail_price_value: float = Field(..., alias='retailPriceValue')
     field__typename: str = Field(..., alias='__typename')
 
 class PlanOffer(GAPIBaseModel):
@@ -128,23 +128,14 @@ class Node1(GAPIBaseModel):
     packages: list[Package2]
     field__typename: str = Field(..., alias='__typename')
 
-class Child2(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    title: str
-    retail_price: None = Field(..., alias='retailPrice')
-    is_trial: bool = Field(..., alias='isTrial')
-    duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: None = Field(..., alias='retailPriceValue')
-    field__typename: str = Field(..., alias='__typename')
-
 class PlanOffer1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     title: str
-    retail_price: str | None = Field(..., alias='retailPrice')
+    retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: float | None = Field(..., alias='retailPriceValue')
-    children: list[Child2]
+    retail_price_value: float = Field(..., alias='retailPriceValue')
+    children: list[None]
     field__typename: str = Field(..., alias='__typename')
 
 class Package3(GAPIBaseModel):
@@ -162,11 +153,11 @@ class Package3(GAPIBaseModel):
 class Plan1(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     title: str
-    retail_price: str | None = Field(..., alias='retailPrice')
+    retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
     duration_days: int = Field(..., alias='durationDays')
-    retail_price_value: float | None = Field(..., alias='retailPriceValue')
-    children: list[Child2]
+    retail_price_value: float = Field(..., alias='retailPriceValue')
+    children: list[None]
     field__typename: str = Field(..., alias='__typename')
 
 class Offer(GAPIBaseModel):
@@ -207,7 +198,7 @@ class Node(GAPIBaseModel):
     id: str
     field__typename: str = Field(..., alias='__typename')
     offer_count: int = Field(..., alias='offerCount')
-    max_offer_updated_at: AwareDatetime | None = Field(..., alias='maxOfferUpdatedAt')
+    max_offer_updated_at: AwareDatetime = Field(..., alias='maxOfferUpdatedAt')
     offers_history: list[None] = Field(..., alias='offersHistory')
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
@@ -220,29 +211,6 @@ class Data(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     node: Node
 
-class Variables(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    platform: str
-    fallback_to_foreign_offers: bool = Field(..., alias='fallbackToForeignOffers')
-    exclude_packages: list[str] = Field(..., alias='excludePackages')
-    node_id: str = Field(..., alias='nodeId')
-    country: str
-    language: str
-
-class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    user_agent: str = Field(..., alias='User-Agent')
-    referer: str = Field(..., alias='Referer')
-    origin: str = Field(..., alias='Origin')
-
-class JustScrape(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    variables: Variables
-    operation_name: str = Field(..., alias='operationName')
-    headers: Headers
-    timestamp: AwareDatetime
-
 class BuyBoxOffersResponse(GAPIBaseModel):
     model_config = ConfigDict(extra='forbid')
     data: Data
-    just_scrape: JustScrape | None = None

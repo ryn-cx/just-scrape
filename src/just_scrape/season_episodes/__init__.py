@@ -50,8 +50,14 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
             },
             log_id=log_id,
         )
-        if data.get("data", {}).get("node", {}).get("id") != node_id:
+        node = data.get("data", {}).get("node", {})
+        if node.get("id") != node_id:
             raise InvalidFileError(field="node id", expected=node_id)
+        # An unknown node_id is not an error to the API: it echoes the id back in
+        # a node holding no episodes. Paging past the last episode is empty too,
+        # so only the first page can tell an unknown id from an exhausted one.
+        if offset == 0 and not node.get("episodes"):
+            raise InvalidFileError(field=f"episodes for node id {node_id!r}")
         return data
 
     def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
