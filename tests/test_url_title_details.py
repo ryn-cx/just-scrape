@@ -12,24 +12,15 @@ if TYPE_CHECKING:
     from just_scrape import JustScrape
     from just_scrape.url_title_details import UrlTitleDetails
 
-MOVIE_PATH = "/us/movie/the-thursday-murder-club"
-"""URL path for a movie title."""
-TV_SHOW_PATH = "/us/tv-show/strip-law"
-"""URL path for a TV show title."""
-UNAVAILABLE_MOVIE_PATH = "/us/movie/code-geass-akito-the-exiled-5-to-beloved-ones"
-"""URL path for a movie that is not available."""
-UNAVAILABLE_TV_SHOW_PATH = "/us/tv-show/darker-than-black"
-"""URL path for a TV show that is not available."""
-MULTI_SEASON_TV_SHOW_PATH = "/us/tv-show/aria-the-animation"
-"""URL path for a TV show with several seasons and both flatrate and buy offers."""
 INVALID_URL_PATH = "/us/tv-show/invalid-url"
 
 PATHS = [
-    pytest.param(MOVIE_PATH, id="movie"),
-    pytest.param(TV_SHOW_PATH, id="tv-show"),
-    pytest.param(UNAVAILABLE_MOVIE_PATH, id="unavailable-movie"),
-    pytest.param(UNAVAILABLE_TV_SHOW_PATH, id="unavailable-tv-show"),
-    pytest.param(MULTI_SEASON_TV_SHOW_PATH, id="multi-season-tv-show"),
+    "/us/movie/the-thursday-murder-club",
+    "/us/tv-show/strip-law",
+    "/us/movie/code-geass-akito-the-exiled-5-to-beloved-ones",
+    "/us/tv-show/darker-than-black",
+    "/us/tv-show/aria-the-animation",
+    "/us/tv-show/frieren-beyond-journeys-end",
 ]
 
 
@@ -54,7 +45,7 @@ class TestUrlTitleDetails:
     @pytest.mark.parametrize("full_path", PATHS)
     def test_parse(self, endpoint: UrlTitleDetails, full_path: str) -> None:
         data = parsed_json(endpoint, _name(full_path))
-        assert data is not None
+        assert data.data.url_v2.node.content.full_path == full_path
 
     def test_invalid_download(self, endpoint: UrlTitleDetails) -> None:
         assert_error(
