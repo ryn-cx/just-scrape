@@ -8,6 +8,7 @@ from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.url_title_details import query
 from just_scrape.url_title_details.models import UrlTitleDetailsResponse
 
@@ -20,8 +21,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
 
     _response_model = UrlTitleDetailsResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         full_path: str,
         *,
@@ -36,7 +36,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
     ) -> dict[str, Any]:
         """Downloads the url title details file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             "GetUrlTitleDetails",
             query.QUERY,
             {
@@ -52,9 +52,12 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
             },
             log_id=log_id,
         )
+        node = data.get("data", {}).get("urlV2", {}).get("node", {})
+        if node.get("content", {}).get("fullPath") != full_path:
+            raise InvalidFileError(field="full path", expected=full_path)
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         full_path: str,
         *,

@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.season_episodes import query
 from just_scrape.season_episodes.models import SeasonEpisodesResponse
 
@@ -24,8 +25,7 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
 
     _response_model = SeasonEpisodesResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         node_id: str,
         *,
@@ -37,7 +37,7 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
     ) -> dict[str, Any]:
         """Downloads the season episodes file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             operation_name="GetSeasonEpisodes",
             query=query.QUERY,
             variables={
@@ -50,9 +50,11 @@ class SeasonEpisodes(BaseEndpoint[SeasonEpisodesResponse]):
             },
             log_id=log_id,
         )
+        if data.get("data", {}).get("node", {}).get("id") != node_id:
+            raise InvalidFileError(field="node id", expected=node_id)
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         node_id: str,
         *,

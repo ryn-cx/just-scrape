@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.title_detail_article import query
 from just_scrape.title_detail_article.models import TitleDetailArticleResponse
 
@@ -28,7 +29,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
     ) -> dict[str, Any]:
         """Downloads the title detail article file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             "GetTitleDetailArticle",
             query.QUERY,
             {
@@ -38,6 +39,10 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
             },
             log_id=log_id,
         )
+        # The response does not echo fullPath, so only the resolved node is checked.
+        if not data.get("data", {}).get("urlV2", {}).get("node", {}).get("id"):
+            raise InvalidFileError(field="node id")
+        return data
 
     def download_and_parse(
         self,

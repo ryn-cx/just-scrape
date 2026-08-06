@@ -20,6 +20,8 @@ UNAVAILABLE_MOVIE_PATH = "/us/movie/code-geass-akito-the-exiled-5-to-beloved-one
 """URL path for a movie that is not available."""
 UNAVAILABLE_TV_SHOW_PATH = "/us/tv-show/darker-than-black"
 """URL path for a TV show that is not available."""
+MULTI_SEASON_TV_SHOW_PATH = "/us/tv-show/aria-the-animation"
+"""URL path for a TV show with several seasons and both flatrate and buy offers."""
 INVALID_URL_PATH = "/us/tv-show/invalid-url"
 
 PATHS = [
@@ -27,6 +29,7 @@ PATHS = [
     pytest.param(TV_SHOW_PATH, id="tv-show"),
     pytest.param(UNAVAILABLE_MOVIE_PATH, id="unavailable-movie"),
     pytest.param(UNAVAILABLE_TV_SHOW_PATH, id="unavailable-tv-show"),
+    pytest.param(MULTI_SEASON_TV_SHOW_PATH, id="multi-season-tv-show"),
 ]
 
 

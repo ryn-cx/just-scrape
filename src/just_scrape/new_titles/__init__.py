@@ -8,6 +8,7 @@ from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.new_titles import query
 from just_scrape.new_titles.models import NewTitlesResponse
 
@@ -23,8 +24,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
 
     _response_model = NewTitlesResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
         first: int = 10,
@@ -53,7 +53,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         log_id = self.get_log_id(self.download, locals())
         date = date or datetime.datetime.now(tz=datetime.UTC).date()
 
-        return self._client.download(
+        data = self._client.download(
             "GetNewTitles",
             query.QUERY,
             {
@@ -85,9 +85,12 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
             },
             log_id=log_id,
         )
+        # The response carries no echo of the request, so only its shape is checked.
+        if data.get("data", {}).get("newTitles", {}).get("edges") is None:
+            raise InvalidFileError(field="new titles")
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
         first: int = 10,
@@ -138,8 +141,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         )
         return self.parse(data)
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse_for_date(  # noqa: PLR0913
+    def download_and_parse_for_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
         first: int = 10,
@@ -198,8 +200,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
 
             after = parsed.data.new_titles.page_info.end_cursor
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse_since_date(  # noqa: PLR0913
+    def download_and_parse_since_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         start_date: datetime.date | None = None,
         *,

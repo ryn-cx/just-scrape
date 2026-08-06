@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from just_scrape.base_client import BaseEndpoint
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.search import query
 from just_scrape.search.models import SearchResponse
 
@@ -19,8 +20,7 @@ class Search(BaseEndpoint[SearchResponse]):
 
     _response_model = SearchResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         search_query: str,
         *,
@@ -36,7 +36,7 @@ class Search(BaseEndpoint[SearchResponse]):
     ) -> dict[str, Any]:
         """Downloads the search file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             "GetSearchTitles",
             query.QUERY,
             {
@@ -55,9 +55,12 @@ class Search(BaseEndpoint[SearchResponse]):
             },
             log_id=log_id,
         )
+        # The response carries no echo of the query, so only its shape is checked.
+        if data.get("data", {}).get("searchTitles", {}).get("edges") is None:
+            raise InvalidFileError(field="search titles")
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         search_query: str,
         *,

@@ -83,9 +83,7 @@ edges = client.new_title_buckets.extract_edges(buckets)
 | `client.url_title_details` | full URL path | Full details for a movie, show, or season. |
 | `client.title_detail_article` | full URL path | Editorial article for a title. |
 | `client.season_episodes` | season node ID | Episodes in a season. |
-| `client.custom_season_episodes` | season node ID | Episodes with extra offer fields. |
 | `client.buy_box_offers` | node ID | Streaming, buy, and rent offers. |
-| `client.custom_buy_box_offers` | node ID | Offers with extra fields. |
 | `client.new_titles` | date + filters | Newly released titles. |
 | `client.new_title_buckets` | date + filters | New titles grouped into buckets. |
 

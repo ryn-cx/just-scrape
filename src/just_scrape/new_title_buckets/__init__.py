@@ -11,6 +11,7 @@ from logging import NullHandler, getLogger
 from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_client import BaseEndpoint
+from just_scrape.exceptions import InvalidFileError
 from just_scrape.new_title_buckets import query
 from just_scrape.new_title_buckets.models import NewTitleBucketsResponse
 
@@ -28,8 +29,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
 
     _response_model = NewTitleBucketsResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
         first: int = 8,
@@ -53,7 +53,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
     ) -> dict[str, Any]:
         """Downloads the new title buckets file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             "GetNewTitleBuckets",
             query.QUERY,
             {
@@ -82,9 +82,12 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
             },
             log_id=log_id,
         )
+        # The response carries no echo of the request, so only its shape is checked.
+        if data.get("data", {}).get("newTitleBuckets", {}).get("edges") is None:
+            raise InvalidFileError(field="new title buckets")
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
         first: int = 8,
@@ -129,8 +132,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         )
         return self.parse(data)
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse_since_date(  # noqa: PLR0913
+    def download_and_parse_since_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         end_date: datetime.date,
         *,

@@ -10,6 +10,7 @@ from just_scrape.base_client import BaseEndpoint
 from just_scrape.buy_box_offers import query
 from just_scrape.buy_box_offers.models import BuyBoxOffersResponse
 from just_scrape.constants import DEFAULT_EXCLUDE_PACKAGES
+from just_scrape.exceptions import InvalidFileError
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -20,8 +21,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
 
     _response_model = BuyBoxOffersResponse
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download(  # noqa: PLR0913
+    def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         node_id: str,
         *,
@@ -33,7 +33,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
     ) -> dict[str, Any]:
         """Downloads the buy box offers file."""
         log_id = self.get_log_id(self.download, locals())
-        return self._client.download(
+        data = self._client.download(
             "GetBuyBoxOffers",
             query.QUERY,
             {
@@ -46,9 +46,11 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
             },
             log_id=log_id,
         )
+        if data.get("data", {}).get("node", {}).get("id") != node_id:
+            raise InvalidFileError(field="node id", expected=node_id)
+        return data
 
-    # PLR0913 - Each parameter maps to an API parameter.
-    def download_and_parse(  # noqa: PLR0913
+    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         node_id: str,
         *,
