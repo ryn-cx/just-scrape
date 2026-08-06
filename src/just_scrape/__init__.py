@@ -11,8 +11,6 @@ from typing import TYPE_CHECKING, Any
 from get_around import GetAround
 
 from just_scrape.buy_box_offers import BuyBoxOffers
-from just_scrape.custom_buy_box_offers import CustomBuyBoxOffers
-from just_scrape.custom_season_episodes import CustomSeasonEpisodes
 from just_scrape.exceptions import GraphQLError, HTTPError
 from just_scrape.new_title_buckets import NewTitleBuckets
 from just_scrape.new_titles import NewTitles
@@ -41,8 +39,6 @@ class JustScrape:
         """Initialize the JustScrape client."""
         self.get_around_client = get_around_client or GetAround()
         self.buy_box_offers = BuyBoxOffers(self)
-        self.custom_buy_box_offers = CustomBuyBoxOffers(self)
-        self.custom_season_episodes = CustomSeasonEpisodes(self)
         self.new_title_buckets = NewTitleBuckets(self)
         self.new_titles = NewTitles(self)
         self.search = Search(self)
