@@ -1,131 +1,122 @@
-# ruff: noqa: D100, D101, D102, TC001, TC002, TC003
+from pydantic import AwareDatetime, ConfigDict, Field
+from good_ass_pydantic_integrator import GAPIBaseModel
+from typing import Any
 from datetime import date
 
-from good_ass_pydantic_integrator import GAPIBaseModel
-from pydantic import AwareDatetime, ConfigDict, Field
-
-
 class Package(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
-    clear_name: str = Field(..., alias="clearName")
-    package_id: int = Field(..., alias="packageId")
-    field__typename: str = Field(..., alias="__typename")
-
+    clear_name: str = Field(..., alias='clearName')
+    package_id: int = Field(..., alias='packageId')
+    field__typename: str = Field(..., alias='__typename')
 
 class FlatrateItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     package: Package
-    field__typename: str = Field(..., alias="__typename")
-
+    field__typename: str = Field(..., alias='__typename')
 
 class BuyItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     package: Package
-    field__typename: str = Field(..., alias="__typename")
-
+    field__typename: str = Field(..., alias='__typename')
 
 class FreeItem(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
     package: Package
-    field__typename: str = Field(..., alias="__typename")
+    field__typename: str = Field(..., alias='__typename')
 
-
-class Package3(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+class FastItem(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
     id: str
-    package_id: int = Field(..., alias="packageId")
-    short_name: str = Field(..., alias="shortName")
-    clear_name: str = Field(..., alias="clearName")
-    monetization_types: list[str] = Field(..., alias="monetizationTypes")
-    icon: str
-    icon_wide: str = Field(..., alias="iconWide")
-    has_rectangular_icon: bool = Field(..., alias="hasRectangularIcon")
-    plan_offers: list[None] = Field(..., alias="planOffers")
-    field__typename: str = Field(..., alias="__typename")
+    package: Package
+    field__typename: str = Field(..., alias='__typename')
 
+class Package4(GAPIBaseModel):
+    model_config = ConfigDict(extra='forbid')
+    id: str
+    package_id: int = Field(..., alias='packageId')
+    short_name: str = Field(..., alias='shortName')
+    clear_name: str = Field(..., alias='clearName')
+    monetization_types: list[str] = Field(..., alias='monetizationTypes')
+    icon: str
+    icon_wide: str = Field(..., alias='iconWide')
+    has_rectangular_icon: bool = Field(..., alias='hasRectangularIcon')
+    plan_offers: list[None] = Field(..., alias='planOffers')
+    field__typename: str = Field(..., alias='__typename')
 
 class UpcomingRelease(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    release_count_down: int = Field(..., alias="releaseCountDown")
-    release_date: date = Field(..., alias="releaseDate")
-    release_type: str = Field(..., alias="releaseType")
+    model_config = ConfigDict(extra='forbid')
+    release_count_down: int = Field(..., alias='releaseCountDown')
+    release_date: date = Field(..., alias='releaseDate')
+    release_type: str = Field(..., alias='releaseType')
     label: str
-    package: Package3
-    field__typename: str = Field(..., alias="__typename")
-
+    package: Package4
+    field__typename: str = Field(..., alias='__typename')
 
 class Content(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    field__typename: str = Field(..., alias="__typename")
+    model_config = ConfigDict(extra='forbid')
+    field__typename: str = Field(..., alias='__typename')
     title: str
-    short_description: str = Field(..., alias="shortDescription")
-    episode_number: int = Field(..., alias="episodeNumber")
-    season_number: int = Field(..., alias="seasonNumber")
-    is_released: bool = Field(..., alias="isReleased")
+    short_description: str = Field(..., alias='shortDescription')
+    episode_number: int = Field(..., alias='episodeNumber')
+    season_number: int = Field(..., alias='seasonNumber')
+    is_released: bool = Field(..., alias='isReleased')
     runtime: int
-    original_release_date: date = Field(..., alias="originalReleaseDate")
-    upcoming_releases: list[UpcomingRelease] = Field(..., alias="upcomingReleases")
-
+    original_release_date: date = Field(..., alias='originalReleaseDate')
+    upcoming_releases: list[UpcomingRelease] = Field(..., alias='upcomingReleases')
 
 class Episode(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
-    object_id: int = Field(..., alias="objectId")
-    object_type: str = Field(..., alias="objectType")
-    seenlist_entry: None = Field(..., alias="seenlistEntry")
-    unique_offer_count: int = Field(..., alias="uniqueOfferCount")
+    object_id: int = Field(..., alias='objectId')
+    object_type: str = Field(..., alias='objectType')
+    seenlist_entry: None = Field(..., alias='seenlistEntry')
+    unique_offer_count: int = Field(..., alias='uniqueOfferCount')
     flatrate: list[FlatrateItem]
     buy: list[BuyItem]
     rent: list[None]
     free: list[FreeItem]
-    fast: list[None]
+    fast: list[FastItem]
     content: Content
-    field__typename: str = Field(..., alias="__typename")
-    max_offer_updated_at: AwareDatetime = Field(..., alias="maxOfferUpdatedAt")
-
+    field__typename: str = Field(..., alias='__typename')
+    max_offer_updated_at: AwareDatetime = Field(..., alias='maxOfferUpdatedAt')
 
 class Node(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     id: str
-    field__typename: str = Field(..., alias="__typename")
+    field__typename: str = Field(..., alias='__typename')
     episodes: list[Episode]
 
-
 class Data(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     node: Node
 
-
 class Variables(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     platform: str
     country: str
     language: str
     limit: int
-    node_id: str = Field(..., alias="nodeId")
+    node_id: str = Field(..., alias='nodeId')
     offset: int
 
-
 class Headers(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
-    user_agent: str = Field(..., alias="User-Agent")
-    referer: str = Field(..., alias="Referer")
-    origin: str = Field(..., alias="Origin")
-
+    model_config = ConfigDict(extra='forbid')
+    user_agent: str = Field(..., alias='User-Agent')
+    referer: str = Field(..., alias='Referer')
+    origin: str = Field(..., alias='Origin')
 
 class JustScrape(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     variables: Variables
-    operation_name: str = Field(..., alias="operationName")
+    operation_name: str = Field(..., alias='operationName')
     headers: Headers
     timestamp: AwareDatetime
 
-
 class CustomSeasonEpisodesResponse(GAPIBaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
     data: Data
     just_scrape: JustScrape | None = None

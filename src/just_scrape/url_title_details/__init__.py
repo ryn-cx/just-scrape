@@ -21,36 +21,6 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
     _response_model = UrlTitleDetailsResponse
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        full_path: str,
-        *,
-        platform: str = "WEB",
-        exclude_text_recommendation_title: bool = True,
-        first: int = 10,
-        fallback_to_foreign_offers: bool = False,
-        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
-        language: str = "en",
-        country: str = "US",
-        episode_max_limit: int = 20,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {full_path=}",
-            platform=(platform, "WEB"),
-            exclude_text_recommendation_title=(
-                exclude_text_recommendation_title,
-                True,
-            ),
-            first=(first, 10),
-            fallback_to_foreign_offers=(fallback_to_foreign_offers, False),
-            exclude_packages=(exclude_packages, DEFAULT_EXCLUDE_PACKAGES),
-            language=(language, "en"),
-            country=(country, "US"),
-            episode_max_limit=(episode_max_limit, 20),
-        )
-
-    # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
         full_path: str,
@@ -65,6 +35,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
         episode_max_limit: int = 20,
     ) -> dict[str, Any]:
         """Downloads the url title details file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "GetUrlTitleDetails",
             query.QUERY,
@@ -79,17 +50,7 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
                 "country": country,
                 "episodeMaxLimit": episode_max_limit,
             },
-            log_id=self.get_log_id(
-                full_path,
-                platform=platform,
-                exclude_text_recommendation_title=exclude_text_recommendation_title,
-                first=first,
-                fallback_to_foreign_offers=fallback_to_foreign_offers,
-                exclude_packages=exclude_packages,
-                language=language,
-                country=country,
-                episode_max_limit=episode_max_limit,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.

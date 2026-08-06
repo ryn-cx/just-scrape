@@ -23,35 +23,6 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
 
     _response_model = NewTitlesResponse
 
-    # PLR0913 - Each parameter maps to an API parameter. Only scalar options are
-    # included in the log id; the list-valued ``filter_*`` params are omitted for
-    # readability.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        date: datetime.date,
-        *,
-        first: int = 10,
-        page_type: str = "NEW",
-        language: str = "en",
-        country: str = "US",
-        price_drops: bool = False,
-        platform: str = "WEB",
-        show_date_badge: bool = False,
-        after: str | None = None,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {date=}",
-            first=(first, 10),
-            page_type=(page_type, "NEW"),
-            language=(language, "en"),
-            country=(country, "US"),
-            price_drops=(price_drops, False),
-            platform=(platform, "WEB"),
-            show_date_badge=(show_date_badge, False),
-            after=(after, None),
-        )
-
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
@@ -79,6 +50,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
         """Downloads the new titles file."""
+        log_id = self.get_log_id(self.download, locals())
         date = date or datetime.datetime.now(tz=datetime.UTC).date()
 
         return self._client.download(
@@ -111,17 +83,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
                 "showDateBadge": show_date_badge,
                 "availableToPackages": available_to_packages or [],
             },
-            log_id=self.get_log_id(
-                date,
-                first=first,
-                page_type=page_type,
-                language=language,
-                country=country,
-                price_drops=price_drops,
-                platform=platform,
-                show_date_badge=show_date_badge,
-                after=after,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.

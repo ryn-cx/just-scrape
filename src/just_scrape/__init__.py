@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from http import HTTPStatus
 from logging import NullHandler, getLogger
 from time import monotonic, sleep
 from typing import TYPE_CHECKING, Any
@@ -87,9 +88,8 @@ class JustScrape:
             timeout=30,
         )
 
-        if response.status_code != 200:  # noqa: PLR2004
-            msg = f"Unexpected response status code: {response.status_code}"
-            raise HTTPError(msg)
+        if response.status_code != HTTPStatus.OK:
+            raise HTTPError(response.status_code, response.text)
 
         logger.debug("Downloaded %s (%.4f s)", operation, monotonic() - start)
 

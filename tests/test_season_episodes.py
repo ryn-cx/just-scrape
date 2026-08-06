@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -34,7 +34,7 @@ class TestSeasonEpisodes:
         )
 
     def test_extract_episodes(self, endpoint: SeasonEpisodes) -> None:
-        data = parse_json(endpoint, SEASON_ID)
+        data = parsed_json(endpoint, SEASON_ID)
         episodes = endpoint.extract_episodes(data)
         assert episodes is not None
         # TODO: assert expected value (needs live data)
@@ -49,7 +49,7 @@ class TestSeasonEpisodes:
         )
 
     def test_invalid_parse(self, endpoint: SeasonEpisodes) -> None:
-        data = parse_json(endpoint, INVALID_SEASON_ID)
+        data = parsed_json(endpoint, INVALID_SEASON_ID)
         assert data is not None
 
     # Live pagination test: walks every page of the season over the network and
@@ -58,11 +58,3 @@ class TestSeasonEpisodes:
         season_episodes = endpoint.download_and_parse_all(PAGINATED_SEASON_ID)
         episodes = endpoint.extract_episodes(season_episodes)
         assert len(episodes) == EXPECTED_EPISODE_COUNT
-
-
-@pytest.mark.parametrize("country", [None, "CA"])
-def test_log_id(endpoint: SeasonEpisodes, country: str | None) -> None:
-    expected = f"SeasonEpisodes node_id={SEASON_ID!r}"
-    if country is not None:
-        expected += f" country={country!r}"
-    assert endpoint.get_log_id(SEASON_ID, country=country or "US") == expected

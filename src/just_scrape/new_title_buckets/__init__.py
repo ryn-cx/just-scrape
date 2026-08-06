@@ -28,31 +28,6 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
 
     _response_model = NewTitleBucketsResponse
 
-    # PLR0913 - Each parameter maps to an API parameter. Only scalar options are
-    # included in the log id; the list-valued ``filter_*`` params are omitted for
-    # readability.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        *,
-        first: int = 8,
-        bucket_size: int = 0,
-        group_by: str = "DATE_PACKAGE",
-        page_type: str = "NEW",
-        country: str = "US",
-        new_after_cursor: str = "",
-        price_drops: bool = False,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {page_type=}",
-            first=(first, 8),
-            bucket_size=(bucket_size, 0),
-            group_by=(group_by, "DATE_PACKAGE"),
-            country=(country, "US"),
-            new_after_cursor=(new_after_cursor, ""),
-            price_drops=(price_drops, False),
-        )
-
     # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
@@ -77,6 +52,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         filter_monetization_types: list[Any] | None = None,
     ) -> dict[str, Any]:
         """Downloads the new title buckets file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "GetNewTitleBuckets",
             query.QUERY,
@@ -104,15 +80,7 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
                 },
                 "priceDrops": price_drops,
             },
-            log_id=self.get_log_id(
-                first=first,
-                bucket_size=bucket_size,
-                group_by=group_by,
-                page_type=page_type,
-                country=country,
-                new_after_cursor=new_after_cursor,
-                price_drops=price_drops,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.

@@ -20,35 +20,6 @@ class Search(BaseEndpoint[SearchResponse]):
     _response_model = SearchResponse
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        search_query: str,
-        *,
-        first: int = 5,
-        search_titles_sort_by: str = "POPULAR",
-        sort_random_seed: int = 0,
-        search_after_cursor: str = "",
-        include_titles_without_url: bool = True,
-        person_id: str | None = None,
-        language: str = "en",
-        country: str = "US",
-        location: str = "SearchPage",
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {search_query=}",
-            first=(first, 5),
-            search_titles_sort_by=(search_titles_sort_by, "POPULAR"),
-            sort_random_seed=(sort_random_seed, 0),
-            search_after_cursor=(search_after_cursor, ""),
-            include_titles_without_url=(include_titles_without_url, True),
-            person_id=(person_id, None),
-            language=(language, "en"),
-            country=(country, "US"),
-            location=(location, "SearchPage"),
-        )
-
-    # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
         search_query: str,
@@ -64,6 +35,7 @@ class Search(BaseEndpoint[SearchResponse]):
         location: str = "SearchPage",
     ) -> dict[str, Any]:
         """Downloads the search file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "GetSearchTitles",
             query.QUERY,
@@ -81,18 +53,7 @@ class Search(BaseEndpoint[SearchResponse]):
                 "country": country,
                 "location": location,
             },
-            log_id=self.get_log_id(
-                search_query,
-                first=first,
-                search_titles_sort_by=search_titles_sort_by,
-                sort_random_seed=sort_random_seed,
-                search_after_cursor=search_after_cursor,
-                include_titles_without_url=include_titles_without_url,
-                person_id=person_id,
-                language=language,
-                country=country,
-                location=location,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.

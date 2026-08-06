@@ -21,27 +21,6 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
     _response_model = BuyBoxOffersResponse
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        node_id: str,
-        *,
-        platform: str = "WEB",
-        fallback_to_foreign_offers: bool = False,
-        exclude_packages: list[str] = DEFAULT_EXCLUDE_PACKAGES,
-        country: str = "US",
-        language: str = "en",
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {node_id=}",
-            platform=(platform, "WEB"),
-            fallback_to_foreign_offers=(fallback_to_foreign_offers, False),
-            exclude_packages=(exclude_packages, DEFAULT_EXCLUDE_PACKAGES),
-            country=(country, "US"),
-            language=(language, "en"),
-        )
-
-    # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
         node_id: str,
@@ -53,6 +32,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
         language: str = "en",
     ) -> dict[str, Any]:
         """Downloads the buy box offers file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "GetBuyBoxOffers",
             query.QUERY,
@@ -64,14 +44,7 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
                 "country": country,
                 "language": language,
             },
-            log_id=self.get_log_id(
-                node_id,
-                platform=platform,
-                fallback_to_foreign_offers=fallback_to_foreign_offers,
-                exclude_packages=exclude_packages,
-                country=country,
-                language=language,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.

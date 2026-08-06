@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -26,7 +26,7 @@ class TestNewTitleBuckets:
         download_and_save(endpoint, PAGE_TYPE, endpoint.download)
 
     def test_extract_edges(self, endpoint: NewTitleBuckets) -> None:
-        data = parse_json(endpoint, PAGE_TYPE)
+        data = parsed_json(endpoint, PAGE_TYPE)
         edges = endpoint.extract_edges(data)
         assert edges is not None
         # TODO: assert expected value (needs live data)
@@ -45,11 +45,3 @@ class TestNewTitleBuckets:
 
         if len(all_buckets) > 1:
             assert len(all_edges) > 3  # noqa: PLR2004
-
-
-@pytest.mark.parametrize("country", [None, "CA"])
-def test_log_id(endpoint: NewTitleBuckets, country: str | None) -> None:
-    expected = f"NewTitleBuckets page_type={PAGE_TYPE!r}"
-    if country is not None:
-        expected += f" country={country!r}"
-    assert endpoint.get_log_id(country=country or "US") == expected

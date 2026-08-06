@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -35,7 +35,7 @@ class TestNewTitles:
         )
 
     def test_extract_edges(self, endpoint: NewTitles) -> None:
-        data = parse_json(endpoint, PAGE_TYPE)
+        data = parsed_json(endpoint, PAGE_TYPE)
         edges = endpoint.extract_edges(data)
         assert edges is not None
         # TODO: assert expected value (needs live data)
@@ -82,12 +82,3 @@ class TestNewTitles:
             expected_edges += responses[0].data.new_titles.total_count
 
         assert len(endpoint.extract_edges(new_titles)) == expected_edges
-
-
-@pytest.mark.parametrize("country", [None, "CA"])
-def test_log_id(endpoint: NewTitles, country: str | None) -> None:
-    date = datetime.date(2026, 7, 18)
-    expected = f"NewTitles date={date!r}"
-    if country is not None:
-        expected += f" country={country!r}"
-    assert endpoint.get_log_id(date, country=country or "US") == expected

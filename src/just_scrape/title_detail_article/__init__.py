@@ -19,20 +19,6 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
 
     _response_model = TitleDetailArticleResponse
 
-    def get_log_id(
-        self,
-        full_path: str,
-        *,
-        language: str = "en",
-        country: str = "US",
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {full_path=}",
-            language=(language, "en"),
-            country=(country, "US"),
-        )
-
     def download(
         self,
         full_path: str,
@@ -41,6 +27,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
         country: str = "US",
     ) -> dict[str, Any]:
         """Downloads the title detail article file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             "GetTitleDetailArticle",
             query.QUERY,
@@ -49,11 +36,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
                 "language": language,
                 "country": country,
             },
-            log_id=self.get_log_id(
-                full_path,
-                language=language,
-                country=country,
-            ),
+            log_id=log_id,
         )
 
     def download_and_parse(

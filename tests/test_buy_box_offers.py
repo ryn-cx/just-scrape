@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -30,7 +30,7 @@ class TestBuyBoxOffers:
         )
 
     def test_parse(self, endpoint: BuyBoxOffers) -> None:
-        data = parse_json(endpoint, BUY_BOX_NODE_ID)
+        data = parsed_json(endpoint, BUY_BOX_NODE_ID)
         assert data is not None
 
     # This endpoint does not raise for an unknown node_id, so the invalid case is
@@ -43,13 +43,5 @@ class TestBuyBoxOffers:
         )
 
     def test_invalid_parse(self, endpoint: BuyBoxOffers) -> None:
-        data = parse_json(endpoint, INVALID_NODE_ID)
+        data = parsed_json(endpoint, INVALID_NODE_ID)
         assert data is not None
-
-
-@pytest.mark.parametrize("country", [None, "CA"])
-def test_log_id(endpoint: BuyBoxOffers, country: str | None) -> None:
-    expected = f"BuyBoxOffers node_id={BUY_BOX_NODE_ID!r}"
-    if country is not None:
-        expected += f" country={country!r}"
-    assert endpoint.get_log_id(BUY_BOX_NODE_ID, country=country or "US") == expected

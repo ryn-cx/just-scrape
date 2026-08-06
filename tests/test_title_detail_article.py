@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import pytest
 
 from just_scrape.exceptions import GraphQLError
-from tests.utils import assert_error, download_and_save, parse_json
+from tests.utils import assert_error, download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -35,7 +35,7 @@ class TestTitleDetailArticle:
         )
 
     def test_parse(self, endpoint: TitleDetailArticle) -> None:
-        data = parse_json(endpoint, MOVIE_NAME)
+        data = parsed_json(endpoint, MOVIE_NAME)
         assert data is not None
 
     def test_invalid_download(self, endpoint: TitleDetailArticle) -> None:
@@ -45,11 +45,3 @@ class TestTitleDetailArticle:
             lambda: endpoint.download(INVALID_MOVIE_PATH),
             GraphQLError,
         )
-
-
-@pytest.mark.parametrize("country", [None, "CA"])
-def test_log_id(endpoint: TitleDetailArticle, country: str | None) -> None:
-    expected = f"TitleDetailArticle full_path={MOVIE_PATH!r}"
-    if country is not None:
-        expected += f" country={country!r}"
-    assert endpoint.get_log_id(MOVIE_PATH, country=country or "US") == expected

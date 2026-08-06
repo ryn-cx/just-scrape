@@ -29,27 +29,6 @@ class CustomSeasonEpisodes(
     _response_model = CustomSeasonEpisodesResponse
 
     # PLR0913 - Each parameter maps to an API parameter.
-    def get_log_id(  # noqa: PLR0913
-        self,
-        node_id: str,
-        *,
-        country: str = "US",
-        language: str = "en",
-        platform: str = "WEB",
-        limit: int = DEFAULT_LIMIT,
-        offset: int = 0,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {node_id=}",
-            country=(country, "US"),
-            language=(language, "en"),
-            platform=(platform, "WEB"),
-            limit=(limit, DEFAULT_LIMIT),
-            offset=(offset, 0),
-        )
-
-    # PLR0913 - Each parameter maps to an API parameter.
     def download(  # noqa: PLR0913
         self,
         node_id: str,
@@ -61,6 +40,7 @@ class CustomSeasonEpisodes(
         offset: int = 0,
     ) -> dict[str, Any]:
         """Downloads the custom season episodes file."""
+        log_id = self.get_log_id(self.download, locals())
         return self._client.download(
             operation_name="GetSeasonEpisodes",
             query=query.QUERY,
@@ -72,14 +52,7 @@ class CustomSeasonEpisodes(
                 "limit": limit,
                 "offset": offset,
             },
-            log_id=self.get_log_id(
-                node_id,
-                country=country,
-                language=language,
-                platform=platform,
-                limit=limit,
-                offset=offset,
-            ),
+            log_id=log_id,
         )
 
     # PLR0913 - Each parameter maps to an API parameter.
@@ -127,7 +100,7 @@ class CustomSeasonEpisodes(
             )
 
             all_episodes.append(response)
-            # TODO(YBR): This can download one more page  # noqa: TD003, FIX002
+            # TODO(YBR): This can download one more page
             # than needed, there may be a better way to do this.
             if len(response.data.node.episodes) < DEFAULT_LIMIT:
                 return all_episodes
