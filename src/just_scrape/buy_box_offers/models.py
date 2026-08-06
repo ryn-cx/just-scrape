@@ -103,7 +103,7 @@ class BuyItem(GAPIBaseModel):
     available_to: None = Field(..., alias='availableTo')
     subtitle_languages: list[str] = Field(..., alias='subtitleLanguages')
     video_technology: list[str] = Field(..., alias='videoTechnology')
-    audio_technology: list[None] = Field(..., alias='audioTechnology')
+    audio_technology: list[str] = Field(..., alias='audioTechnology')
     audio_languages: list[str] = Field(..., alias='audioLanguages')
     field__typename: str = Field(..., alias='__typename')
     offer_seasons: None = Field(..., alias='offerSeasons')
