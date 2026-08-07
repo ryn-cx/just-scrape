@@ -41,7 +41,7 @@ class TitleDetailArticle(BaseEndpoint[TitleDetailArticleResponse]):
         )
         # The response does not echo fullPath, so only the resolved node is checked.
         if not data.get("data", {}).get("urlV2", {}).get("node", {}).get("id"):
-            raise InvalidFileError(field="node id")
+            raise InvalidFileError(field="node id", response=data)
         return data
 
     def download_and_parse(

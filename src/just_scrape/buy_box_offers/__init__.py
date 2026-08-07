@@ -48,12 +48,11 @@ class BuyBoxOffers(BaseEndpoint[BuyBoxOffersResponse]):
         )
         node = data.get("data", {}).get("node", {})
         if node.get("id") != node_id:
-            raise InvalidFileError(field="node id", expected=node_id)
+            raise InvalidFileError(field="node id", expected=node_id, response=data)
         # An unknown node_id is not an error to the API: it echoes the id back in
-        # an otherwise empty node. Only maxOfferUpdatedAt separates that stub from
-        # a real node, so a null value is treated as the id not existing.
-        if node.get("maxOfferUpdatedAt") is None:
-            raise InvalidFileError(field=f"offers for node id {node_id!r}")
+        # a node carrying no offers. That is the same response a real title with
+        # nowhere to watch it gives, so an empty result is returned as-is rather
+        # than guessed at.
         return data
 
     def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.

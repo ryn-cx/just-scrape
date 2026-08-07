@@ -21,27 +21,28 @@ def endpoint(client: JustScrape) -> NewTitleBuckets:
     return client.new_title_buckets
 
 
-class TestNewTitleBuckets:
-    def test_download(self, endpoint: NewTitleBuckets) -> None:
-        download_and_save(endpoint, PAGE_TYPE, endpoint.download)
+def test_download(endpoint: NewTitleBuckets) -> None:
+    download_and_save(endpoint, PAGE_TYPE, endpoint.download)
 
-    def test_extract_edges(self, endpoint: NewTitleBuckets) -> None:
-        data = parsed_json(endpoint, PAGE_TYPE)
-        edges = endpoint.extract_edges(data)
-        assert edges is not None
-        # TODO: assert expected value (needs live data)
 
-    # Live pagination test: walks the buckets back to a date over the network and
-    # has no clean cached-file equivalent.
-    def test_download_and_parse_since_date(self, endpoint: NewTitleBuckets) -> None:
-        today = datetime.now().astimezone().date()
-        end_date = today - timedelta(days=5)
+def test_extract_edges(endpoint: NewTitleBuckets) -> None:
+    data = parsed_json(endpoint, PAGE_TYPE)
+    edges = endpoint.extract_edges(data)
+    assert edges is not None
+    # TODO: assert expected value (needs live data)
 
-        all_buckets = endpoint.download_and_parse_since_date(end_date)
-        all_edges = endpoint.extract_edges(all_buckets)
 
-        assert len(all_buckets) >= 1
-        assert len(all_edges) >= 1
+# Live pagination test: walks the buckets back to a date over the network and has
+# no clean cached-file equivalent.
+def test_download_and_parse_since_date(endpoint: NewTitleBuckets) -> None:
+    today = datetime.now().astimezone().date()
+    end_date = today - timedelta(days=5)
 
-        if len(all_buckets) > 1:
-            assert len(all_edges) > 3  # noqa: PLR2004
+    all_buckets = endpoint.download_and_parse_since_date(end_date)
+    all_edges = endpoint.extract_edges(all_buckets)
+
+    assert len(all_buckets) >= 1
+    assert len(all_edges) >= 1
+
+    if len(all_buckets) > 1:
+        assert len(all_edges) > 3  # noqa: PLR2004

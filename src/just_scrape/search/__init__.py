@@ -57,7 +57,7 @@ class Search(BaseEndpoint[SearchResponse]):
         )
         # The response carries no echo of the query, so only its shape is checked.
         if data.get("data", {}).get("searchTitles", {}).get("edges") is None:
-            raise InvalidFileError(field="search titles")
+            raise InvalidFileError(field="search titles", response=data)
         return data
 
     def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.

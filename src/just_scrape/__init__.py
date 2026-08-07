@@ -92,8 +92,7 @@ class JustScrape:
         output = response.json()
 
         if output.get("errors"):
-            msg = f"GraphQL errors occurred: {output['errors']}"
-            raise GraphQLError(msg)
+            raise GraphQLError(output["errors"], output)
 
         sleep(self.sleep_time)
 

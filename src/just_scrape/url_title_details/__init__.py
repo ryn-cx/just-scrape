@@ -54,7 +54,11 @@ class UrlTitleDetails(BaseEndpoint[UrlTitleDetailsResponse]):
         )
         node = data.get("data", {}).get("urlV2", {}).get("node", {})
         if node.get("content", {}).get("fullPath") != full_path:
-            raise InvalidFileError(field="full path", expected=full_path)
+            raise InvalidFileError(
+                field="full path",
+                expected=full_path,
+                response=data,
+            )
         return data
 
     def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.

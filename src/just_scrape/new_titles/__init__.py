@@ -87,7 +87,7 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         )
         # The response carries no echo of the request, so only its shape is checked.
         if data.get("data", {}).get("newTitles", {}).get("edges") is None:
-            raise InvalidFileError(field="new titles")
+            raise InvalidFileError(field="new titles", response=data)
         return data
 
     def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
