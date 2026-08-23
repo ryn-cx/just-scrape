@@ -1,48 +1,61 @@
 # TODO: Validate
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from just_scrape.new_title_buckets.models import NewTitleBucketsModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
-    from just_scrape.new_title_buckets import NewTitleBuckets
 
-# download() takes no id; the response is keyed on the default page type.
-PAGE_TYPE = "NEW"
+FIRST = 3
+"""A short page, so what a page holds stays small enough to read."""
 
-
-@pytest.fixture(scope="session")
-def endpoint(client: JustScrape) -> NewTitleBuckets:
-    return client.new_title_buckets
-
-
-def test_download(endpoint: NewTitleBuckets) -> None:
-    download_and_save(endpoint, PAGE_TYPE, endpoint.download)
+OBJECT_TYPES = [
+    # The object type is filtered on because the API pages wrongly when it is
+    # not, which is a server side bug the site itself has.
+    pytest.param("MOVIE", id="movies"),
+]
 
 
-def test_extract_edges(endpoint: NewTitleBuckets) -> None:
-    data = parsed_json(endpoint, PAGE_TYPE)
-    edges = endpoint.extract_edges(data)
-    assert edges is not None
-    # TODO: assert expected value (needs live data)
+# TODO: Validate
+class NewTitleBucketsTest(RecordedEndpoint):
+    MODEL = NewTitleBucketsModel
+    # A bucket holds whatever turned up on the day it was recorded, so its date,
+    # its service and its count are different every time it is downloaded.
+    SAME_TYPE = (
+        "Key.date",
+        "Package.id",
+        "Package.package_id",
+        "Package.short_name",
+        "Package.icon",
+        "Node.total_count",
+        "PageInfo.start_cursor",
+        "PageInfo.end_cursor",
+        "PageInfo1.start_cursor",
+        "PageInfo1.end_cursor",
+    )
 
 
-# Live pagination test: walks the buckets back to a date over the network and has
-# no clean cached-file equivalent.
-def test_download_and_parse_since_date(endpoint: NewTitleBuckets) -> None:
-    today = datetime.now().astimezone().date()
-    end_date = today - timedelta(days=5)
+# TODO: Validate
+@pytest.mark.parametrize("object_type", OBJECT_TYPES)
+def test_download(client: JustScrape, object_type: str) -> None:
+    NewTitleBucketsTest.download_test(
+        object_type,
+        lambda: client.new_title_buckets.download(
+            filter_object_types=[object_type],
+            first=FIRST,
+        ),
+    )
 
-    all_buckets = endpoint.download_and_parse_since_date(end_date)
-    all_edges = endpoint.extract_edges(all_buckets)
 
-    assert len(all_buckets) >= 1
-    assert len(all_edges) >= 1
-
-    if len(all_buckets) > 1:
-        assert len(all_edges) > 3  # noqa: PLR2004
+# TODO: Validate
+@pytest.mark.parametrize("object_type", OBJECT_TYPES)
+def test_parse(client: JustScrape, object_type: str) -> None:
+    data = client.new_title_buckets.load(
+        NewTitleBucketsTest.recorded_content(object_type),
+    )
+    assert data.data.new_title_buckets.edges

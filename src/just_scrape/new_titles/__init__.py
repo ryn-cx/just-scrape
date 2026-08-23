@@ -4,26 +4,103 @@
 from __future__ import annotations
 
 import datetime
+import json
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from just_scrape.base_client import BaseEndpoint
+from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import InvalidFileError
 from just_scrape.new_titles import query
-from just_scrape.new_titles.models import NewTitlesResponse
-
-if TYPE_CHECKING:
-    from just_scrape.new_titles.models import Edge
+from just_scrape.new_titles.models import NewTitlesModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class NewTitles(BaseEndpoint[NewTitlesResponse]):
-    """Manage the new titles file."""
+# TODO: Validate
+class NewTitles(BaseEndpoint):
+    """Manage the new titles file.
 
-    _response_model = NewTitlesResponse
+    Source: https://www.justwatch.com/us/new
 
+    Example request:
+        - POST /graphql HTTP/2
+        - Host: apis.justwatch.com
+        - User-Agent: __REDACTED__
+        - Accept: */*
+        - Content-Type: application/json
+        - Referer: https://www.justwatch.com/
+        - Origin: https://www.justwatch.com
+        - Body:
+            - operationName: GetNewTitles
+            - query: the document in `query.py`
+            - variables:
+                - date={date}
+                - first=10
+                - pageType=NEW
+                - country=US
+                - language=en
+                - platform=WEB
+    """
+
+    # TODO: Validate
+    def __call__(  # noqa: PLR0913 - Each parameter maps to an API parameter.
+        self,
+        *,
+        first: int = 10,
+        page_type: str = "NEW",
+        date: datetime.date | None = None,
+        language: str = "en",
+        country: str = "US",
+        price_drops: bool = False,
+        platform: str = "WEB",
+        after: str | None = None,
+        show_date_badge: bool = False,
+        available_to_packages: list[str] | None = None,
+        filter_age_certifications: list[Any] | None = None,
+        filter_exclude_genres: list[Any] | None = None,
+        filter_exclude_production_countries: list[Any] | None = None,
+        filter_object_types: list[Any] | None = None,
+        filter_production_countries: list[Any] | None = None,
+        filter_subgenres: list[Any] | None = None,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[str] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+    ) -> NewTitlesModel:
+        """Look the new titles up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(
+            self.download(
+                first=first,
+                page_type=page_type,
+                date=date,
+                language=language,
+                country=country,
+                price_drops=price_drops,
+                platform=platform,
+                after=after,
+                show_date_badge=show_date_badge,
+                available_to_packages=available_to_packages,
+                filter_age_certifications=filter_age_certifications,
+                filter_exclude_genres=filter_exclude_genres,
+                filter_exclude_production_countries=(
+                    filter_exclude_production_countries
+                ),
+                filter_object_types=filter_object_types,
+                filter_production_countries=filter_production_countries,
+                filter_subgenres=filter_subgenres,
+                filter_genres=filter_genres,
+                filter_packages=filter_packages,
+                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+                filter_presentation_types=filter_presentation_types,
+                filter_monetization_types=filter_monetization_types,
+            ),
+            log_id,
+        )
+
+    # TODO: Validate
     def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
@@ -48,19 +125,19 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> dict[str, Any]:
-        """Downloads the new titles file."""
+    ) -> str:
+        """Download the new titles file, defaulting to what turned up today."""
         log_id = self.get_log_id(self.download, locals())
-        date = date or datetime.datetime.now(tz=datetime.UTC).date()
-
-        data = self._client.download(
+        response = self._client.download(
             "GetNewTitles",
             query.QUERY,
             {
                 "after": after,
                 "first": first,
                 "pageType": page_type,
-                "date": date.isoformat(),
+                "date": (
+                    date or datetime.datetime.now(tz=datetime.UTC).date()
+                ).isoformat(),
                 "filter": {
                     "ageCertifications": filter_age_certifications or [],
                     "excludeGenres": filter_exclude_genres or [],
@@ -83,197 +160,21 @@ class NewTitles(BaseEndpoint[NewTitlesResponse]):
                 "showDateBadge": show_date_badge,
                 "availableToPackages": available_to_packages or [],
             },
-            log_id=log_id,
+            log_id,
         )
-        # The response carries no echo of the request, so only its shape is checked.
-        if data.get("data", {}).get("newTitles", {}).get("edges") is None:
-            raise InvalidFileError(field="new titles", response=data)
-        return data
+        return self._validate_download(response)
 
-    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        *,
-        first: int = 10,
-        page_type: str = "NEW",
-        date: datetime.date | None = None,
-        language: str = "en",
-        country: str = "US",
-        price_drops: bool = False,
-        platform: str = "WEB",
-        show_date_badge: bool = False,
-        available_to_packages: list[str] | None = None,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-        after: str | None = None,
-    ) -> NewTitlesResponse:
-        """Downloads and parses the new titles file."""
-        data = self.download(
-            first=first,
-            page_type=page_type,
-            date=date,
-            language=language,
-            after=after,
-            country=country,
-            price_drops=price_drops,
-            platform=platform,
-            show_date_badge=show_date_badge,
-            available_to_packages=available_to_packages,
-            filter_age_certifications=filter_age_certifications,
-            filter_exclude_genres=filter_exclude_genres,
-            filter_exclude_production_countries=filter_exclude_production_countries,
-            filter_object_types=filter_object_types,
-            filter_production_countries=filter_production_countries,
-            filter_subgenres=filter_subgenres,
-            filter_genres=filter_genres,
-            filter_packages=filter_packages,
-            filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-            filter_presentation_types=filter_presentation_types,
-            filter_monetization_types=filter_monetization_types,
-        )
-        return self.parse(data)
+    # TODO: Validate
+    @staticmethod
+    def _validate_download(response: str) -> str:
+        # The response carries no echo of the request, so only its shape is
+        # checked. A date nothing turned up on is answered with an empty page.
+        new_titles = json.loads(response).get("data", {}).get("newTitles", {})
+        if new_titles.get("edges") is None:
+            raise InvalidFileError(field="new titles", response=response)
+        return response
 
-    def download_and_parse_for_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        *,
-        first: int = 10,
-        page_type: str = "NEW",
-        language: str = "en",
-        country: str = "US",
-        price_drops: bool = False,
-        platform: str = "WEB",
-        show_date_badge: bool = False,
-        available_to_packages: list[str] | None = None,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-        date: datetime.date | None = None,
-    ) -> list[NewTitlesResponse]:
-        """Downloads and parses all new titles for a specific date."""
-        after = None
-        output: list[NewTitlesResponse] = []
-
-        while True:
-            parsed = self.download_and_parse(
-                first=first,
-                after=after,
-                available_to_packages=available_to_packages,
-                country=country,
-                date=date,
-                filter_age_certifications=filter_age_certifications,
-                filter_exclude_genres=filter_exclude_genres,
-                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-                filter_exclude_production_countries=filter_exclude_production_countries,
-                filter_genres=filter_genres,
-                filter_monetization_types=filter_monetization_types,
-                filter_object_types=filter_object_types,
-                filter_packages=filter_packages,
-                filter_presentation_types=filter_presentation_types,
-                filter_production_countries=filter_production_countries,
-                filter_subgenres=filter_subgenres,
-                language=language,
-                page_type=page_type,
-                platform=platform,
-                price_drops=price_drops,
-                show_date_badge=show_date_badge,
-            )
-            output.append(parsed)
-
-            if not parsed.data.new_titles.page_info.has_next_page:
-                return output
-
-            after = parsed.data.new_titles.page_info.end_cursor
-
-    def download_and_parse_since_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        start_date: datetime.date | None = None,
-        *,
-        first: int = 10,
-        page_type: str = "NEW",
-        language: str = "en",
-        country: str = "US",
-        price_drops: bool = False,
-        platform: str = "WEB",
-        show_date_badge: bool = False,
-        available_to_packages: list[str] | None = None,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[str] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-        # Specialized parameters for this function.
-        end_date: datetime.date,
-    ) -> list[list[NewTitlesResponse]]:
-        """Downloads and parses all new titles for a specific date range."""
-        current_date = start_date or datetime.datetime.now(tz=datetime.UTC).date()
-        output: list[list[NewTitlesResponse]] = []
-
-        while current_date >= end_date:
-            response = self.download_and_parse_for_date(
-                first=first,
-                page_type=page_type,
-                date=current_date,
-                language=language,
-                country=country,
-                price_drops=price_drops,
-                platform=platform,
-                show_date_badge=show_date_badge,
-                available_to_packages=available_to_packages,
-                filter_age_certifications=filter_age_certifications,
-                filter_exclude_genres=filter_exclude_genres,
-                filter_exclude_production_countries=filter_exclude_production_countries,
-                filter_object_types=filter_object_types,
-                filter_production_countries=filter_production_countries,
-                filter_subgenres=filter_subgenres,
-                filter_genres=filter_genres,
-                filter_packages=filter_packages,
-                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-                filter_presentation_types=filter_presentation_types,
-                filter_monetization_types=filter_monetization_types,
-            )
-
-            output.append(response)
-
-            current_date -= datetime.timedelta(days=1)
-
-        return output
-
-    def extract_edges(
-        self,
-        data: NewTitlesResponse
-        | list[NewTitlesResponse]
-        | list[list[NewTitlesResponse]],
-    ) -> list[Edge]:
-        """Get all of the edges for a new titles input."""
-        if isinstance(data, list):
-            result: list[Edge] = []
-            for resp in data:
-                result.extend(self.extract_edges(resp))
-            return result
-
-        if isinstance(data, dict):
-            data = self.parse(data)
-
-        return data.data.new_titles.edges
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> NewTitlesModel:
+        """Read a downloaded new titles file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

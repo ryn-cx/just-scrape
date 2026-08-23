@@ -1,68 +1,54 @@
-from pydantic import ConfigDict, Field
-from good_ass_pydantic_integrator import GAPIBaseModel
-from typing import Any
+"""SeasonEpisodesModel, strict to a type checker, all-optional at runtime.
 
-class Package(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    clear_name: str = Field(..., alias='clearName')
-    package_id: int = Field(..., alias='packageId')
-    field__typename: str = Field(..., alias='__typename')
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class FlatrateItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias='__typename')
+from typing import TYPE_CHECKING
 
-class BuyItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias='__typename')
+from good_ass_pydantic_integrator import load
 
-class FastItem(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    package: Package
-    field__typename: str = Field(..., alias='__typename')
+from .optional_models import SeasonEpisodesModel as OptionalModel
+from .strict_models import SeasonEpisodesModel as StrictModel
 
-class Content(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field__typename: str = Field(..., alias='__typename')
-    title: str
-    short_description: str = Field(..., alias='shortDescription')
-    episode_number: int = Field(..., alias='episodeNumber')
-    season_number: int = Field(..., alias='seasonNumber')
-    is_released: bool = Field(..., alias='isReleased')
-    runtime: int
-    upcoming_releases: list[None] = Field(..., alias='upcomingReleases')
+if TYPE_CHECKING:
+    from .strict_models import (
+        BuyItem,
+        Content,
+        Data,
+        Episode,
+        FlatrateItem,
+        Node,
+        Package,
+        SeasonEpisodesModel,
+    )
+else:
+    from .optional_models import (
+        BuyItem,
+        Content,
+        Data,
+        Episode,
+        FlatrateItem,
+        Node,
+        Package,
+        SeasonEpisodesModel,
+    )
 
-class Episode(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    object_id: int = Field(..., alias='objectId')
-    object_type: str = Field(..., alias='objectType')
-    seenlist_entry: None = Field(..., alias='seenlistEntry')
-    unique_offer_count: int = Field(..., alias='uniqueOfferCount')
-    flatrate: list[FlatrateItem]
-    buy: list[BuyItem]
-    rent: list[None]
-    free: list[None]
-    fast: list[FastItem]
-    content: Content
-    field__typename: str = Field(..., alias='__typename')
+__all__ = [
+    "BuyItem",
+    "Content",
+    "Data",
+    "Episode",
+    "FlatrateItem",
+    "Node",
+    "Package",
+    "SeasonEpisodesModel",
+    "model_validate_json",
+]
 
-class Node(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    field__typename: str = Field(..., alias='__typename')
-    episodes: list[Episode]
 
-class Data(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    node: Node
-
-class SeasonEpisodesResponse(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: Data
+def model_validate_json(data: str | bytes | object, log_id: str) -> SeasonEpisodesModel:
+    """Read a downloaded file into SeasonEpisodesModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

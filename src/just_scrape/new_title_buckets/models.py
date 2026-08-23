@@ -1,59 +1,57 @@
-from pydantic import ConfigDict, Field
-from good_ass_pydantic_integrator import GAPIBaseModel
-from datetime import date as date_aliased
+"""NewTitleBucketsModel, strict to a type checker, all-optional at runtime.
 
-class PageInfo(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    start_cursor: str = Field(..., alias='startCursor')
-    end_cursor: str = Field(..., alias='endCursor')
-    has_previous_page: bool = Field(..., alias='hasPreviousPage')
-    has_next_page: bool = Field(..., alias='hasNextPage')
-    field__typename: str = Field(..., alias='__typename')
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class Package(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    package_id: int = Field(..., alias='packageId')
-    short_name: str = Field(..., alias='shortName')
-    icon: str
-    field__typename: str = Field(..., alias='__typename')
+from typing import TYPE_CHECKING
 
-class Key(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field__typename: str = Field(..., alias='__typename')
-    date: date_aliased
-    package: Package
+from good_ass_pydantic_integrator import load
 
-class PageInfo1(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    start_cursor: str = Field(..., alias='startCursor')
-    end_cursor: str = Field(..., alias='endCursor')
-    has_next_page: bool = Field(..., alias='hasNextPage')
-    has_previous_page: bool = Field(..., alias='hasPreviousPage')
-    field__typename: str = Field(..., alias='__typename')
+from .optional_models import NewTitleBucketsModel as OptionalModel
+from .strict_models import NewTitleBucketsModel as StrictModel
 
-class Node(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    total_count: int = Field(..., alias='totalCount')
-    page_info: PageInfo1 = Field(..., alias='pageInfo')
-    field__typename: str = Field(..., alias='__typename')
+if TYPE_CHECKING:
+    from .strict_models import (
+        Data,
+        Edge,
+        Key,
+        NewTitleBuckets,
+        NewTitleBucketsModel,
+        Node,
+        Package,
+        PageInfo,
+        PageInfo1,
+    )
+else:
+    from .optional_models import (
+        Data,
+        Edge,
+        Key,
+        NewTitleBuckets,
+        NewTitleBucketsModel,
+        Node,
+        Package,
+        PageInfo,
+        PageInfo1,
+    )
 
-class Edge(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    key: Key
-    node: Node
-    field__typename: str = Field(..., alias='__typename')
+__all__ = [
+    "Data",
+    "Edge",
+    "Key",
+    "NewTitleBuckets",
+    "NewTitleBucketsModel",
+    "Node",
+    "Package",
+    "PageInfo",
+    "PageInfo1",
+    "model_validate_json",
+]
 
-class NewTitleBuckets(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    page_info: PageInfo = Field(..., alias='pageInfo')
-    edges: list[Edge]
-    field__typename: str = Field(..., alias='__typename')
 
-class Data(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    new_title_buckets: NewTitleBuckets = Field(..., alias='newTitleBuckets')
-
-class NewTitleBucketsResponse(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: Data
+def model_validate_json(data: str | bytes | object, log_id: str) -> NewTitleBucketsModel:
+    """Read a downloaded file into NewTitleBucketsModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

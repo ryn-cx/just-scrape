@@ -1,142 +1,75 @@
-from pydantic import ConfigDict, Field
-from good_ass_pydantic_integrator import GAPIBaseModel
-from datetime import date
+"""NewTitlesModel, strict to a type checker, all-optional at runtime.
 
-class Package(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    id: str
-    icon: str
-    package_id: int = Field(..., alias='packageId')
-    clear_name: str = Field(..., alias='clearName')
-    short_name: str = Field(..., alias='shortName')
-    technical_name: str = Field(..., alias='technicalName')
-    icon_wide: str = Field(..., alias='iconWide')
-    has_rectangular_icon: bool = Field(..., alias='hasRectangularIcon')
-    field__typename: str = Field(..., alias='__typename')
+A type checker reads the strict model, so every field carries the type and
+the requiredness the schema recorded. At runtime the all-optional copy is imported
+instead, so a response that has drifted still parses and a field the data is
+missing is None despite what its type hint says.
+"""
 
-class NewOffer(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field__typename: str = Field(..., alias='__typename')
-    id: str
-    standard_web_url: str = Field(..., alias='standardWebURL')
-    pre_affiliated_standard_web_url: None = Field(..., alias='preAffiliatedStandardWebURL')
-    stream_url: None = Field(..., alias='streamUrl')
-    stream_url_external_player: None = Field(..., alias='streamUrlExternalPlayer')
-    package: Package
-    retail_price: str | None = Field(..., alias='retailPrice')
-    retail_price_value: float | None = Field(..., alias='retailPriceValue')
-    last_change_retail_price_value: None = Field(..., alias='lastChangeRetailPriceValue')
-    currency: str
-    presentation_type: str = Field(..., alias='presentationType')
-    monetization_type: str = Field(..., alias='monetizationType')
-    available_to: date | None = Field(..., alias='availableTo')
-    date_created: date = Field(..., alias='dateCreated')
-    new_element_count: int = Field(..., alias='newElementCount')
-    last_change_retail_price: None = Field(..., alias='lastChangeRetailPrice')
-    last_change_percent: int = Field(..., alias='lastChangePercent')
+from typing import TYPE_CHECKING
 
-class Scoring(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    imdb_votes: int | None = Field(..., alias='imdbVotes')
-    imdb_score: int | float | None = Field(..., alias='imdbScore')
-    tmdb_popularity: float | None = Field(..., alias='tmdbPopularity')
-    tmdb_score: int | float | None = Field(..., alias='tmdbScore')
-    tomato_meter: int | None = Field(..., alias='tomatoMeter')
-    certified_fresh: bool | None = Field(..., alias='certifiedFresh')
-    field__typename: str = Field(..., alias='__typename')
+from good_ass_pydantic_integrator import load
 
-class Genre(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    translation: str
-    field__typename: str = Field(..., alias='__typename')
+from .optional_models import NewTitlesModel as OptionalModel
+from .strict_models import NewTitlesModel as StrictModel
 
-class Content(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    title: str
-    short_description: str = Field(..., alias='shortDescription')
-    full_path: str = Field(..., alias='fullPath')
-    scoring: Scoring
-    poster_url: str = Field(..., alias='posterUrl')
-    runtime: int
-    genres: list[Genre]
-    season_number: int | None = Field(None, alias='seasonNumber')
-    field__typename: str = Field(..., alias='__typename')
-    is_released: bool = Field(..., alias='isReleased')
+if TYPE_CHECKING:
+    from .strict_models import (
+        Content,
+        Content1,
+        Data,
+        Edge,
+        Genre,
+        NewOffer,
+        NewTitles,
+        NewTitlesModel,
+        Node,
+        Package,
+        PageInfo,
+        Scoring,
+        Scoring1,
+        SeenState,
+        Show,
+    )
+else:
+    from .optional_models import (
+        Content,
+        Content1,
+        Data,
+        Edge,
+        Genre,
+        NewOffer,
+        NewTitles,
+        NewTitlesModel,
+        Node,
+        Package,
+        PageInfo,
+        Scoring,
+        Scoring1,
+        SeenState,
+        Show,
+    )
 
-class Scoring1(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    imdb_votes: int | None = Field(..., alias='imdbVotes')
-    imdb_score: int | float | None = Field(..., alias='imdbScore')
-    tmdb_popularity: float | None = Field(..., alias='tmdbPopularity')
-    tmdb_score: float | None = Field(..., alias='tmdbScore')
-    field__typename: str = Field(..., alias='__typename')
+__all__ = [
+    "Content",
+    "Content1",
+    "Data",
+    "Edge",
+    "Genre",
+    "NewOffer",
+    "NewTitles",
+    "NewTitlesModel",
+    "Node",
+    "Package",
+    "PageInfo",
+    "Scoring",
+    "Scoring1",
+    "SeenState",
+    "Show",
+    "model_validate_json",
+]
 
-class Content1(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    title: str
-    short_description: str = Field(..., alias='shortDescription')
-    full_path: str = Field(..., alias='fullPath')
-    scoring: Scoring1
-    poster_url: str | None = Field(..., alias='posterUrl')
-    runtime: int
-    genres: list[Genre]
-    field__typename: str = Field(..., alias='__typename')
 
-class SeenState(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    progress: int
-    field__typename: str = Field(..., alias='__typename')
-
-class Show(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field__typename: str = Field(..., alias='__typename')
-    id: str
-    object_id: int = Field(..., alias='objectId')
-    object_type: str = Field(..., alias='objectType')
-    content: Content1
-    likelist_entry: None = Field(..., alias='likelistEntry')
-    dislikelist_entry: None = Field(..., alias='dislikelistEntry')
-    watchlist_entry_v2: None = Field(..., alias='watchlistEntryV2')
-    seen_state: SeenState = Field(..., alias='seenState')
-
-class Node(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    field__typename: str = Field(..., alias='__typename')
-    id: str
-    object_id: int = Field(..., alias='objectId')
-    object_type: str = Field(..., alias='objectType')
-    content: Content
-    likelist_entry: None = Field(..., alias='likelistEntry')
-    dislikelist_entry: None = Field(..., alias='dislikelistEntry')
-    show: Show | None = None
-    seenlist_entry: None = Field(None, alias='seenlistEntry')
-    watchlist_entry_v2: None = Field(None, alias='watchlistEntryV2')
-
-class Edge(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    cursor: str
-    new_offer: NewOffer = Field(..., alias='newOffer')
-    node: Node
-    field__typename: str = Field(..., alias='__typename')
-
-class PageInfo(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    end_cursor: str = Field(..., alias='endCursor')
-    has_previous_page: bool = Field(..., alias='hasPreviousPage')
-    has_next_page: bool = Field(..., alias='hasNextPage')
-    field__typename: str = Field(..., alias='__typename')
-
-class NewTitles(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    total_count: int = Field(..., alias='totalCount')
-    edges: list[Edge]
-    page_info: PageInfo = Field(..., alias='pageInfo')
-    field__typename: str = Field(..., alias='__typename')
-
-class Data(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    new_titles: NewTitles = Field(..., alias='newTitles')
-
-class NewTitlesResponse(GAPIBaseModel):
-    model_config = ConfigDict(extra='forbid')
-    data: Data
+def model_validate_json(data: str | bytes | object, log_id: str) -> NewTitlesModel:
+    """Read a downloaded file into NewTitlesModel."""
+    return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

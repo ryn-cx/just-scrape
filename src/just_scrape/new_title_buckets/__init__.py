@@ -1,34 +1,108 @@
 # TODO: Validate
-# As of 3/13/2026 API is broken server side and returns a truncated set of results if
-# objectTypes is empty. Set to "SHOW_SEASON" or "MOVIE" to fix pagination. This is a
-# server side bug because the website itself is broken
-# https://www.justwatch.com/us/tv-shows/new
 """Contains the NewTitleBuckets class."""
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from just_scrape.base_client import BaseEndpoint
+from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import InvalidFileError
 from just_scrape.new_title_buckets import query
-from just_scrape.new_title_buckets.models import NewTitleBucketsResponse
-
-if TYPE_CHECKING:
-    import datetime
-
-    from just_scrape.new_title_buckets.models import Edge
+from just_scrape.new_title_buckets.models import (
+    NewTitleBucketsModel,
+    model_validate_json,
+)
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
-    """Manage the new title buckets file."""
+# TODO: Validate
+class NewTitleBuckets(BaseEndpoint):
+    """Manage the new title buckets file.
 
-    _response_model = NewTitleBucketsResponse
+    As of 3/13/2026 the API pages wrongly when objectTypes is empty and answers
+    with a truncated set of results. Set `filter_object_types` to
+    `["SHOW_SEASON"]` or `["MOVIE"]` to fix pagination. It is a server side bug,
+    because the website itself is broken:
+    https://www.justwatch.com/us/tv-shows/new
 
+    Source: https://www.justwatch.com/us/new
+
+    Example request:
+        - POST /graphql HTTP/2
+        - Host: apis.justwatch.com
+        - User-Agent: __REDACTED__
+        - Accept: */*
+        - Content-Type: application/json
+        - Referer: https://www.justwatch.com/
+        - Origin: https://www.justwatch.com
+        - Body:
+            - operationName: GetNewTitleBuckets
+            - query: the document in `query.py`
+            - variables:
+                - first=8
+                - bucketSize=0
+                - groupBy=DATE_PACKAGE
+                - pageType=NEW
+                - country=US
+                - priceDrops=false
+    """
+
+    # TODO: Validate
+    def __call__(  # noqa: PLR0913 - Each parameter maps to an API parameter.
+        self,
+        *,
+        first: int = 8,
+        bucket_size: int = 0,
+        group_by: str = "DATE_PACKAGE",
+        page_type: str = "NEW",
+        country: str = "US",
+        new_after_cursor: str = "",
+        price_drops: bool = False,
+        filter_age_certifications: list[Any] | None = None,
+        filter_exclude_genres: list[Any] | None = None,
+        filter_exclude_production_countries: list[Any] | None = None,
+        filter_object_types: list[Any] | None = None,
+        filter_production_countries: list[Any] | None = None,
+        filter_subgenres: list[Any] | None = None,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[str] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+    ) -> NewTitleBucketsModel:
+        """Look the new title buckets up and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(
+            self.download(
+                first=first,
+                bucket_size=bucket_size,
+                group_by=group_by,
+                page_type=page_type,
+                country=country,
+                new_after_cursor=new_after_cursor,
+                price_drops=price_drops,
+                filter_age_certifications=filter_age_certifications,
+                filter_exclude_genres=filter_exclude_genres,
+                filter_exclude_production_countries=(
+                    filter_exclude_production_countries
+                ),
+                filter_object_types=filter_object_types,
+                filter_production_countries=filter_production_countries,
+                filter_subgenres=filter_subgenres,
+                filter_genres=filter_genres,
+                filter_packages=filter_packages,
+                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+                filter_presentation_types=filter_presentation_types,
+                filter_monetization_types=filter_monetization_types,
+            ),
+            log_id,
+        )
+
+    # TODO: Validate
     def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         *,
@@ -46,14 +120,14 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
         filter_production_countries: list[Any] | None = None,
         filter_subgenres: list[Any] | None = None,
         filter_genres: list[Any] | None = None,
-        filter_packages: list[None] | None = None,
+        filter_packages: list[str] | None = None,
         filter_exclude_irrelevant_titles: bool = False,
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
-    ) -> dict[str, Any]:
-        """Downloads the new title buckets file."""
+    ) -> str:
+        """Download the new title buckets file."""
         log_id = self.get_log_id(self.download, locals())
-        data = self._client.download(
+        response = self._client.download(
             "GetNewTitleBuckets",
             query.QUERY,
             {
@@ -80,128 +154,21 @@ class NewTitleBuckets(BaseEndpoint[NewTitleBucketsResponse]):
                 },
                 "priceDrops": price_drops,
             },
-            log_id=log_id,
+            log_id,
         )
-        # The response carries no echo of the request, so only its shape is checked.
-        if data.get("data", {}).get("newTitleBuckets", {}).get("edges") is None:
-            raise InvalidFileError(field="new title buckets", response=data)
-        return data
+        return self._validate_download(response)
 
-    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        *,
-        first: int = 8,
-        bucket_size: int = 0,
-        group_by: str = "DATE_PACKAGE",
-        page_type: str = "NEW",
-        country: str = "US",
-        new_after_cursor: str = "",
-        price_drops: bool = False,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[None] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-    ) -> NewTitleBucketsResponse:
-        """Downloads and parses the new title buckets file."""
-        data = self.download(
-            first=first,
-            bucket_size=bucket_size,
-            group_by=group_by,
-            page_type=page_type,
-            country=country,
-            new_after_cursor=new_after_cursor,
-            price_drops=price_drops,
-            filter_age_certifications=filter_age_certifications,
-            filter_exclude_genres=filter_exclude_genres,
-            filter_exclude_production_countries=filter_exclude_production_countries,
-            filter_object_types=filter_object_types,
-            filter_production_countries=filter_production_countries,
-            filter_subgenres=filter_subgenres,
-            filter_genres=filter_genres,
-            filter_packages=filter_packages,
-            filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-            filter_presentation_types=filter_presentation_types,
-            filter_monetization_types=filter_monetization_types,
-        )
-        return self.parse(data)
+    # TODO: Validate
+    @staticmethod
+    def _validate_download(response: str) -> str:
+        # The response carries no echo of the request, so only its shape is
+        # checked.
+        buckets = json.loads(response).get("data", {}).get("newTitleBuckets", {})
+        if buckets.get("edges") is None:
+            raise InvalidFileError(field="new title buckets", response=response)
+        return response
 
-    def download_and_parse_since_date(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        end_date: datetime.date,
-        *,
-        first: int = 8,
-        bucket_size: int = 0,
-        group_by: str = "DATE_PACKAGE",
-        page_type: str = "NEW",
-        country: str = "US",
-        price_drops: bool = False,
-        filter_age_certifications: list[Any] | None = None,
-        filter_exclude_genres: list[Any] | None = None,
-        filter_exclude_production_countries: list[Any] | None = None,
-        filter_object_types: list[Any] | None = None,
-        filter_production_countries: list[Any] | None = None,
-        filter_subgenres: list[Any] | None = None,
-        filter_genres: list[Any] | None = None,
-        filter_packages: list[None] | None = None,
-        filter_exclude_irrelevant_titles: bool = False,
-        filter_presentation_types: list[Any] | None = None,
-        filter_monetization_types: list[Any] | None = None,
-    ) -> list[NewTitleBucketsResponse]:
-        """Downloads and parses all new title buckets since a date."""
-        new_after_cursor = ""
-        output: list[NewTitleBucketsResponse] = []
-
-        while True:
-            parsed = self.download_and_parse(
-                first=first,
-                bucket_size=bucket_size,
-                group_by=group_by,
-                page_type=page_type,
-                country=country,
-                new_after_cursor=new_after_cursor,
-                price_drops=price_drops,
-                filter_age_certifications=filter_age_certifications,
-                filter_exclude_genres=filter_exclude_genres,
-                filter_exclude_production_countries=filter_exclude_production_countries,
-                filter_object_types=filter_object_types,
-                filter_production_countries=filter_production_countries,
-                filter_subgenres=filter_subgenres,
-                filter_genres=filter_genres,
-                filter_packages=filter_packages,
-                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
-                filter_presentation_types=filter_presentation_types,
-                filter_monetization_types=filter_monetization_types,
-            )
-            output.append(parsed)
-
-            last_edge = parsed.data.new_title_buckets.edges[-1]
-            if last_edge.key.date < end_date:
-                return output
-
-            if not parsed.data.new_title_buckets.page_info.has_next_page:
-                return output
-
-            new_after_cursor = parsed.data.new_title_buckets.page_info.end_cursor
-
-    def extract_edges(
-        self,
-        data: NewTitleBucketsResponse | list[NewTitleBucketsResponse],
-    ) -> list[Edge]:
-        """Get all of the edges for a new title buckets input."""
-        if isinstance(data, list):
-            result: list[Edge] = []
-            for resp in data:
-                result.extend(self.extract_edges(resp))
-            return result
-
-        if isinstance(data, dict):
-            data = self.parse(data)
-
-        return data.data.new_title_buckets.edges
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> NewTitleBucketsModel:
+        """Read a downloaded new title buckets file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

@@ -3,23 +3,78 @@
 
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
-from typing import Any
 
-from just_scrape.base_client import BaseEndpoint
+from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import InvalidFileError
 from just_scrape.search import query
-from just_scrape.search.models import SearchResponse
+from just_scrape.search.models import SearchModel, model_validate_json
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class Search(BaseEndpoint[SearchResponse]):
-    """Manage the search file."""
+# TODO: Validate
+class Search(BaseEndpoint):
+    """Manage the search file.
 
-    _response_model = SearchResponse
+    Source: https://www.justwatch.com/us/search?q={query}
 
+    Example request:
+        - POST /graphql HTTP/2
+        - Host: apis.justwatch.com
+        - User-Agent: __REDACTED__
+        - Accept: */*
+        - Content-Type: application/json
+        - Referer: https://www.justwatch.com/
+        - Origin: https://www.justwatch.com
+        - Body:
+            - operationName: GetSearchTitles
+            - query: the document in `query.py`
+            - variables:
+                - searchTitlesFilter.searchQuery={query}
+                - first=5
+                - searchTitlesSortBy=POPULAR
+                - country=US
+                - language=en
+                - location=SearchPage
+    """
+
+    # TODO: Validate
+    def __call__(  # noqa: PLR0913 - Each parameter maps to an API parameter.
+        self,
+        search_query: str,
+        *,
+        first: int = 5,
+        search_titles_sort_by: str = "POPULAR",
+        sort_random_seed: int = 0,
+        search_after_cursor: str = "",
+        include_titles_without_url: bool = True,
+        person_id: str | None = None,
+        language: str = "en",
+        country: str = "US",
+        location: str = "SearchPage",
+    ) -> SearchModel:
+        """Run the search and return the model it is read into."""
+        log_id = self.get_log_id(self.__call__, locals())
+        return self.load(
+            self.download(
+                search_query,
+                first=first,
+                search_titles_sort_by=search_titles_sort_by,
+                sort_random_seed=sort_random_seed,
+                search_after_cursor=search_after_cursor,
+                include_titles_without_url=include_titles_without_url,
+                person_id=person_id,
+                language=language,
+                country=country,
+                location=location,
+            ),
+            log_id,
+        )
+
+    # TODO: Validate
     def download(  # noqa: PLR0913 - Each parameter maps to an API parameter.
         self,
         search_query: str,
@@ -33,10 +88,10 @@ class Search(BaseEndpoint[SearchResponse]):
         language: str = "en",
         country: str = "US",
         location: str = "SearchPage",
-    ) -> dict[str, Any]:
-        """Downloads the search file."""
+    ) -> str:
+        """Download the search file."""
         log_id = self.get_log_id(self.download, locals())
-        data = self._client.download(
+        response = self._client.download(
             "GetSearchTitles",
             query.QUERY,
             {
@@ -47,44 +102,27 @@ class Search(BaseEndpoint[SearchResponse]):
                 "searchTitlesFilter": {
                     "searchQuery": search_query,
                     "personId": person_id,
-                    "includeTitlesWithoutUrl": (include_titles_without_url),
+                    "includeTitlesWithoutUrl": include_titles_without_url,
                 },
                 "language": language,
                 "country": country,
                 "location": location,
             },
-            log_id=log_id,
+            log_id,
         )
-        # The response carries no echo of the query, so only its shape is checked.
-        if data.get("data", {}).get("searchTitles", {}).get("edges") is None:
-            raise InvalidFileError(field="search titles", response=data)
-        return data
+        return self._validate_download(response)
 
-    def download_and_parse(  # noqa: PLR0913 - Each parameter maps to an API parameter.
-        self,
-        search_query: str,
-        *,
-        first: int = 5,
-        search_titles_sort_by: str = "POPULAR",
-        sort_random_seed: int = 0,
-        search_after_cursor: str = "",
-        include_titles_without_url: bool = True,
-        person_id: str | None = None,
-        language: str = "en",
-        country: str = "US",
-        location: str = "SearchPage",
-    ) -> SearchResponse:
-        """Downloads and parses the search file."""
-        data = self.download(
-            search_query=search_query,
-            first=first,
-            search_titles_sort_by=search_titles_sort_by,
-            sort_random_seed=sort_random_seed,
-            search_after_cursor=search_after_cursor,
-            include_titles_without_url=include_titles_without_url,
-            person_id=person_id,
-            language=language,
-            country=country,
-            location=location,
-        )
-        return self.parse(data)
+    # TODO: Validate
+    @staticmethod
+    def _validate_download(response: str) -> str:
+        # The response carries no echo of the query, so only its shape is
+        # checked. A query nothing matches is answered with an empty page.
+        search_titles = json.loads(response).get("data", {}).get("searchTitles", {})
+        if search_titles.get("edges") is None:
+            raise InvalidFileError(field="search titles", response=response)
+        return response
+
+    # TODO: Validate
+    def load(self, data: str, log_id: str = "") -> SearchModel:
+        """Read a downloaded search file into its model."""
+        return model_validate_json(data, log_id or type(self).__name__)

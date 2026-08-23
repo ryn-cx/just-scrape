@@ -2,7 +2,7 @@
 """GraphQL query."""
 
 # ruff: noqa: E501
-QUERY = """query GetBuyBoxOffers($nodeId: ID!, $country: Country!, $language: Language!, $platform: Platform! = WEB, $fallbackToForeignOffers: Boolean = true, $excludePackages: [String!] = []) {
+QUERY = """query GetBuyBoxOffers($isLinearTvExperiment: Boolean = false, $nodeId: ID!, $country: Country!, $language: Language!, $platform: Platform! = WEB, $fallbackToForeignOffers: Boolean = true, $excludePackages: [String!] = []) {
   node(id: $nodeId) {
     id
     ...BuyBoxOffers
@@ -14,10 +14,15 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
   __typename
   offerCount(country: $country, platform: $platform)
   maxOfferUpdatedAt(country: $country, platform: $platform)
+  totalPackages(
+    country: $country
+    platform: $platform
+    fallbackToForeignOffers: $fallbackToForeignOffers
+  )
   offersHistory(
     country: $country
     platform: $platform
-    filterV2: {monetizationTypes: [FLATRATE, FLATRATE_AND_BUY, RENT, FREE, ADS, BUY, FAST], bestOnly: true, preAffiliate: true, fallbackToForeignOffers: $fallbackToForeignOffers, excludePackages: $excludePackages}
+    filterV2: {monetizationTypes: [FLATRATE, FLATRATE_AND_BUY, RENT, FREE, ADS, BUY, FAST, LINEAR_FLATRATE, LINEAR_FREE], bestOnly: true, preAffiliate: true, fallbackToForeignOffers: $fallbackToForeignOffers, excludePackages: $excludePackages}
   ) {
     ...OffersHistory
     __typename
@@ -28,6 +33,16 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
     filter: {monetizationTypes: [FLATRATE, FLATRATE_AND_BUY, CINEMA], bestOnly: true, preAffiliate: true, fallbackToForeignOffers: $fallbackToForeignOffers, excludePackages: $excludePackages}
   ) {
     ...TitleOffer
+    __typename
+  }
+  dvdBluray: offers(
+    country: $country
+    platform: $platform
+    filter: {presentationTypes: [DVD, BLURAY, BLURAY_4K], preAffiliate: true, excludePackages: $excludePackages}
+  ) {
+    ...TitleOffer
+    offerSeasons
+    minRetailPrice(country: $country, platform: $platform, language: $language)
     __typename
   }
   buy: offers(
@@ -58,12 +73,31 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
     ...TitleOffer
     __typename
   }
-  fast: offers(
+  linear: offers(
     country: $country
     platform: $platform
-    filter: {monetizationTypes: [FAST], bestOnly: true, preAffiliate: true, fallbackToForeignOffers: $fallbackToForeignOffers, excludePackages: $excludePackages}
+    filter: {monetizationTypes: [FAST, LINEAR_FREE, LINEAR_FLATRATE], bestOnly: true, preAffiliate: true, fallbackToForeignOffers: $fallbackToForeignOffers, excludePackages: $excludePackages}
   ) {
-    ...FastOffer
+    ...TitleOffer
+    offerEpisodes @include(if: $isLinearTvExperiment) {
+      offer {
+        id
+        availableFromTime
+        availableToTime
+        __typename
+      }
+      episode {
+        id
+        content(country: $country, language: $language) {
+          title
+          seasonNumber
+          episodeNumber
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
     __typename
   }
   bundles(country: $country, platform: WEB) {
@@ -73,12 +107,14 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
       icon(profile: S100)
       technicalName
       bundleId
+      shortName
       packages(country: $country, platform: $platform) {
         icon
         id
         iconWide(profile: S160)
         clearName
         packageId
+        shortName
         __typename
       }
       __typename
@@ -98,12 +134,14 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
         icon(profile: S100)
         technicalName
         bundleId
+        shortName
         packages(country: $country, platform: $platform) {
           icon
           id
           clearName
           packageId
           iconWide(profile: S160)
+          shortName
           __typename
         }
         __typename
@@ -121,6 +159,7 @@ fragment BuyBoxOffers on MovieOrShowOrSeasonOrEpisode {
       filter: {bestOnly: true, preAffiliate: true}
     ) {
       ...TitleOffer
+      offerSeasons
       minRetailPrice(country: $country, platform: $platform, language: $language)
       __typename
     }
@@ -155,6 +194,8 @@ fragment TitleOffer on Offer {
   newElementCount
   retailPrice(language: $language)
   retailPriceValue
+  userLocalCurrency
+  retailPriceConverted(language: $language)
   currency
   lastChangeRetailPriceValue
   type
@@ -167,12 +208,14 @@ fragment TitleOffer on Offer {
     technicalName
     icon(profile: S100)
     iconWide(profile: S160)
+    maskReferrer(country: $country, platform: WEB)
     planOffers(country: $country, platform: WEB) {
       title
       retailPrice(language: $language)
       isTrial
       durationDays
       retailPriceValue
+      retailPriceConverted(language: $language)
       children {
         title
         retailPrice(language: $language)
@@ -191,6 +234,7 @@ fragment TitleOffer on Offer {
     isTrial
     durationDays
     retailPriceValue
+    retailPriceConverted(language: $language)
     children {
       title
       retailPrice(language: $language)
@@ -207,18 +251,14 @@ fragment TitleOffer on Offer {
   streamUrlExternalPlayer
   elementCount
   availableTo
+  availableFromTime
+  availableToTime
   subtitleLanguages
   videoTechnology
   audioTechnology
   audioLanguages(language: $language)
-  __typename
-}
-
-fragment FastOffer on Offer {
-  ...TitleOffer
-  availableTo
-  availableFromTime
-  availableToTime
+  updatedAt
+  mediaDealId
   __typename
 }
 """

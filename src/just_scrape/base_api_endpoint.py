@@ -1,14 +1,10 @@
 # TODO: Validate
-"""Base GAPIClient for just-scrape."""
+"""Contains BaseEndpoint."""
 
 from __future__ import annotations
 
 from inspect import Parameter, signature
 from typing import TYPE_CHECKING, Any
-
-from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
-
-from just_scrape.constants import FILES_PATH
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -16,15 +12,16 @@ if TYPE_CHECKING:
     from just_scrape import JustScrape
 
 
-class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
+# TODO: Validate
+class BaseEndpoint:
     """Base class for API endpoints."""
 
-    JSON_FILES_ROOT = FILES_PATH
-
+    # TODO: Validate
     def __init__(self, client: JustScrape) -> None:
         """Initialize the endpoint with the JustScrape client."""
         self._client = client
 
+    # TODO: Validate
     @staticmethod
     def non_default_args(
         func: Callable[..., Any],
@@ -39,8 +36,9 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
             and values[name] != param.default
         }
 
+    # TODO: Validate
     def get_log_id(self, func: Callable[..., Any], values: dict[str, Any]) -> str:
-        """Gets the log id.
+        """Get the log id.
 
         Example: ClassName (arg1='value1' arg2='value2')
         """
