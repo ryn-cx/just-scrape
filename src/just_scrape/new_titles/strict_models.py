@@ -1,9 +1,11 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from datetime import date
 
 class Package(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     icon: str
     package_id: int = Field(..., alias='packageId')
@@ -15,6 +17,7 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class NewOffer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     standard_web_url: str = Field(..., alias='standardWebURL')
@@ -35,6 +38,7 @@ class NewOffer(BaseModel):
     last_change_percent: int = Field(..., alias='lastChangePercent')
 
 class Scoring(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     imdb_votes: int = Field(..., alias='imdbVotes')
     imdb_score: int | float = Field(..., alias='imdbScore')
     tmdb_popularity: float = Field(..., alias='tmdbPopularity')
@@ -44,10 +48,12 @@ class Scoring(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     translation: str
     field__typename: str = Field(..., alias='__typename')
 
 class Content(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     short_description: str = Field(..., alias='shortDescription')
     full_path: str = Field(..., alias='fullPath')
@@ -60,6 +66,7 @@ class Content(BaseModel):
     season_number: int | None = Field(None, alias='seasonNumber')
 
 class Scoring1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     imdb_votes: int = Field(..., alias='imdbVotes')
     imdb_score: float = Field(..., alias='imdbScore')
     tmdb_popularity: float = Field(..., alias='tmdbPopularity')
@@ -67,6 +74,7 @@ class Scoring1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Content1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     short_description: str = Field(..., alias='shortDescription')
     full_path: str = Field(..., alias='fullPath')
@@ -77,10 +85,12 @@ class Content1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class SeenState(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     progress: int
     field__typename: str = Field(..., alias='__typename')
 
 class Show(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     object_id: int = Field(..., alias='objectId')
@@ -92,6 +102,7 @@ class Show(BaseModel):
     seen_state: SeenState = Field(..., alias='seenState')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     object_id: int = Field(..., alias='objectId')
@@ -104,27 +115,32 @@ class Node(BaseModel):
     show: Show | None = None
 
 class Edge(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     cursor: str
     new_offer: NewOffer = Field(..., alias='newOffer')
     node: Node
     field__typename: str = Field(..., alias='__typename')
 
 class PageInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end_cursor: str = Field(..., alias='endCursor')
     has_previous_page: bool = Field(..., alias='hasPreviousPage')
     has_next_page: bool = Field(..., alias='hasNextPage')
     field__typename: str = Field(..., alias='__typename')
 
 class NewTitles(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total_count: int = Field(..., alias='totalCount')
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias='pageInfo')
     field__typename: str = Field(..., alias='__typename')
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     new_titles: NewTitles = Field(..., alias='newTitles')
 
 class NewTitlesModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 

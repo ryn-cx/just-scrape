@@ -4,7 +4,7 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class PlanOffer(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     title: str | None = None
     retail_price: str | None = Field(None, alias='retailPrice')
     is_trial: bool | None = Field(None, alias='isTrial')
@@ -15,7 +15,7 @@ class PlanOffer(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Package(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package_id: int | None = Field(None, alias='packageId')
     clear_name: str | None = Field(None, alias='clearName')
@@ -28,7 +28,7 @@ class Package(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Plan(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     title: str | None = None
     retail_price: str | None = Field(None, alias='retailPrice')
     is_trial: bool | None = Field(None, alias='isTrial')
@@ -39,7 +39,7 @@ class Plan(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class FlatrateItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     presentation_type: str | None = Field(None, alias='presentationType')
     monetization_type: str | None = Field(None, alias='monetizationType')
@@ -71,7 +71,7 @@ class FlatrateItem(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Package1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     icon: str | None = None
     id: str | None = None
     icon_wide: str | None = Field(None, alias='iconWide')
@@ -81,7 +81,7 @@ class Package1(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Node1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     clear_name: str | None = Field(None, alias='clearName')
     icon: str | None = None
@@ -92,7 +92,7 @@ class Node1(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Package2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package_id: int | None = Field(None, alias='packageId')
     clear_name: str | None = Field(None, alias='clearName')
@@ -105,7 +105,7 @@ class Package2(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Offer(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     presentation_type: str | None = Field(None, alias='presentationType')
     monetization_type: str | None = Field(None, alias='monetizationType')
@@ -137,14 +137,14 @@ class Offer(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Bundle(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     node: Node1 | None = None
     promotion_url: str | None = Field(None, alias='promotionUrl')
     offer: Offer | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     field__typename: str | None = Field(None, alias='__typename')
     offer_count: int | None = Field(None, alias='offerCount')
@@ -160,11 +160,11 @@ class Node(BaseModel):
     bundles: list[Bundle] | None = None
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     node: Node | None = None
 
 class EpisodeOffersModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

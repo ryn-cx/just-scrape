@@ -197,7 +197,7 @@ class SeasonEpisodes(BaseEndpoint):
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SeasonEpisodesModel:
         """Read a downloaded season episodes file into its model."""
-        return model_validate_json(data, log_id or type(self).__name__)
+        return model_validate_json(data, log_id or self.default_log_id)
 
     # TODO: Validate
     def load_pages(self, pages: list[str]) -> list[SeasonEpisodesModel]:

@@ -1,10 +1,12 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 from datetime import date
 
 class PlanOffer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
@@ -14,6 +16,7 @@ class PlanOffer(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package_id: int = Field(..., alias='packageId')
     clear_name: str = Field(..., alias='clearName')
@@ -25,6 +28,7 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Plan(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
@@ -34,6 +38,7 @@ class Plan(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Offer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     presentation_type: str = Field(..., alias='presentationType')
     monetization_type: str = Field(..., alias='monetizationType')
@@ -59,6 +64,7 @@ class Offer(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     icon: str
     package_id: int = Field(..., alias='packageId')
@@ -70,6 +76,7 @@ class Package1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class WatchNowOffer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     standard_web_url: str = Field(..., alias='standardWebURL')
@@ -88,6 +95,7 @@ class WatchNowOffer(BaseModel):
     new_element_count: int = Field(..., alias='newElementCount')
 
 class Clip(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     source_url: str = Field(..., alias='sourceUrl')
     external_id: str = Field(..., alias='externalId')
     provider: str
@@ -95,6 +103,7 @@ class Clip(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class DailymotionClip(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     source_url: str = Field(..., alias='sourceUrl')
     external_id: str = Field(..., alias='externalId')
     provider: str
@@ -102,25 +111,30 @@ class DailymotionClip(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class FallBackClips(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     clips: list[Clip]
     videobuster_clips: list[None] = Field(..., alias='videobusterClips')
     dailymotion_clips: list[DailymotionClip] = Field(..., alias='dailymotionClips')
     field__typename: str = Field(..., alias='__typename')
 
 class Backdrop(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     backdrop_url: str = Field(..., alias='backdropUrl')
     field__typename: str = Field(..., alias='__typename')
 
 class FullBackdrop(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     backdrop_url: str = Field(..., alias='backdropUrl')
     field__typename: str = Field(..., alias='__typename')
 
 class ExternalIds(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     imdb_id: str = Field(..., alias='imdbId')
     wikidata_id: str | None = Field(..., alias='wikidataId')
     field__typename: str = Field(..., alias='__typename')
 
 class Scoring(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     imdb_score: float = Field(..., alias='imdbScore')
     imdb_votes: int = Field(..., alias='imdbVotes')
     tmdb_popularity: float = Field(..., alias='tmdbPopularity')
@@ -131,25 +145,30 @@ class Scoring(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Genre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     short_name: str = Field(..., alias='shortName')
     translation: str
     field__typename: str = Field(..., alias='__typename')
 
 class Url(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     full_path: str = Field(..., alias='fullPath')
     field__typename: str = Field(..., alias='__typename')
 
 class Content1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     short_name: str = Field(..., alias='shortName')
     name: str
     field__typename: str = Field(..., alias='__typename')
     url: Url
 
 class Subgenre(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     content: Content1
     field__typename: str = Field(..., alias='__typename')
 
 class Credit(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     role: str
     name: str
     character_name: str = Field(..., alias='characterName')
@@ -159,17 +178,20 @@ class Credit(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Interactions(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     dislikelist_additions: int = Field(..., alias='dislikelistAdditions')
     likelist_additions: int = Field(..., alias='likelistAdditions')
     votes_number: int = Field(..., alias='votesNumber')
     field__typename: str = Field(..., alias='__typename')
 
 class Tag(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     technical_name: str = Field(..., alias='technicalName')
     translated_name: str = Field(..., alias='translatedName')
     field__typename: str = Field(..., alias='__typename')
 
 class Content(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     backdrops: list[Backdrop]
     full_backdrops: list[FullBackdrop] = Field(..., alias='fullBackdrops')
     clips: list[Clip]
@@ -199,12 +221,14 @@ class Content(BaseModel):
     tags: list[Tag]
 
 class PopularityRank(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     rank: int
     trend: str
     trend_difference: int = Field(..., alias='trendDifference')
     field__typename: str = Field(..., alias='__typename')
 
 class StreamingChartInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     rank: int
     trend: str
     trend_difference: int = Field(..., alias='trendDifference')
@@ -217,23 +241,28 @@ class StreamingChartInfo(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Edge(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     streaming_chart_info: StreamingChartInfo = Field(..., alias='streamingChartInfo')
     field__typename: str = Field(..., alias='__typename')
 
 class StreamingCharts(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     edges: list[Edge] | None
     field__typename: str = Field(..., alias='__typename')
 
 class SimilarTitlesV2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     sponsored_ad: None = Field(..., alias='sponsoredAd')
     field__typename: str = Field(..., alias='__typename')
 
 class DateRange(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     end: AwareDatetime
     start: AwareDatetime
     field__typename: str = Field(..., alias='__typename')
 
 class Package2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     icon: str
     id: str
     icon_wide: str = Field(..., alias='iconWide')
@@ -243,6 +272,7 @@ class Package2(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class OffersHistoryItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     country: str
@@ -250,6 +280,7 @@ class OffersHistoryItem(BaseModel):
     package: Package2
 
 class Package3(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package_id: int = Field(..., alias='packageId')
     clear_name: str = Field(..., alias='clearName')
@@ -261,6 +292,7 @@ class Package3(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class FlatrateItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     presentation_type: str = Field(..., alias='presentationType')
     monetization_type: str = Field(..., alias='monetizationType')
@@ -286,6 +318,7 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class RankInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     rank: int
     trend: str
     trend_difference: int = Field(..., alias='trendDifference')
@@ -298,6 +331,7 @@ class RankInfo(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Title(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     full_path: str = Field(..., alias='fullPath')
     jw_entity_id: str = Field(..., alias='jwEntityID')
     poster_url: str = Field(..., alias='posterUrl')
@@ -308,10 +342,12 @@ class Title(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Genre1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     translation: str
     field__typename: str = Field(..., alias='__typename')
 
 class Scoring1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     imdb_votes: int | float | None = Field(..., alias='imdbVotes')
     imdb_score: int | float | None = Field(..., alias='imdbScore')
     tomato_meter: int | None = Field(..., alias='tomatoMeter')
@@ -320,10 +356,12 @@ class Scoring1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Interactions1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     votes_number: int = Field(..., alias='votesNumber')
     field__typename: str = Field(..., alias='__typename')
 
 class Content3(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     poster_url: str | None = Field(..., alias='posterUrl')
     full_path: str = Field(..., alias='fullPath')
@@ -335,15 +373,18 @@ class Content3(BaseModel):
     season_number: int | None = Field(None, alias='seasonNumber')
 
 class SeenState(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     progress: int
     seen_episode_count: int = Field(..., alias='seenEpisodeCount')
     field__typename: str = Field(..., alias='__typename')
 
 class Content4(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     field__typename: str = Field(..., alias='__typename')
 
 class Show(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
@@ -351,6 +392,7 @@ class Show(BaseModel):
     content: Content4
 
 class Node1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
@@ -364,27 +406,32 @@ class Node1(BaseModel):
     show: Show | None = None
 
 class Titles1Item(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     node: Node1
     field__typename: str = Field(..., alias='__typename')
 
 class Content2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     titles: list[Title] | None = Field(None, alias='Titles')
     field__typename: str = Field(..., alias='__typename')
     titles_1: list[Titles1Item] | None = Field(None, alias='titles')
 
 class Template(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     anchor: str
     content_type: str = Field(..., alias='contentType')
     technical_name: str = Field(..., alias='technicalName')
     field__typename: str = Field(..., alias='__typename')
 
 class TitleModules(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     content: Content2
     fomo_score: int = Field(..., alias='fomoScore')
     template: Template
     field__typename: str = Field(..., alias='__typename')
 
 class Content5(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     poster_url: str = Field(..., alias='posterUrl')
     season_number: int = Field(..., alias='seasonNumber')
     full_path: str = Field(..., alias='fullPath')
@@ -395,10 +442,12 @@ class Content5(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Content6(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     field__typename: str = Field(..., alias='__typename')
 
 class Show1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     id: str
     object_id: int = Field(..., alias='objectId')
@@ -407,12 +456,14 @@ class Show1(BaseModel):
     content: Content6
 
 class FallBackClips1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     clips: list[Clip]
     videobuster_clips: list[None] = Field(..., alias='videobusterClips')
     dailymotion_clips: list[DailymotionClip] = Field(..., alias='dailymotionClips')
     field__typename: str = Field(..., alias='__typename')
 
 class Season(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
@@ -425,6 +476,7 @@ class Season(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Content7(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     title: str
     short_description: str = Field(..., alias='shortDescription')
@@ -435,6 +487,7 @@ class Content7(BaseModel):
     upcoming_releases: list[None] = Field(..., alias='upcomingReleases')
 
 class RecentEpisode(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
@@ -449,6 +502,7 @@ class RecentEpisode(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_type: str = Field(..., alias='objectType')
     object_id: int = Field(..., alias='objectId')
@@ -492,6 +546,7 @@ class Node(BaseModel):
     recent_episodes: list[RecentEpisode] | None = Field(None, alias='recentEpisodes')
 
 class UrlV2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     meta_description: str = Field(..., alias='metaDescription')
     meta_keywords: str = Field(..., alias='metaKeywords')
@@ -504,9 +559,11 @@ class UrlV2(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     url_v2: UrlV2 = Field(..., alias='urlV2')
 
 class UrlTitleDetailsModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 

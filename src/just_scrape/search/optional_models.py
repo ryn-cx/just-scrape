@@ -4,12 +4,12 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Genre(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     short_name: str | None = Field(None, alias='shortName')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Scoring(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     imdb_score: float | None = Field(None, alias='imdbScore')
     imdb_votes: int | None = Field(None, alias='imdbVotes')
     tmdb_score: int | float | None = Field(None, alias='tmdbScore')
@@ -19,12 +19,12 @@ class Scoring(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Backdrop(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     backdrop_url: str | None = Field(None, alias='backdropUrl')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Content(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     title: str | None = None
     full_path: str | None = Field(None, alias='fullPath')
     original_release_year: int | None = Field(None, alias='originalReleaseYear')
@@ -36,21 +36,21 @@ class Content(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class WatchNowOffer(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     standard_web_url: str | None = Field(None, alias='standardWebURL')
     pre_affiliated_standard_web_url: Any | None = Field(None, alias='preAffiliatedStandardWebURL')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Package(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package_id: int | None = Field(None, alias='packageId')
     short_name: str | None = Field(None, alias='shortName')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Offer(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     monetization_type: str | None = Field(None, alias='monetizationType')
     presentation_type: str | None = Field(None, alias='presentationType')
     standard_web_url: str | None = Field(None, alias='standardWebURL')
@@ -60,7 +60,7 @@ class Offer(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     id: str | None = None
     object_id: int | None = Field(None, alias='objectId')
@@ -70,13 +70,13 @@ class Node(BaseModel):
     offers: list[Offer] | None = None
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     cursor: str | None = None
     node: Node | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     start_cursor: str | None = Field(None, alias='startCursor')
     end_cursor: str | None = Field(None, alias='endCursor')
     has_previous_page: bool | None = Field(None, alias='hasPreviousPage')
@@ -84,18 +84,18 @@ class PageInfo(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class SearchTitles(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
     total_count: int | None = Field(None, alias='totalCount')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     search_titles: SearchTitles | None = Field(None, alias='searchTitles')
 
 class SearchModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

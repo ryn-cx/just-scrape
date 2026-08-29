@@ -1,9 +1,11 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from datetime import date as date_aliased
 
 class PageInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     start_cursor: str = Field(..., alias='startCursor')
     end_cursor: str = Field(..., alias='endCursor')
     has_previous_page: bool = Field(..., alias='hasPreviousPage')
@@ -11,6 +13,7 @@ class PageInfo(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package_id: int = Field(..., alias='packageId')
     short_name: str = Field(..., alias='shortName')
@@ -18,11 +21,13 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Key(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     date: date_aliased
     package: Package
 
 class PageInfo1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     start_cursor: str = Field(..., alias='startCursor')
     end_cursor: str = Field(..., alias='endCursor')
     has_next_page: bool = Field(..., alias='hasNextPage')
@@ -30,24 +35,29 @@ class PageInfo1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     total_count: int = Field(..., alias='totalCount')
     page_info: PageInfo1 = Field(..., alias='pageInfo')
     field__typename: str = Field(..., alias='__typename')
 
 class Edge(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     key: Key
     node: Node
     field__typename: str = Field(..., alias='__typename')
 
 class NewTitleBuckets(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     page_info: PageInfo = Field(..., alias='pageInfo')
     edges: list[Edge]
     field__typename: str = Field(..., alias='__typename')
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     new_title_buckets: NewTitleBuckets = Field(..., alias='newTitleBuckets')
 
 class NewTitleBucketsModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 

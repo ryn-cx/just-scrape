@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from datetime import date as date_aliased
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     start_cursor: str | None = Field(None, alias='startCursor')
     end_cursor: str | None = Field(None, alias='endCursor')
     has_previous_page: bool | None = Field(None, alias='hasPreviousPage')
@@ -12,7 +12,7 @@ class PageInfo(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Package(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package_id: int | None = Field(None, alias='packageId')
     short_name: str | None = Field(None, alias='shortName')
@@ -20,13 +20,13 @@ class Package(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Key(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     date: date_aliased | None = None
     package: Package | None = None
 
 class PageInfo1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     start_cursor: str | None = Field(None, alias='startCursor')
     end_cursor: str | None = Field(None, alias='endCursor')
     has_next_page: bool | None = Field(None, alias='hasNextPage')
@@ -34,29 +34,29 @@ class PageInfo1(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     total_count: int | None = Field(None, alias='totalCount')
     page_info: PageInfo1 | None = Field(None, alias='pageInfo')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     key: Key | None = None
     node: Node | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class NewTitleBuckets(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     page_info: PageInfo | None = Field(None, alias='pageInfo')
     edges: list[Edge] | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     new_title_buckets: NewTitleBuckets | None = Field(None, alias='newTitleBuckets')
 
 class NewTitleBucketsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

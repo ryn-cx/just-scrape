@@ -1,9 +1,11 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 
 class PlanOffer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
@@ -14,6 +16,7 @@ class PlanOffer(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package_id: int = Field(..., alias='packageId')
     clear_name: str = Field(..., alias='clearName')
@@ -26,6 +29,7 @@ class Package(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Plan(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     title: str
     retail_price: str = Field(..., alias='retailPrice')
     is_trial: bool = Field(..., alias='isTrial')
@@ -36,6 +40,7 @@ class Plan(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class FlatrateItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     presentation_type: str = Field(..., alias='presentationType')
     monetization_type: str = Field(..., alias='monetizationType')
@@ -67,6 +72,7 @@ class FlatrateItem(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     icon: str
     id: str
     icon_wide: str = Field(..., alias='iconWide')
@@ -76,6 +82,7 @@ class Package1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Node1(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     clear_name: str = Field(..., alias='clearName')
     icon: str
@@ -86,6 +93,7 @@ class Node1(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Package2(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package_id: int = Field(..., alias='packageId')
     clear_name: str = Field(..., alias='clearName')
@@ -98,6 +106,7 @@ class Package2(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Offer(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     presentation_type: str = Field(..., alias='presentationType')
     monetization_type: str = Field(..., alias='monetizationType')
@@ -129,12 +138,14 @@ class Offer(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Bundle(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     node: Node1
     promotion_url: str = Field(..., alias='promotionUrl')
     offer: Offer
     field__typename: str = Field(..., alias='__typename')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     field__typename: str = Field(..., alias='__typename')
     offer_count: int = Field(..., alias='offerCount')
@@ -150,9 +161,11 @@ class Node(BaseModel):
     bundles: list[Bundle]
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     node: Node
 
 class EpisodeOffersModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 

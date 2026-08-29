@@ -4,26 +4,26 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Package(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     clear_name: str | None = Field(None, alias='clearName')
     package_id: int | None = Field(None, alias='packageId')
     field__typename: str | None = Field(None, alias='__typename')
 
 class FlatrateItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package: Package | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class BuyItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     package: Package | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
 class Content(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     title: str | None = None
     short_description: str | None = Field(None, alias='shortDescription')
@@ -34,7 +34,7 @@ class Content(BaseModel):
     upcoming_releases: list[Any] | None = Field(None, alias='upcomingReleases')
 
 class Episode(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     object_id: int | None = Field(None, alias='objectId')
     object_type: str | None = Field(None, alias='objectType')
@@ -49,17 +49,17 @@ class Episode(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     field__typename: str | None = Field(None, alias='__typename')
     episodes: list[Episode] | None = None
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     node: Node | None = None
 
 class SeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

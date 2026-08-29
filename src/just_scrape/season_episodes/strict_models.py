@@ -1,25 +1,30 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from typing import Any
 
 class Package(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     clear_name: str = Field(..., alias='clearName')
     package_id: int = Field(..., alias='packageId')
     field__typename: str = Field(..., alias='__typename')
 
 class FlatrateItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package: Package
     field__typename: str = Field(..., alias='__typename')
 
 class BuyItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     package: Package
     field__typename: str = Field(..., alias='__typename')
 
 class Content(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     title: str
     short_description: str = Field(..., alias='shortDescription')
@@ -30,6 +35,7 @@ class Content(BaseModel):
     upcoming_releases: list[None] = Field(..., alias='upcomingReleases')
 
 class Episode(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     object_id: int = Field(..., alias='objectId')
     object_type: str = Field(..., alias='objectType')
@@ -44,14 +50,17 @@ class Episode(BaseModel):
     field__typename: str = Field(..., alias='__typename')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     id: str
     field__typename: str = Field(..., alias='__typename')
     episodes: list[Episode]
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     node: Node
 
 class SeasonEpisodesModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
