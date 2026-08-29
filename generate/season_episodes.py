@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, JUST_SCRAPE_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from just_scrape import JustScrape
 
-NODE_IDS = ["tss0000000", "tss486285"]
+NODE_IDS = load_ids("SeasonEpisodesModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_season_episodes(client: JustScrape) -> None:
             node_id,
             lambda node_id=node_id: client.season_episodes.download(node_id),
         )
-    generate_model(FILES_PATH, JUST_SCRAPE_PATH, "SeasonEpisodesModel")
+    rebuild_model(FILES_PATH, JUST_SCRAPE_PATH, "SeasonEpisodesModel")
 
 
 if __name__ == "__main__":

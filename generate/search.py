@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, JUST_SCRAPE_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from just_scrape import JustScrape
 
-QUERIES = ["Frieren", "zxcvbbnm"]
+QUERIES = load_ids("SearchModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_search(client: JustScrape) -> None:
             search_query,
             lambda search_query=search_query: client.search.download(search_query),
         )
-    generate_model(FILES_PATH, JUST_SCRAPE_PATH, "SearchModel")
+    rebuild_model(FILES_PATH, JUST_SCRAPE_PATH, "SearchModel")
 
 
 if __name__ == "__main__":

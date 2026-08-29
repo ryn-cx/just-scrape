@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, JUST_SCRAPE_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from just_scrape import JustScrape
 
-FULL_PATHS = ["/us/movie/the-thursday-murder-club", "/us/tv-show/darker-than-black"]
+FULL_PATHS = load_ids("UrlTitleDetailsModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_url_title_details(client: JustScrape) -> None:
             full_path,
             lambda full_path=full_path: client.url_title_details.download(full_path),
         )
-    generate_model(FILES_PATH, JUST_SCRAPE_PATH, "UrlTitleDetailsModel")
+    rebuild_model(FILES_PATH, JUST_SCRAPE_PATH, "UrlTitleDetailsModel")
 
 
 if __name__ == "__main__":

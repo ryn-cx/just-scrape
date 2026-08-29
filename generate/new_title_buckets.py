@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, JUST_SCRAPE_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from just_scrape import JustScrape
 
-OBJECT_TYPES = ["MOVIE"]
+OBJECT_TYPES = load_ids("NewTitleBucketsModel")
 """The object type each recorded page of buckets is filtered to, because the API
 pages wrongly when it is not filtered."""
 
@@ -33,7 +32,7 @@ def generate_new_title_buckets(client: JustScrape) -> None:
                 first=FIRST,
             ),
         )
-    generate_model(FILES_PATH, JUST_SCRAPE_PATH, "NewTitleBucketsModel")
+    rebuild_model(FILES_PATH, JUST_SCRAPE_PATH, "NewTitleBucketsModel")
 
 
 if __name__ == "__main__":

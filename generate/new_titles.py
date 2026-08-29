@@ -7,13 +7,12 @@ import logging
 from datetime import date
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, JUST_SCRAPE_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from just_scrape import JustScrape
 
-RELEASE_DATES = ["2026-08-01", "2050-01-01"]
+RELEASE_DATES = load_ids("NewTitlesModel")
 """The days the recorded pages of new titles are for."""
 
 FIRST = 3
@@ -33,7 +32,7 @@ def generate_new_titles(client: JustScrape) -> None:
                 first=FIRST,
             ),
         )
-    generate_model(FILES_PATH, JUST_SCRAPE_PATH, "NewTitlesModel")
+    rebuild_model(FILES_PATH, JUST_SCRAPE_PATH, "NewTitlesModel")
 
 
 if __name__ == "__main__":
