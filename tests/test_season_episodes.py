@@ -6,8 +6,6 @@ from typing import TYPE_CHECKING
 import pytest
 
 from just_scrape.exceptions import GraphQLError
-from just_scrape.season_episodes.models import SeasonEpisodesModel
-from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -21,34 +19,22 @@ NODE_IDS = [
 
 
 # TODO: Validate
-class SeasonEpisodesTest(RecordedEndpoint):
-    MODEL = SeasonEpisodesModel
-
-
-# TODO: Validate
 @pytest.mark.parametrize("node_id", NODE_IDS)
 def test_download(client: JustScrape, node_id: str) -> None:
-    SeasonEpisodesTest.download_test(
-        node_id,
-        lambda: client.season_episodes.download(node_id),
-    )
+    season = client.season_episodes(node_id)
+    assert season.id == node_id
 
 
 # TODO: Validate
-@pytest.mark.parametrize("node_id", NODE_IDS)
-def test_parse(client: JustScrape, node_id: str) -> None:
-    data = client.season_episodes.load(SeasonEpisodesTest.recorded_content(node_id))
-    assert data.data.node.id == node_id
+def test_download_all(client: JustScrape) -> None:
+    endpoint = client.season_episodes
+    node_id = "tss486285"
+    pages = endpoint.load_pages(endpoint.download_all(node_id))
+    merged = endpoint.load(endpoint.merge_pages(endpoint.download_all(node_id)))
+    assert len(merged.episodes) == sum(len(page.episodes) for page in pages)
 
 
 # TODO: Validate
-@pytest.mark.parametrize(
-    "node_id",
-    [pytest.param("0000000", id="node id that is not shaped like one")],
-)
-def test_download_invalid(client: JustScrape, node_id: str) -> None:
-    SeasonEpisodesTest.error_test(
-        node_id,
-        lambda: client.season_episodes.download(node_id),
-        GraphQLError,
-    )
+def test_download_invalid(client: JustScrape) -> None:
+    with pytest.raises(GraphQLError):
+        client.season_episodes.download("0000000")

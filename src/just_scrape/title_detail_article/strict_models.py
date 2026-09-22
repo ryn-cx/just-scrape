@@ -15,19 +15,11 @@ class Node(BaseModel):
     content: Content
     field__typename: str = Field(..., alias='__typename')
 
-class UrlV2(BaseModel):
+class TitleDetailArticleModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     node: Node
     field__typename: str = Field(..., alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    url_v2: UrlV2 = Field(..., alias='urlV2')
-
-class TitleDetailArticleModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

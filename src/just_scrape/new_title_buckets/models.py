@@ -15,10 +15,8 @@ from .strict_models import NewTitleBucketsModel as StrictModel
 
 if TYPE_CHECKING:
     from .strict_models import (
-        Data,
         Edge,
         Key,
-        NewTitleBuckets,
         NewTitleBucketsModel,
         Node,
         Package,
@@ -27,10 +25,8 @@ if TYPE_CHECKING:
     )
 else:
     from .optional_models import (
-        Data,
         Edge,
         Key,
-        NewTitleBuckets,
         NewTitleBucketsModel,
         Node,
         Package,
@@ -39,10 +35,8 @@ else:
     )
 
 __all__ = [
-    "Data",
     "Edge",
     "Key",
-    "NewTitleBuckets",
     "NewTitleBucketsModel",
     "Node",
     "Package",

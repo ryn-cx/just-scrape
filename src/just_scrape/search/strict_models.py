@@ -84,20 +84,12 @@ class PageInfo(BaseModel):
     has_next_page: bool = Field(..., alias='hasNextPage')
     field__typename: str = Field(..., alias='__typename')
 
-class SearchTitles(BaseModel):
+class SearchModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias='pageInfo')
     total_count: int = Field(..., alias='totalCount')
     field__typename: str = Field(..., alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    search_titles: SearchTitles = Field(..., alias='searchTitles')
-
-class SearchModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

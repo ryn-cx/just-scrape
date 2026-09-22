@@ -10,6 +10,7 @@ from typing import Any
 from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import (
     InvalidFileError,
+    JustScrapeError,
     ResourceNotFoundError,
     SeasonNotFoundError,
 )
@@ -19,12 +20,23 @@ from just_scrape.season_episodes.models import SeasonEpisodesModel, model_valida
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
+
+# TODO: Validate
+def extract_season(response: str) -> dict[str, Any]:
+    """Extract the season from the SeasonEpisodes response."""
+    if season := json.loads(response)["data"]["node"]:
+        return season
+
+    msg = "The response has no season in it"
+    raise JustScrapeError(msg)
+
+
 LIMIT = 20
 
 
 # TODO: Validate
 class SeasonEpisodes(BaseEndpoint):
-    """Manage the season episodes file.
+    """Contains the season episodes.
 
     Source: https://www.justwatch.com/us/tv-show/{slug}/season-{n}
 
@@ -59,7 +71,7 @@ class SeasonEpisodes(BaseEndpoint):
         limit: int = LIMIT,
         offset: int = 0,
     ) -> SeasonEpisodesModel:
-        """Look the season episodes up and return the model it is read into."""
+        """Download and parse the season episodes file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -196,8 +208,11 @@ class SeasonEpisodes(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SeasonEpisodesModel:
-        """Read a downloaded season episodes file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a season episodes file into its model."""
+        return model_validate_json(
+            extract_season(data),
+            log_id or self.default_log_id,
+        )
 
     # TODO: Validate
     def load_pages(self, pages: list[str]) -> list[SeasonEpisodesModel]:

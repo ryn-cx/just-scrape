@@ -128,20 +128,12 @@ class PageInfo(BaseModel):
     has_next_page: bool | None = Field(None, alias='hasNextPage')
     field__typename: str | None = Field(None, alias='__typename')
 
-class NewTitles(BaseModel):
+class NewTitlesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     total_count: int | None = Field(None, alias='totalCount')
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
     field__typename: str | None = Field(None, alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    new_titles: NewTitles | None = Field(None, alias='newTitles')
-
-class NewTitlesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

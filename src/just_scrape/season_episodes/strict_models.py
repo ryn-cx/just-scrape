@@ -49,19 +49,11 @@ class Episode(BaseModel):
     content: Content
     field__typename: str = Field(..., alias='__typename')
 
-class Node(BaseModel):
+class SeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     field__typename: str = Field(..., alias='__typename')
     episodes: list[Episode]
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    node: Node
-
-class SeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

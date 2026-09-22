@@ -48,19 +48,11 @@ class Episode(BaseModel):
     content: Content | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
-class Node(BaseModel):
+class SeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     field__typename: str | None = Field(None, alias='__typename')
     episodes: list[Episode] | None = None
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    node: Node | None = None
-
-class SeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

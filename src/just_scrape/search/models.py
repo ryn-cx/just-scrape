@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from .strict_models import (
         Backdrop,
         Content,
-        Data,
         Edge,
         Genre,
         Node,
@@ -26,14 +25,12 @@ if TYPE_CHECKING:
         PageInfo,
         Scoring,
         SearchModel,
-        SearchTitles,
         WatchNowOffer,
     )
 else:
     from .optional_models import (
         Backdrop,
         Content,
-        Data,
         Edge,
         Genre,
         Node,
@@ -42,14 +39,12 @@ else:
         PageInfo,
         Scoring,
         SearchModel,
-        SearchTitles,
         WatchNowOffer,
     )
 
 __all__ = [
     "Backdrop",
     "Content",
-    "Data",
     "Edge",
     "Genre",
     "Node",
@@ -58,7 +53,6 @@ __all__ = [
     "PageInfo",
     "Scoring",
     "SearchModel",
-    "SearchTitles",
     "WatchNowOffer",
     "model_validate_json",
 ]

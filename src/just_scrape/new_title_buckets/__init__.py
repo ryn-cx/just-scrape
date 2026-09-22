@@ -8,7 +8,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
-from just_scrape.exceptions import InvalidFileError
+from just_scrape.exceptions import InvalidFileError, JustScrapeError
 from just_scrape.new_title_buckets import query
 from just_scrape.new_title_buckets.models import (
     NewTitleBucketsModel,
@@ -20,8 +20,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_buckets(response: str) -> dict[str, Any]:
+    """Extract the buckets from the NewTitleBuckets response."""
+    if buckets := json.loads(response)["data"]["newTitleBuckets"]:
+        return buckets
+
+    msg = "The response has no new title buckets in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class NewTitleBuckets(BaseEndpoint):
-    """Manage the new title buckets file.
+    """Contains the new title buckets.
 
     As of 3/13/2026 the API pages wrongly when objectTypes is empty and answers
     with a truncated set of results. Set `filter_object_types` to
@@ -74,7 +84,7 @@ class NewTitleBuckets(BaseEndpoint):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> NewTitleBucketsModel:
-        """Look the new title buckets up and return the model it is read into."""
+        """Download and parse the new title buckets file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -170,5 +180,8 @@ class NewTitleBuckets(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> NewTitleBucketsModel:
-        """Read a downloaded new title buckets file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a new title buckets file into its model."""
+        return model_validate_json(
+            extract_buckets(data),
+            log_id or self.default_log_id,
+        )

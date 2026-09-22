@@ -9,7 +9,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
-from just_scrape.exceptions import InvalidFileError
+from just_scrape.exceptions import InvalidFileError, JustScrapeError
 from just_scrape.new_titles import query
 from just_scrape.new_titles.models import NewTitlesModel, model_validate_json
 
@@ -18,8 +18,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_new_titles(response: str) -> dict[str, Any]:
+    """Extract the new titles from the NewTitles response."""
+    if new_titles := json.loads(response)["data"]["newTitles"]:
+        return new_titles
+
+    msg = "The response has no new titles in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class NewTitles(BaseEndpoint):
-    """Manage the new titles file.
+    """Contains the new titles.
 
     Source: https://www.justwatch.com/us/new
 
@@ -69,7 +79,7 @@ class NewTitles(BaseEndpoint):
         filter_presentation_types: list[Any] | None = None,
         filter_monetization_types: list[Any] | None = None,
     ) -> NewTitlesModel:
-        """Look the new titles up and return the model it is read into."""
+        """Download and parse the new titles file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -176,5 +186,8 @@ class NewTitles(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> NewTitlesModel:
-        """Read a downloaded new titles file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a new titles file into its model."""
+        return model_validate_json(
+            extract_new_titles(data),
+            log_id or self.default_log_id,
+        )

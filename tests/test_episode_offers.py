@@ -5,9 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from just_scrape.episode_offers.models import EpisodeOffersModel
 from just_scrape.exceptions import GraphQLError
-from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from just_scrape import JustScrape
@@ -22,35 +20,13 @@ NODE_IDS = [
 
 
 # TODO: Validate
-class EpisodeOffersTest(RecordedEndpoint):
-    MODEL = EpisodeOffersModel
-    SAME_TYPE = ("Node.max_offer_updated_at",)
-
-
-# TODO: Validate
 @pytest.mark.parametrize("node_id", NODE_IDS)
 def test_download(client: JustScrape, node_id: str) -> None:
-    EpisodeOffersTest.download_test(
-        node_id,
-        lambda: client.episode_offers.download(node_id),
-    )
+    episode = client.episode_offers(node_id)
+    assert episode.id == node_id
 
 
 # TODO: Validate
-@pytest.mark.parametrize("node_id", NODE_IDS)
-def test_parse(client: JustScrape, node_id: str) -> None:
-    data = client.episode_offers.load(EpisodeOffersTest.recorded_content(node_id))
-    assert data.data.node.id == node_id
-
-
-# TODO: Validate
-@pytest.mark.parametrize(
-    "node_id",
-    [pytest.param("0000000", id="node id that is not shaped like one")],
-)
-def test_download_invalid(client: JustScrape, node_id: str) -> None:
-    EpisodeOffersTest.error_test(
-        node_id,
-        lambda: client.episode_offers.download(node_id),
-        GraphQLError,
-    )
+def test_download_invalid(client: JustScrape) -> None:
+    with pytest.raises(GraphQLError):
+        client.episode_offers.download("0000000")

@@ -80,7 +80,7 @@ class Package1(BaseModel):
     short_name: str | None = Field(None, alias='shortName')
     field__typename: str | None = Field(None, alias='__typename')
 
-class Node1(BaseModel):
+class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     clear_name: str | None = Field(None, alias='clearName')
@@ -138,12 +138,12 @@ class Offer(BaseModel):
 
 class Bundle(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    node: Node1 | None = None
+    node: Node | None = None
     promotion_url: str | None = Field(None, alias='promotionUrl')
     offer: Offer | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
-class Node(BaseModel):
+class EpisodeOffersModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     field__typename: str | None = Field(None, alias='__typename')
@@ -158,14 +158,6 @@ class Node(BaseModel):
     free: list[Any] | None = None
     linear: list[Any] | None = None
     bundles: list[Bundle] | None = None
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    node: Node | None = None
-
-class EpisodeOffersModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

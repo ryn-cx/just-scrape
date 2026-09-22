@@ -46,19 +46,11 @@ class Edge(BaseModel):
     node: Node
     field__typename: str = Field(..., alias='__typename')
 
-class NewTitleBuckets(BaseModel):
+class NewTitleBucketsModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     page_info: PageInfo = Field(..., alias='pageInfo')
     edges: list[Edge]
     field__typename: str = Field(..., alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    new_title_buckets: NewTitleBuckets = Field(..., alias='newTitleBuckets')
-
-class NewTitleBucketsModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

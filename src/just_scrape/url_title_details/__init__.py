@@ -5,11 +5,12 @@ from __future__ import annotations
 
 import json
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import (
     InvalidFileError,
+    JustScrapeError,
     ResourceNotFoundError,
     TitleNotFoundError,
 )
@@ -27,8 +28,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_title(response: str) -> dict[str, Any]:
+    """Extract the title from the UrlTitleDetails response."""
+    if title := json.loads(response)["data"]["urlV2"]:
+        return title
+
+    msg = "The response has no title in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class UrlTitleDetails(BaseEndpoint):
-    """Manage the url title details file.
+    """Contains the url title details.
 
     Source: https://www.justwatch.com{full_path}
 
@@ -66,7 +77,7 @@ class UrlTitleDetails(BaseEndpoint):
         country: str = "US",
         episode_max_limit: int = 20,
     ) -> UrlTitleDetailsModel:
-        """Look the title details up and return the model they are read into."""
+        """Download and parse the title details file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -136,5 +147,8 @@ class UrlTitleDetails(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> UrlTitleDetailsModel:
-        """Read a downloaded url title details file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a url title details file into its model."""
+        return model_validate_json(
+            extract_title(data),
+            log_id or self.default_log_id,
+        )

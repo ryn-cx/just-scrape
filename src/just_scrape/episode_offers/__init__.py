@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 from logging import NullHandler, getLogger
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.episode_offers import query
@@ -13,6 +13,7 @@ from just_scrape.episode_offers.models import EpisodeOffersModel, model_validate
 from just_scrape.exceptions import (
     EpisodeNotFoundError,
     InvalidFileError,
+    JustScrapeError,
     ResourceNotFoundError,
 )
 
@@ -24,8 +25,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_offers(response: str) -> dict[str, Any]:
+    """Extract the episode from the EpisodeOffers response."""
+    if episode := json.loads(response)["data"]["node"]:
+        return episode
+
+    msg = "The response has no episode in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class EpisodeOffers(BaseEndpoint):
-    """Manage the episode offers file.
+    """Contains the episode offers.
 
     Source: https://www.justwatch.com/us/tv-show/{slug}/season-{n}/episode-{n}
 
@@ -62,7 +73,7 @@ class EpisodeOffers(BaseEndpoint):
         country: str = "US",
         language: str = "en",
     ) -> EpisodeOffersModel:
-        """Look the episode offers up and return the model it is read into."""
+        """Download and parse the episode offers file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -123,5 +134,8 @@ class EpisodeOffers(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> EpisodeOffersModel:
-        """Read a downloaded episode offers file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a episode offers file into its model."""
+        return model_validate_json(
+            extract_offers(data),
+            log_id or self.default_log_id,
+        )

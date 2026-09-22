@@ -81,7 +81,7 @@ class Package1(BaseModel):
     short_name: str = Field(..., alias='shortName')
     field__typename: str = Field(..., alias='__typename')
 
-class Node1(BaseModel):
+class Node(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     clear_name: str = Field(..., alias='clearName')
@@ -139,12 +139,12 @@ class Offer(BaseModel):
 
 class Bundle(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    node: Node1
+    node: Node
     promotion_url: str = Field(..., alias='promotionUrl')
     offer: Offer
     field__typename: str = Field(..., alias='__typename')
 
-class Node(BaseModel):
+class EpisodeOffersModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     id: str
     field__typename: str = Field(..., alias='__typename')
@@ -159,14 +159,6 @@ class Node(BaseModel):
     free: list[None]
     linear: list[None]
     bundles: list[Bundle]
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    node: Node
-
-class EpisodeOffersModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

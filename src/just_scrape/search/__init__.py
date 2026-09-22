@@ -5,9 +5,10 @@ from __future__ import annotations
 
 import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
-from just_scrape.exceptions import InvalidFileError
+from just_scrape.exceptions import InvalidFileError, JustScrapeError
 from just_scrape.search import query
 from just_scrape.search.models import SearchModel, model_validate_json
 
@@ -16,8 +17,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_titles(response: str) -> dict[str, Any]:
+    """Extract the search results from the Search response."""
+    if titles := json.loads(response)["data"]["searchTitles"]:
+        return titles
+
+    msg = "The response has no search results in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class Search(BaseEndpoint):
-    """Manage the search file.
+    """Contains the search.
 
     Source: https://www.justwatch.com/us/search?q={query}
 
@@ -56,7 +67,7 @@ class Search(BaseEndpoint):
         country: str = "US",
         location: str = "SearchPage",
     ) -> SearchModel:
-        """Run the search and return the model it is read into."""
+        """Download and parse the search file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(
@@ -124,5 +135,8 @@ class Search(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SearchModel:
-        """Read a downloaded search file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a search file into its model."""
+        return model_validate_json(
+            extract_titles(data),
+            log_id or self.default_log_id,
+        )

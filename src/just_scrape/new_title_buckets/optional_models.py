@@ -45,19 +45,11 @@ class Edge(BaseModel):
     node: Node | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
-class NewTitleBuckets(BaseModel):
+class NewTitleBucketsModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     page_info: PageInfo | None = Field(None, alias='pageInfo')
     edges: list[Edge] | None = None
     field__typename: str | None = Field(None, alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    new_title_buckets: NewTitleBuckets | None = Field(None, alias='newTitleBuckets')
-
-class NewTitleBucketsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

@@ -27,7 +27,6 @@ if TYPE_CHECKING:
         Content7,
         Credit,
         DailymotionClip,
-        Data,
         DateRange,
         Edge,
         ExternalIds,
@@ -69,7 +68,6 @@ if TYPE_CHECKING:
         Titles1Item,
         Url,
         UrlTitleDetailsModel,
-        UrlV2,
         WatchNowOffer,
     )
 else:
@@ -86,7 +84,6 @@ else:
         Content7,
         Credit,
         DailymotionClip,
-        Data,
         DateRange,
         Edge,
         ExternalIds,
@@ -128,7 +125,6 @@ else:
         Titles1Item,
         Url,
         UrlTitleDetailsModel,
-        UrlV2,
         WatchNowOffer,
     )
 
@@ -145,7 +141,6 @@ __all__ = [
     "Content7",
     "Credit",
     "DailymotionClip",
-    "Data",
     "DateRange",
     "Edge",
     "ExternalIds",
@@ -187,7 +182,6 @@ __all__ = [
     "Titles1Item",
     "Url",
     "UrlTitleDetailsModel",
-    "UrlV2",
     "WatchNowOffer",
     "model_validate_json",
 ]

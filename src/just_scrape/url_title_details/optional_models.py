@@ -544,7 +544,7 @@ class Node(BaseModel):
     seasons: list[Season] | None = None
     recent_episodes: list[RecentEpisode] | None = Field(None, alias='recentEpisodes')
 
-class UrlV2(BaseModel):
+class UrlTitleDetailsModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     meta_description: str | None = Field(None, alias='metaDescription')
@@ -556,14 +556,6 @@ class UrlV2(BaseModel):
     html_content: str | None = Field(None, alias='htmlContent')
     node: Node | None = None
     field__typename: str | None = Field(None, alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    url_v2: UrlV2 | None = Field(None, alias='urlV2')
-
-class UrlTitleDetailsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

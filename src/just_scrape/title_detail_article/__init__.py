@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import json
 from logging import NullHandler, getLogger
+from typing import Any
 
 from just_scrape.base_api_endpoint import BaseEndpoint
 from just_scrape.exceptions import (
     ArticleNotFoundError,
     InvalidFileError,
+    JustScrapeError,
     ResourceNotFoundError,
 )
 from just_scrape.title_detail_article import query
@@ -23,8 +25,18 @@ logger.addHandler(NullHandler())
 
 
 # TODO: Validate
+def extract_article(response: str) -> dict[str, Any]:
+    """Extract the article from the TitleDetailArticle response."""
+    if article := json.loads(response)["data"]["urlV2"]:
+        return article
+
+    msg = "The response has no article in it"
+    raise JustScrapeError(msg)
+
+
+# TODO: Validate
 class TitleDetailArticle(BaseEndpoint):
-    """Manage the title detail article file.
+    """Contains the title detail article.
 
     Source: https://www.justwatch.com{full_path}
 
@@ -53,7 +65,7 @@ class TitleDetailArticle(BaseEndpoint):
         language: str = "en",
         country: str = "US",
     ) -> TitleDetailArticleModel:
-        """Look the title's articles up and return the model they are read into."""
+        """Download and parse the title's articles file."""
         log_id = self.get_log_id(self.__call__, locals())
         return self.load(
             self.download(full_path, language=language, country=country),
@@ -97,5 +109,8 @@ class TitleDetailArticle(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> TitleDetailArticleModel:
-        """Read a downloaded title detail article file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load a title detail article file into its model."""
+        return model_validate_json(
+            extract_article(data),
+            log_id or self.default_log_id,
+        )

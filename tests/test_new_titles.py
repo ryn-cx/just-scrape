@@ -6,9 +6,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from just_scrape.new_titles.models import NewTitlesModel
-from tests.utils import RecordedEndpoint
-
 if TYPE_CHECKING:
     from just_scrape import JustScrape
 
@@ -23,25 +20,10 @@ DATES = [
 
 
 # TODO: Validate
-class NewTitlesTest(RecordedEndpoint):
-    MODEL = NewTitlesModel
-
-
-# TODO: Validate
 @pytest.mark.parametrize("release_date", DATES)
 def test_download(client: JustScrape, release_date: str) -> None:
-    NewTitlesTest.download_test(
-        release_date,
-        lambda: client.new_titles.download(
-            date=date.fromisoformat(release_date),
-            first=FIRST,
-        ),
+    new_titles = client.new_titles(
+        date=date.fromisoformat(release_date),
+        first=FIRST,
     )
-
-
-# TODO: Validate
-@pytest.mark.parametrize("release_date", DATES)
-def test_parse(client: JustScrape, release_date: str) -> None:
-    data = client.new_titles.load(NewTitlesTest.recorded_content(release_date))
-    new_titles = data.data.new_titles
     assert bool(new_titles.edges) == bool(new_titles.total_count)

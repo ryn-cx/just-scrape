@@ -14,19 +14,11 @@ class Node(BaseModel):
     content: Content | None = None
     field__typename: str | None = Field(None, alias='__typename')
 
-class UrlV2(BaseModel):
+class TitleDetailArticleModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     id: str | None = None
     node: Node | None = None
     field__typename: str | None = Field(None, alias='__typename')
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    url_v2: UrlV2 | None = Field(None, alias='urlV2')
-
-class TitleDetailArticleModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')
