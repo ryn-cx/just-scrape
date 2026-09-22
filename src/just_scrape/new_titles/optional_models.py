@@ -27,15 +27,15 @@ class NewOffer(BaseModel):
     package: Package | None = None
     retail_price: str | None = Field(None, alias='retailPrice')
     retail_price_value: float | None = Field(None, alias='retailPriceValue')
-    last_change_retail_price_value: Any | None = Field(None, alias='lastChangeRetailPriceValue')
+    last_change_retail_price_value: float | None = Field(None, alias='lastChangeRetailPriceValue')
     currency: str | None = None
     presentation_type: str | None = Field(None, alias='presentationType')
     monetization_type: str | None = Field(None, alias='monetizationType')
     available_to: Any | date | None = Field(None, alias='availableTo')
     date_created: date | None = Field(None, alias='dateCreated')
     new_element_count: int | None = Field(None, alias='newElementCount')
-    last_change_retail_price: Any | None = Field(None, alias='lastChangeRetailPrice')
-    last_change_percent: int | None = Field(None, alias='lastChangePercent')
+    last_change_retail_price: str | None = Field(None, alias='lastChangeRetailPrice')
+    last_change_percent: int | float | None = Field(None, alias='lastChangePercent')
 
 class Scoring(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -44,7 +44,7 @@ class Scoring(BaseModel):
     tmdb_popularity: float | None = Field(None, alias='tmdbPopularity')
     tmdb_score: float | None = Field(None, alias='tmdbScore')
     tomato_meter: int | None = Field(None, alias='tomatoMeter')
-    certified_fresh: Any | None = Field(None, alias='certifiedFresh')
+    certified_fresh: bool | None = Field(None, alias='certifiedFresh')
     field__typename: str | None = Field(None, alias='__typename')
 
 class Genre(BaseModel):
