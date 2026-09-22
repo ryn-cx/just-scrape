@@ -28,6 +28,14 @@ def extract_new_titles(response: str) -> dict[str, Any]:
 
 
 # TODO: Validate
+def next_cursor(response: str) -> str | None:
+    page_info = extract_new_titles(response).get("pageInfo") or {}
+    if not page_info.get("hasNextPage"):
+        return None
+    return page_info.get("endCursor")
+
+
+# TODO: Validate
 class NewTitles(BaseEndpoint):
     """Contains the new titles.
 
@@ -173,6 +181,62 @@ class NewTitles(BaseEndpoint):
             log_id,
         )
         return self._validate_download(response)
+
+    # TODO: Validate
+    def download_all(  # noqa: PLR0913 - Each parameter maps to an API parameter.
+        self,
+        *,
+        page_type: str = "NEW",
+        date: datetime.date | None = None,
+        language: str = "en",
+        country: str = "US",
+        price_drops: bool = False,
+        platform: str = "WEB",
+        show_date_badge: bool = False,
+        available_to_packages: list[str] | None = None,
+        filter_age_certifications: list[Any] | None = None,
+        filter_exclude_genres: list[Any] | None = None,
+        filter_exclude_production_countries: list[Any] | None = None,
+        filter_object_types: list[Any] | None = None,
+        filter_production_countries: list[Any] | None = None,
+        filter_subgenres: list[Any] | None = None,
+        filter_genres: list[Any] | None = None,
+        filter_packages: list[str] | None = None,
+        filter_exclude_irrelevant_titles: bool = False,
+        filter_presentation_types: list[Any] | None = None,
+        filter_monetization_types: list[Any] | None = None,
+    ) -> list[str]:
+        pages: list[str] = []
+        after: str | None = None
+        while True:
+            response = self.download(
+                page_type=page_type,
+                date=date,
+                language=language,
+                country=country,
+                price_drops=price_drops,
+                platform=platform,
+                after=after,
+                show_date_badge=show_date_badge,
+                available_to_packages=available_to_packages,
+                filter_age_certifications=filter_age_certifications,
+                filter_exclude_genres=filter_exclude_genres,
+                filter_exclude_production_countries=(
+                    filter_exclude_production_countries
+                ),
+                filter_object_types=filter_object_types,
+                filter_production_countries=filter_production_countries,
+                filter_subgenres=filter_subgenres,
+                filter_genres=filter_genres,
+                filter_packages=filter_packages,
+                filter_exclude_irrelevant_titles=filter_exclude_irrelevant_titles,
+                filter_presentation_types=filter_presentation_types,
+                filter_monetization_types=filter_monetization_types,
+            )
+            pages.append(response)
+            after = next_cursor(response)
+            if after is None:
+                return pages
 
     # TODO: Validate
     @staticmethod
