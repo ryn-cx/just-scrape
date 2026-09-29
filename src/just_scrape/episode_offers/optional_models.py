@@ -5,159 +5,159 @@ from typing import Any
 
 class PlanOffer(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    title: str | None = None
-    retail_price: str | None = Field(None, alias='retailPrice')
-    is_trial: bool | None = Field(None, alias='isTrial')
-    duration_days: int | None = Field(None, alias='durationDays')
-    retail_price_value: int | float | None = Field(None, alias='retailPriceValue')
-    retail_price_converted: str | None = Field(None, alias='retailPriceConverted')
-    children: list[Any] | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    retail_price: str | Any = Field(None, alias='retailPrice', union_mode='left_to_right')
+    is_trial: bool | Any = Field(None, alias='isTrial', union_mode='left_to_right')
+    duration_days: int | Any = Field(None, alias='durationDays', union_mode='left_to_right')
+    retail_price_value: int | float | Any = Field(None, alias='retailPriceValue', union_mode='left_to_right')
+    retail_price_converted: str | Any = Field(None, alias='retailPriceConverted', union_mode='left_to_right')
+    children: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Package(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    package_id: int | None = Field(None, alias='packageId')
-    clear_name: str | None = Field(None, alias='clearName')
-    short_name: str | None = Field(None, alias='shortName')
-    technical_name: str | None = Field(None, alias='technicalName')
-    icon: str | None = None
-    icon_wide: str | None = Field(None, alias='iconWide')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    package_id: int | Any = Field(None, alias='packageId', union_mode='left_to_right')
+    clear_name: str | Any = Field(None, alias='clearName', union_mode='left_to_right')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    technical_name: str | Any = Field(None, alias='technicalName', union_mode='left_to_right')
+    icon: str | Any = Field(default=None, union_mode='left_to_right')
+    icon_wide: str | Any = Field(None, alias='iconWide', union_mode='left_to_right')
     mask_referrer: Any | None = Field(None, alias='maskReferrer')
-    plan_offers: list[PlanOffer] | None = Field(None, alias='planOffers')
-    field__typename: str | None = Field(None, alias='__typename')
+    plan_offers: list[PlanOffer] | Any = Field(None, alias='planOffers', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Plan(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    title: str | None = None
-    retail_price: str | None = Field(None, alias='retailPrice')
-    is_trial: bool | None = Field(None, alias='isTrial')
-    duration_days: int | None = Field(None, alias='durationDays')
-    retail_price_value: int | float | None = Field(None, alias='retailPriceValue')
-    retail_price_converted: str | None = Field(None, alias='retailPriceConverted')
-    children: list[Any] | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    retail_price: str | Any = Field(None, alias='retailPrice', union_mode='left_to_right')
+    is_trial: bool | Any = Field(None, alias='isTrial', union_mode='left_to_right')
+    duration_days: int | Any = Field(None, alias='durationDays', union_mode='left_to_right')
+    retail_price_value: int | float | Any = Field(None, alias='retailPriceValue', union_mode='left_to_right')
+    retail_price_converted: str | Any = Field(None, alias='retailPriceConverted', union_mode='left_to_right')
+    children: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class FlatrateItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    presentation_type: str | None = Field(None, alias='presentationType')
-    monetization_type: str | None = Field(None, alias='monetizationType')
-    new_element_count: int | None = Field(None, alias='newElementCount')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    presentation_type: str | Any = Field(None, alias='presentationType', union_mode='left_to_right')
+    monetization_type: str | Any = Field(None, alias='monetizationType', union_mode='left_to_right')
+    new_element_count: int | Any = Field(None, alias='newElementCount', union_mode='left_to_right')
     retail_price: Any | None = Field(None, alias='retailPrice')
     retail_price_value: Any | None = Field(None, alias='retailPriceValue')
-    user_local_currency: str | None = Field(None, alias='userLocalCurrency')
+    user_local_currency: str | Any = Field(None, alias='userLocalCurrency', union_mode='left_to_right')
     retail_price_converted: Any | None = Field(None, alias='retailPriceConverted')
-    currency: str | None = None
+    currency: str | Any = Field(default=None, union_mode='left_to_right')
     last_change_retail_price_value: Any | None = Field(None, alias='lastChangeRetailPriceValue')
-    type: str | None = None
-    country: str | None = None
-    package: Package | None = None
-    plans: list[Plan] | None = None
-    standard_web_url: str | None = Field(None, alias='standardWebURL')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    country: str | Any = Field(default=None, union_mode='left_to_right')
+    package: Package | Any = Field(default=None, union_mode='left_to_right')
+    plans: list[Plan] | Any = Field(default=None, union_mode='left_to_right')
+    standard_web_url: str | Any = Field(None, alias='standardWebURL', union_mode='left_to_right')
     pre_affiliated_standard_web_url: Any | None = Field(None, alias='preAffiliatedStandardWebURL')
     stream_url: Any | None = Field(None, alias='streamUrl')
     stream_url_external_player: Any | None = Field(None, alias='streamUrlExternalPlayer')
-    element_count: int | None = Field(None, alias='elementCount')
+    element_count: int | Any = Field(None, alias='elementCount', union_mode='left_to_right')
     available_to: Any | None = Field(None, alias='availableTo')
-    available_from_time: Any | AwareDatetime | None = Field(None, alias='availableFromTime')
+    available_from_time: AwareDatetime | Any = Field(None, alias='availableFromTime', union_mode='left_to_right')
     available_to_time: Any | None = Field(None, alias='availableToTime')
-    subtitle_languages: list[str] | None = Field(None, alias='subtitleLanguages')
-    video_technology: list[str] | None = Field(None, alias='videoTechnology')
-    audio_technology: list[str] | None = Field(None, alias='audioTechnology')
-    audio_languages: list[str] | None = Field(None, alias='audioLanguages')
-    updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
+    subtitle_languages: list[str] | Any = Field(None, alias='subtitleLanguages', union_mode='left_to_right')
+    video_technology: list[str] | Any = Field(None, alias='videoTechnology', union_mode='left_to_right')
+    audio_technology: list[str] | Any = Field(None, alias='audioTechnology', union_mode='left_to_right')
+    audio_languages: list[str] | Any = Field(None, alias='audioLanguages', union_mode='left_to_right')
+    updated_at: AwareDatetime | Any = Field(None, alias='updatedAt', union_mode='left_to_right')
     media_deal_id: Any | None = Field(None, alias='mediaDealId')
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Package1(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    icon: str | None = None
-    id: str | None = None
-    icon_wide: str | None = Field(None, alias='iconWide')
-    clear_name: str | None = Field(None, alias='clearName')
-    package_id: int | None = Field(None, alias='packageId')
-    short_name: str | None = Field(None, alias='shortName')
-    field__typename: str | None = Field(None, alias='__typename')
+    icon: str | Any = Field(default=None, union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    icon_wide: str | Any = Field(None, alias='iconWide', union_mode='left_to_right')
+    clear_name: str | Any = Field(None, alias='clearName', union_mode='left_to_right')
+    package_id: int | Any = Field(None, alias='packageId', union_mode='left_to_right')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    clear_name: str | None = Field(None, alias='clearName')
-    icon: str | None = None
-    technical_name: str | None = Field(None, alias='technicalName')
-    bundle_id: int | None = Field(None, alias='bundleId')
-    short_name: str | None = Field(None, alias='shortName')
-    packages: list[Package1] | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    clear_name: str | Any = Field(None, alias='clearName', union_mode='left_to_right')
+    icon: str | Any = Field(default=None, union_mode='left_to_right')
+    technical_name: str | Any = Field(None, alias='technicalName', union_mode='left_to_right')
+    bundle_id: int | Any = Field(None, alias='bundleId', union_mode='left_to_right')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    packages: list[Package1] | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Package2(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    package_id: int | None = Field(None, alias='packageId')
-    clear_name: str | None = Field(None, alias='clearName')
-    short_name: str | None = Field(None, alias='shortName')
-    technical_name: str | None = Field(None, alias='technicalName')
-    icon: str | None = None
-    icon_wide: str | None = Field(None, alias='iconWide')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    package_id: int | Any = Field(None, alias='packageId', union_mode='left_to_right')
+    clear_name: str | Any = Field(None, alias='clearName', union_mode='left_to_right')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    technical_name: str | Any = Field(None, alias='technicalName', union_mode='left_to_right')
+    icon: str | Any = Field(default=None, union_mode='left_to_right')
+    icon_wide: str | Any = Field(None, alias='iconWide', union_mode='left_to_right')
     mask_referrer: Any | None = Field(None, alias='maskReferrer')
-    plan_offers: list[PlanOffer] | None = Field(None, alias='planOffers')
-    field__typename: str | None = Field(None, alias='__typename')
+    plan_offers: list[PlanOffer] | Any = Field(None, alias='planOffers', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Offer(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    presentation_type: str | None = Field(None, alias='presentationType')
-    monetization_type: str | None = Field(None, alias='monetizationType')
-    new_element_count: int | None = Field(None, alias='newElementCount')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    presentation_type: str | Any = Field(None, alias='presentationType', union_mode='left_to_right')
+    monetization_type: str | Any = Field(None, alias='monetizationType', union_mode='left_to_right')
+    new_element_count: int | Any = Field(None, alias='newElementCount', union_mode='left_to_right')
     retail_price: Any | None = Field(None, alias='retailPrice')
     retail_price_value: Any | None = Field(None, alias='retailPriceValue')
-    user_local_currency: str | None = Field(None, alias='userLocalCurrency')
+    user_local_currency: str | Any = Field(None, alias='userLocalCurrency', union_mode='left_to_right')
     retail_price_converted: Any | None = Field(None, alias='retailPriceConverted')
-    currency: str | None = None
+    currency: str | Any = Field(default=None, union_mode='left_to_right')
     last_change_retail_price_value: Any | None = Field(None, alias='lastChangeRetailPriceValue')
-    type: str | None = None
-    country: str | None = None
-    package: Package2 | None = None
-    plans: list[Plan] | None = None
-    standard_web_url: str | None = Field(None, alias='standardWebURL')
+    type: str | Any = Field(default=None, union_mode='left_to_right')
+    country: str | Any = Field(default=None, union_mode='left_to_right')
+    package: Package2 | Any = Field(default=None, union_mode='left_to_right')
+    plans: list[Plan] | Any = Field(default=None, union_mode='left_to_right')
+    standard_web_url: str | Any = Field(None, alias='standardWebURL', union_mode='left_to_right')
     pre_affiliated_standard_web_url: Any | None = Field(None, alias='preAffiliatedStandardWebURL')
     stream_url: Any | None = Field(None, alias='streamUrl')
     stream_url_external_player: Any | None = Field(None, alias='streamUrlExternalPlayer')
-    element_count: int | None = Field(None, alias='elementCount')
+    element_count: int | Any = Field(None, alias='elementCount', union_mode='left_to_right')
     available_to: Any | None = Field(None, alias='availableTo')
-    available_from_time: AwareDatetime | None = Field(None, alias='availableFromTime')
+    available_from_time: AwareDatetime | Any = Field(None, alias='availableFromTime', union_mode='left_to_right')
     available_to_time: Any | None = Field(None, alias='availableToTime')
-    subtitle_languages: list[str] | None = Field(None, alias='subtitleLanguages')
-    video_technology: list[Any] | None = Field(None, alias='videoTechnology')
-    audio_technology: list[str] | None = Field(None, alias='audioTechnology')
-    audio_languages: list[str] | None = Field(None, alias='audioLanguages')
-    updated_at: AwareDatetime | None = Field(None, alias='updatedAt')
+    subtitle_languages: list[str] | Any = Field(None, alias='subtitleLanguages', union_mode='left_to_right')
+    video_technology: list[Any] | Any = Field(None, alias='videoTechnology', union_mode='left_to_right')
+    audio_technology: list[str] | Any = Field(None, alias='audioTechnology', union_mode='left_to_right')
+    audio_languages: list[str] | Any = Field(None, alias='audioLanguages', union_mode='left_to_right')
+    updated_at: AwareDatetime | Any = Field(None, alias='updatedAt', union_mode='left_to_right')
     media_deal_id: Any | None = Field(None, alias='mediaDealId')
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Bundle(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    node: Node | None = None
-    promotion_url: str | None = Field(None, alias='promotionUrl')
-    offer: Offer | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
+    promotion_url: str | Any = Field(None, alias='promotionUrl', union_mode='left_to_right')
+    offer: Offer | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class EpisodeOffersModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    field__typename: str | None = Field(None, alias='__typename')
-    offer_count: int | None = Field(None, alias='offerCount')
-    max_offer_updated_at: Any | AwareDatetime | None = Field(None, alias='maxOfferUpdatedAt')
-    total_packages: int | None = Field(None, alias='totalPackages')
-    offers_history: list[Any] | None = Field(None, alias='offersHistory')
-    flatrate: list[FlatrateItem] | None = None
-    dvd_bluray: list[Any] | None = Field(None, alias='dvdBluray')
-    buy: list[Any] | None = None
-    rent: list[Any] | None = None
-    free: list[Any] | None = None
-    linear: list[Any] | None = None
-    bundles: list[Bundle] | None = None
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    offer_count: int | Any = Field(None, alias='offerCount', union_mode='left_to_right')
+    max_offer_updated_at: AwareDatetime | Any = Field(None, alias='maxOfferUpdatedAt', union_mode='left_to_right')
+    total_packages: int | Any = Field(None, alias='totalPackages', union_mode='left_to_right')
+    offers_history: list[Any] | Any = Field(None, alias='offersHistory', union_mode='left_to_right')
+    flatrate: list[FlatrateItem] | Any = Field(default=None, union_mode='left_to_right')
+    dvd_bluray: list[Any] | Any = Field(None, alias='dvdBluray', union_mode='left_to_right')
+    buy: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    rent: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    free: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    linear: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    bundles: list[Bundle] | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

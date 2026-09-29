@@ -5,20 +5,20 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class Content(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    articles: list[Any] | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    articles: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    content: Content | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    content: Content | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class TitleDetailArticleModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    node: Node | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

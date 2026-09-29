@@ -5,90 +5,90 @@ from typing import Any
 
 class Genre(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    short_name: str | None = Field(None, alias='shortName')
-    field__typename: str | None = Field(None, alias='__typename')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Scoring(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    imdb_score: float | None = Field(None, alias='imdbScore')
-    imdb_votes: int | None = Field(None, alias='imdbVotes')
-    tmdb_score: int | float | None = Field(None, alias='tmdbScore')
-    tmdb_popularity: float | None = Field(None, alias='tmdbPopularity')
-    tomato_meter: int | None = Field(None, alias='tomatoMeter')
+    imdb_score: float | Any = Field(None, alias='imdbScore', union_mode='left_to_right')
+    imdb_votes: int | Any = Field(None, alias='imdbVotes', union_mode='left_to_right')
+    tmdb_score: int | float | Any = Field(None, alias='tmdbScore', union_mode='left_to_right')
+    tmdb_popularity: float | Any = Field(None, alias='tmdbPopularity', union_mode='left_to_right')
+    tomato_meter: int | Any = Field(None, alias='tomatoMeter', union_mode='left_to_right')
     certified_fresh: Any | None = Field(None, alias='certifiedFresh')
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Backdrop(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    backdrop_url: str | None = Field(None, alias='backdropUrl')
-    field__typename: str | None = Field(None, alias='__typename')
+    backdrop_url: str | Any = Field(None, alias='backdropUrl', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Content(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    title: str | None = None
-    full_path: str | None = Field(None, alias='fullPath')
-    original_release_year: int | None = Field(None, alias='originalReleaseYear')
-    genres: list[Genre] | None = None
-    scoring: Scoring | None = None
-    poster_url: str | None = Field(None, alias='posterUrl')
-    backdrops: list[Backdrop] | None = None
-    upcoming_releases: list[Any] | None = Field(None, alias='upcomingReleases')
-    field__typename: str | None = Field(None, alias='__typename')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    full_path: str | Any = Field(None, alias='fullPath', union_mode='left_to_right')
+    original_release_year: int | Any = Field(None, alias='originalReleaseYear', union_mode='left_to_right')
+    genres: list[Genre] | Any = Field(default=None, union_mode='left_to_right')
+    scoring: Scoring | Any = Field(default=None, union_mode='left_to_right')
+    poster_url: str | Any = Field(None, alias='posterUrl', union_mode='left_to_right')
+    backdrops: list[Backdrop] | Any = Field(default=None, union_mode='left_to_right')
+    upcoming_releases: list[Any] | Any = Field(None, alias='upcomingReleases', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class WatchNowOffer(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    standard_web_url: str | None = Field(None, alias='standardWebURL')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    standard_web_url: str | Any = Field(None, alias='standardWebURL', union_mode='left_to_right')
     pre_affiliated_standard_web_url: Any | None = Field(None, alias='preAffiliatedStandardWebURL')
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Package(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    package_id: int | None = Field(None, alias='packageId')
-    short_name: str | None = Field(None, alias='shortName')
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    package_id: int | Any = Field(None, alias='packageId', union_mode='left_to_right')
+    short_name: str | Any = Field(None, alias='shortName', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Offer(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    monetization_type: str | None = Field(None, alias='monetizationType')
-    presentation_type: str | None = Field(None, alias='presentationType')
-    standard_web_url: str | None = Field(None, alias='standardWebURL')
+    monetization_type: str | Any = Field(None, alias='monetizationType', union_mode='left_to_right')
+    presentation_type: str | Any = Field(None, alias='presentationType', union_mode='left_to_right')
+    standard_web_url: str | Any = Field(None, alias='standardWebURL', union_mode='left_to_right')
     pre_affiliated_standard_web_url: Any | None = Field(None, alias='preAffiliatedStandardWebURL')
-    package: Package | None = None
-    id: str | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    package: Package | Any = Field(default=None, union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    id: str | None = None
-    object_id: int | None = Field(None, alias='objectId')
-    object_type: str | None = Field(None, alias='objectType')
-    content: Content | None = None
-    watch_now_offer: Any | WatchNowOffer | None = Field(None, alias='watchNowOffer')
-    offers: list[Offer] | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    object_id: int | Any = Field(None, alias='objectId', union_mode='left_to_right')
+    object_type: str | Any = Field(None, alias='objectType', union_mode='left_to_right')
+    content: Content | Any = Field(default=None, union_mode='left_to_right')
+    watch_now_offer: WatchNowOffer | Any = Field(None, alias='watchNowOffer', union_mode='left_to_right')
+    offers: list[Offer] | Any = Field(default=None, union_mode='left_to_right')
 
 class Edge(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    cursor: str | None = None
-    node: Node | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class PageInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    start_cursor: str | None = Field(None, alias='startCursor')
-    end_cursor: str | None = Field(None, alias='endCursor')
-    has_previous_page: bool | None = Field(None, alias='hasPreviousPage')
-    has_next_page: bool | None = Field(None, alias='hasNextPage')
-    field__typename: str | None = Field(None, alias='__typename')
+    start_cursor: str | Any = Field(None, alias='startCursor', union_mode='left_to_right')
+    end_cursor: str | Any = Field(None, alias='endCursor', union_mode='left_to_right')
+    has_previous_page: bool | Any = Field(None, alias='hasPreviousPage', union_mode='left_to_right')
+    has_next_page: bool | Any = Field(None, alias='hasNextPage', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class SearchModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    edges: list[Edge] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
-    total_count: int | None = Field(None, alias='totalCount')
-    field__typename: str | None = Field(None, alias='__typename')
+    edges: list[Edge] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
+    total_count: int | Any = Field(None, alias='totalCount', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

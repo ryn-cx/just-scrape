@@ -5,54 +5,54 @@ from typing import Any
 
 class Package(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    clear_name: str | None = Field(None, alias='clearName')
-    package_id: int | None = Field(None, alias='packageId')
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    clear_name: str | Any = Field(None, alias='clearName', union_mode='left_to_right')
+    package_id: int | Any = Field(None, alias='packageId', union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class FlatrateItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    package: Package | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    package: Package | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class BuyItem(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    package: Package | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    package: Package | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Content(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    title: str | None = None
-    short_description: str | None = Field(None, alias='shortDescription')
-    episode_number: int | None = Field(None, alias='episodeNumber')
-    season_number: int | None = Field(None, alias='seasonNumber')
-    is_released: bool | None = Field(None, alias='isReleased')
-    runtime: int | None = None
-    upcoming_releases: list[Any] | None = Field(None, alias='upcomingReleases')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    short_description: str | Any = Field(None, alias='shortDescription', union_mode='left_to_right')
+    episode_number: int | Any = Field(None, alias='episodeNumber', union_mode='left_to_right')
+    season_number: int | Any = Field(None, alias='seasonNumber', union_mode='left_to_right')
+    is_released: bool | Any = Field(None, alias='isReleased', union_mode='left_to_right')
+    runtime: int | Any = Field(default=None, union_mode='left_to_right')
+    upcoming_releases: list[Any] | Any = Field(None, alias='upcomingReleases', union_mode='left_to_right')
 
 class Episode(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    object_id: int | None = Field(None, alias='objectId')
-    object_type: str | None = Field(None, alias='objectType')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    object_id: int | Any = Field(None, alias='objectId', union_mode='left_to_right')
+    object_type: str | Any = Field(None, alias='objectType', union_mode='left_to_right')
     seenlist_entry: Any | None = Field(None, alias='seenlistEntry')
-    unique_offer_count: int | None = Field(None, alias='uniqueOfferCount')
-    flatrate: list[FlatrateItem] | None = None
-    buy: list[BuyItem] | None = None
-    rent: list[Any] | None = None
-    free: list[Any] | None = None
-    fast: list[Any] | None = None
-    content: Content | None = None
-    field__typename: str | None = Field(None, alias='__typename')
+    unique_offer_count: int | Any = Field(None, alias='uniqueOfferCount', union_mode='left_to_right')
+    flatrate: list[FlatrateItem] | Any = Field(default=None, union_mode='left_to_right')
+    buy: list[BuyItem] | Any = Field(default=None, union_mode='left_to_right')
+    rent: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    free: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    fast: list[Any] | Any = Field(default=None, union_mode='left_to_right')
+    content: Content | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class SeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    id: str | None = None
-    field__typename: str | None = Field(None, alias='__typename')
-    episodes: list[Episode] | None = None
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    episodes: list[Episode] | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')
