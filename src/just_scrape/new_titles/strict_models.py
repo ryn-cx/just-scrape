@@ -39,10 +39,10 @@ class NewOffer(BaseModel):
 
 class Scoring(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    imdb_votes: int = Field(..., alias='imdbVotes')
-    imdb_score: int | float = Field(..., alias='imdbScore')
-    tmdb_popularity: float = Field(..., alias='tmdbPopularity')
-    tmdb_score: float = Field(..., alias='tmdbScore')
+    imdb_votes: int | None = Field(..., alias='imdbVotes')
+    imdb_score: int | float | None = Field(..., alias='imdbScore')
+    tmdb_popularity: float | None = Field(..., alias='tmdbPopularity')
+    tmdb_score: int | float | None = Field(..., alias='tmdbScore')
     tomato_meter: int | None = Field(..., alias='tomatoMeter')
     certified_fresh: bool | None = Field(..., alias='certifiedFresh')
     field__typename: str = Field(..., alias='__typename')
@@ -58,7 +58,7 @@ class Content(BaseModel):
     short_description: str = Field(..., alias='shortDescription')
     full_path: str = Field(..., alias='fullPath')
     scoring: Scoring
-    poster_url: str = Field(..., alias='posterUrl')
+    poster_url: str | None = Field(..., alias='posterUrl')
     runtime: int
     genres: list[Genre]
     is_released: bool = Field(..., alias='isReleased')
@@ -67,10 +67,10 @@ class Content(BaseModel):
 
 class Scoring1(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    imdb_votes: int = Field(..., alias='imdbVotes')
-    imdb_score: float = Field(..., alias='imdbScore')
-    tmdb_popularity: float = Field(..., alias='tmdbPopularity')
-    tmdb_score: float = Field(..., alias='tmdbScore')
+    imdb_votes: int | None = Field(..., alias='imdbVotes')
+    imdb_score: int | float | None = Field(..., alias='imdbScore')
+    tmdb_popularity: float | None = Field(..., alias='tmdbPopularity')
+    tmdb_score: int | float | None = Field(..., alias='tmdbScore')
     field__typename: str = Field(..., alias='__typename')
 
 class Content1(BaseModel):
@@ -79,7 +79,7 @@ class Content1(BaseModel):
     short_description: str = Field(..., alias='shortDescription')
     full_path: str = Field(..., alias='fullPath')
     scoring: Scoring1
-    poster_url: str = Field(..., alias='posterUrl')
+    poster_url: str | None = Field(..., alias='posterUrl')
     runtime: int
     genres: list[Genre]
     field__typename: str = Field(..., alias='__typename')
@@ -117,7 +117,7 @@ class Node(BaseModel):
 class Edge(BaseModel):
     model_config = ConfigDict(defer_build=True)
     cursor: str
-    new_offer: NewOffer = Field(..., alias='newOffer')
+    new_offer: NewOffer | None = Field(..., alias='newOffer')
     node: Node
     field__typename: str = Field(..., alias='__typename')
 

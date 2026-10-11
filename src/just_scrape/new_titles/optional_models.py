@@ -42,7 +42,7 @@ class Scoring(BaseModel):
     imdb_votes: int | Any = Field(None, alias='imdbVotes', union_mode='left_to_right')
     imdb_score: int | float | Any = Field(None, alias='imdbScore', union_mode='left_to_right')
     tmdb_popularity: float | Any = Field(None, alias='tmdbPopularity', union_mode='left_to_right')
-    tmdb_score: float | Any = Field(None, alias='tmdbScore', union_mode='left_to_right')
+    tmdb_score: int | float | Any = Field(None, alias='tmdbScore', union_mode='left_to_right')
     tomato_meter: int | Any = Field(None, alias='tomatoMeter', union_mode='left_to_right')
     certified_fresh: bool | Any = Field(None, alias='certifiedFresh', union_mode='left_to_right')
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
@@ -68,9 +68,9 @@ class Content(BaseModel):
 class Scoring1(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     imdb_votes: int | Any = Field(None, alias='imdbVotes', union_mode='left_to_right')
-    imdb_score: float | Any = Field(None, alias='imdbScore', union_mode='left_to_right')
+    imdb_score: int | float | Any = Field(None, alias='imdbScore', union_mode='left_to_right')
     tmdb_popularity: float | Any = Field(None, alias='tmdbPopularity', union_mode='left_to_right')
-    tmdb_score: float | Any = Field(None, alias='tmdbScore', union_mode='left_to_right')
+    tmdb_score: int | float | Any = Field(None, alias='tmdbScore', union_mode='left_to_right')
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
 
 class Content1(BaseModel):
